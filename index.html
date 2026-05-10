@@ -68,6 +68,7 @@ input[type=range]::-moz-range-thumb{width:20px;height:20px;border-radius:50%;bac
 .lrow-unit{font-size:11px;color:#aaa;width:72px;flex-shrink:0;white-space:nowrap}
 .auto-tag{font-size:10px;background:#E6F1FB;color:#185FA5;border-radius:4px;padding:1px 5px;margin-left:4px;vertical-align:middle;font-weight:400}
 .total-box{background:#f5f5f0;border-radius:10px;padding:12px 14px;margin-top:1rem}
+.auto-tag{font-size:10px;background:#E6F1FB;color:#185FA5;border-radius:4px;padding:1px 5px;margin-left:4px;vertical-align:middle;font-weight:400}
 .total-box-label{font-size:11px;color:#888;margin-bottom:8px;text-transform:uppercase;letter-spacing:.05em}
 .trow{display:flex;justify-content:space-between;align-items:baseline;padding:3px 0}
 .trow-name{font-size:13px;color:#555}
@@ -152,48 +153,42 @@ input[type=range]::-moz-range-thumb{width:20px;height:20px;border-radius:50%;bac
 <div class="section">
   <div class="stitle">Monthly living costs</div>
 
-  <div class="lrow">
-    <div class="lrow-left">
-      <div class="lrow-name">Service charge <span class="auto-tag">auto</span></div>
-      <div class="lrow-note" id="sc-note">shown as monthly average</div>
+  <div class="slider-field">
+    <div class="slider-top">
+      <span class="slider-label">DEWA <span class="auto-tag">auto</span></span>
+      <input class="slider-input" id="t-dewa" value="1,275">
     </div>
-    <div class="lrow-right">
-      <input class="lrow-input" id="l-sc" value="23" oninput="calcLiving()" onblur="fmtLiving('l-sc')">
-      <span class="lrow-unit">AED/sqft/yr</span>
-    </div>
+    <input type="range" id="dewa" min="200" max="4000" step="25" value="1275">
+    <div class="slider-minmax"><span>AED 200</span><span>AED 4,000</span></div>
+    <div style="font-size:11px;color:#aaa;margin-top:2px" id="dewa-note">Electricity + water + housing fee (5% annual rental value) · district cooling included</div>
   </div>
 
-  <div class="lrow">
-    <div class="lrow-left">
-      <div class="lrow-name">DEWA <span class="auto-tag">auto</span></div>
-      <div class="lrow-note" id="dewa-note">Electricity + water + housing fee (5% annual rental value) · district cooling included</div>
+  <div class="slider-field">
+    <div class="slider-top">
+      <span class="slider-label">Service charge</span>
+      <input class="slider-input" id="t-sc" value="23">
     </div>
-    <div class="lrow-right">
-      <input class="lrow-input" id="l-dewa" value="1,275" oninput="dewaEdited=true;calcLiving()" onblur="fmtLiving('l-dewa')" onfocus="dewaEdited=true">
-      <span class="lrow-unit">AED/mo</span>
-    </div>
+    <input type="range" id="sc" min="13" max="35" step="0.5" value="23">
+    <div class="slider-minmax"><span id="sc-note">AED/sqft/yr · shown as monthly average</span><span></span></div>
   </div>
 
-  <div class="lrow">
-    <div class="lrow-left">
-      <div class="lrow-name">Gas (Lootah BCGas) <span class="auto-tag">auto</span></div>
-      <div class="lrow-note" id="gas-note">Billed quarterly · shown as monthly average</div>
+  <div class="slider-field">
+    <div class="slider-top">
+      <span class="slider-label">Internet</span>
+      <input class="slider-input" id="t-internet" value="360">
     </div>
-    <div class="lrow-right">
-      <input class="lrow-input" id="l-gas" value="75" oninput="gasEdited=true;calcLiving()" onblur="fmtLiving('l-gas')" onfocus="gasEdited=true">
-      <span class="lrow-unit">AED/mo</span>
-    </div>
+    <input type="range" id="internet" min="100" max="600" step="10" value="360">
+    <div class="slider-minmax"><span>AED 100</span><span>AED 600</span></div>
   </div>
 
-  <div class="lrow">
-    <div class="lrow-left">
-      <div class="lrow-name">Internet (du)</div>
-      <div class="lrow-note">Monthly</div>
+  <div class="slider-field">
+    <div class="slider-top">
+      <span class="slider-label">Gas</span>
+      <input class="slider-input" id="t-gas" value="52.5">
     </div>
-    <div class="lrow-right">
-      <input class="lrow-input" id="l-internet" value="360" oninput="calcLiving()" onblur="fmtLiving('l-internet')">
-      <span class="lrow-unit">AED/mo</span>
-    </div>
+    <input type="range" id="gas" min="20" max="300" step="2.5" value="52.5">
+    <div class="slider-minmax"><span>AED 20</span><span>AED 300</span></div>
+    <div style="font-size:11px;color:#aaa;margin-top:2px">Billed quarterly · shown as monthly average</div>
   </div>
 
   <div class="total-box">
@@ -206,71 +201,103 @@ input[type=range]::-moz-range-thumb{width:20px;height:20px;border-radius:50%;bac
 
 <script>
 const vals={price:2900000,cash:800000,approved:2604000,down:20,years:25,eibor:3.45,sqft:1500};
-// Base rates per sqft at 1500 sqft reference
-const DEWA_BASE = 1275;  // AED/mo at 1500 sqft (0.85/sqft)
-const GAS_BASE  = 75;    // AED/mo at 1500 sqft (0.05/sqft)
-const SQFT_BASE = 1500;
-let dewaEdited = false;
-let gasEdited  = false;
+const DEWA_PER_SQFT=0.85, GAS_PER_SQFT=0.05, SQFT_BASE=1500;
+let dewaEdited=false, gasEdited=false;
 
-function getNum(tid){return parseFloat(document.getElementById(tid).value.replace(/[^0-9.,]/g,'').replace(/,/g,''))||0;}
+function getNum(id){return parseFloat(document.getElementById(id).value.replace(/[^0-9.]/g,''))||0;}
 function clamp(v,mn,mx){return Math.min(mx,Math.max(mn,v));}
+function fmtAED(n){return Math.round(n).toLocaleString('en-US');}
 function fmtDisplay(key,v){
   if(['price','cash','approved','sqft'].includes(key)) return v.toLocaleString('en-US');
   if(key==='down'||key==='years') return String(Math.round(v));
   if(key==='eibor') return v.toFixed(2);
   return String(v);
 }
-function fmtLiving(id){
-  const v=getNum(id);
-  document.getElementById(id).value=Math.round(v).toLocaleString('en-US');
-}
 
+// Main sliders (top sections)
 function fromSlider(key){
   const v=parseFloat(document.getElementById(key).value);
   vals[key]=v;
   const tin=document.getElementById('t-'+key);
   if(document.activeElement!==tin) tin.value=fmtDisplay(key,v);
-  // Auto-update DEWA and gas when sqft changes, unless user manually edited
-  if(key==='sqft'){
-    if(!dewaEdited){
-      const newDewa=Math.round(DEWA_BASE*(v/SQFT_BASE));
-      document.getElementById('l-dewa').value=newDewa.toLocaleString('en-US');
-    }
-    if(!gasEdited){
-      const newGas=Math.round(GAS_BASE*(v/SQFT_BASE));
-      document.getElementById('l-gas').value=newGas.toLocaleString('en-US');
-    }
-  }
+  if(key==='sqft') autoUpdateLiving(v);
   calc();
 }
 function fromText(key){
-  let v=getNum('t-'+key);
+  let raw=document.getElementById('t-'+key).value.replace(/[^0-9.]/g,'');
+  let v=parseFloat(raw)||0;
   const slider=document.getElementById(key);
   v=clamp(v,parseFloat(slider.min),parseFloat(slider.max));
-  vals[key]=v;slider.value=v;
-  if(key==='sqft'){
-    if(!dewaEdited){
-      const newDewa=Math.round(DEWA_BASE*(v/SQFT_BASE));
-      document.getElementById('l-dewa').value=newDewa.toLocaleString('en-US');
-    }
-    if(!gasEdited){
-      const newGas=Math.round(GAS_BASE*(v/SQFT_BASE));
-      document.getElementById('l-gas').value=newGas.toLocaleString('en-US');
-    }
-  }
+  vals[key]=v; slider.value=v;
+  if(key==='sqft') autoUpdateLiving(v);
   calc();
 }
 function blurText(key){document.getElementById('t-'+key).value=fmtDisplay(key,vals[key]);}
 
 ['price','cash','approved','down','years','eibor','sqft'].forEach(key=>{
-  const slider=document.getElementById(key);
+  document.getElementById(key).addEventListener('input',()=>fromSlider(key));
   const tin=document.getElementById('t-'+key);
-  slider.addEventListener('input',()=>fromSlider(key));
   tin.addEventListener('input',()=>fromText(key));
   tin.addEventListener('blur',()=>blurText(key));
   tin.addEventListener('keydown',e=>{if(e.key==='Enter'){blurText(key);tin.blur();}});
 });
+
+// Living sliders
+function fromLivingSlider(key){
+  const v=parseFloat(document.getElementById(key).value);
+  const tin=document.getElementById('t-'+key);
+  if(document.activeElement!==tin) tin.value=fmtAED(v);
+  if(key==='dewa') dewaEdited=true;
+  if(key==='gas') gasEdited=true;
+  calcLiving();
+}
+function fromLivingText(key){
+  let v=parseFloat(document.getElementById('t-'+key).value.replace(/[^0-9.]/g,''))||0;
+  const slider=document.getElementById(key);
+  v=clamp(v,parseFloat(slider.min),parseFloat(slider.max));
+  slider.value=v;
+  if(key==='dewa') dewaEdited=true;
+  if(key==='gas') gasEdited=true;
+  calcLiving();
+}
+function blurLiving(key){
+  const v=parseFloat(document.getElementById(key).value);
+  document.getElementById('t-'+key).value=fmtAED(v);
+}
+
+// sc uses AED/sqft/yr not AED
+function fromScSlider(){
+  const v=parseFloat(document.getElementById('sc').value);
+  const tin=document.getElementById('t-sc');
+  if(document.activeElement!==tin) tin.value=v.toFixed(1);
+  calcLiving();
+}
+function fromScText(){
+  let v=parseFloat(document.getElementById('t-sc').value.replace(/[^0-9.]/g,''))||23;
+  v=clamp(v,13,35);
+  document.getElementById('sc').value=v;
+  calcLiving();
+}
+
+['dewa','gas','internet'].forEach(key=>{
+  document.getElementById(key).addEventListener('input',()=>fromLivingSlider(key));
+  const tin=document.getElementById('t-'+key);
+  tin.addEventListener('input',()=>fromLivingText(key));
+  tin.addEventListener('blur',()=>blurLiving(key));
+  tin.addEventListener('keydown',e=>{if(e.key==='Enter'){blurLiving(key);tin.blur();}});
+});
+document.getElementById('sc').addEventListener('input',fromScSlider);
+document.getElementById('t-sc').addEventListener('input',fromScText);
+document.getElementById('t-sc').addEventListener('blur',()=>{
+  document.getElementById('t-sc').value=parseFloat(document.getElementById('sc').value).toFixed(1);
+});
+
+function autoUpdateLiving(sqft){
+  dewaEdited=false;
+  const vd=Math.round(DEWA_PER_SQFT*sqft);
+  document.getElementById('dewa').value=vd;
+  document.getElementById('t-dewa').value=fmtAED(vd);
+}
 
 function aed(n){return 'AED '+Math.round(n).toLocaleString('en-US');}
 function aed2(n){return 'AED '+n.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});}
@@ -282,32 +309,22 @@ function mpay(loan,rate,months){
 
 function calcLiving(){
   const sqft=vals.sqft||1500;
-  const scRate=parseFloat(document.getElementById('l-sc').value)||23;
+  const scRate=parseFloat(document.getElementById('sc').value)||23;
   const scMonthly=Math.round(sqft*scRate/12);
   document.getElementById('sc-note').textContent=
-    aed(scMonthly)+'/mo  ·  '+sqft.toLocaleString('en-US')+' sqft × AED '+scRate+' ÷ 12  ·  shown as monthly average';
-
-  const dewa=getNum('l-dewa');
+    aed(scMonthly)+'/mo  ·  '+sqft.toLocaleString('en-US')+' sqft × AED '+scRate.toFixed(1)+' ÷ 12  ·  shown as monthly average';
   document.getElementById('dewa-note').textContent=
-    'Electricity + water + housing fee (5% annual rental value) · district cooling included'+(dewaEdited?' · manually set':'  ·  auto: AED 0.85/sqft');
-
-  const gas=getNum('l-gas');
-  document.getElementById('gas-note').textContent=
-    'Billed quarterly · shown as monthly average'+(gasEdited?' · manually set':'  ·  auto: AED 0.05/sqft');
-
-  const internet=getNum('l-internet');
+    'Electricity + water + housing fee (5% annual rental value) · district cooling included'+(dewaEdited?' · manually set':' · auto');
+  const dewa=parseFloat(document.getElementById('dewa').value)||0;
+  const gas=parseFloat(document.getElementById('gas').value)||0;
+  const internet=parseFloat(document.getElementById('internet').value)||0;
   const totalLiving=scMonthly+dewa+gas+internet;
-
   const loanAmt=vals.price-vals.price*vals.down/100;
   const n=vals.years*12;
   const ins=loanAmt*0.000112+vals.price*0.0005/12;
-  const pay3=mpay(loanAmt,3.99,n);
-  const pay5=mpay(loanAmt,4.19,n);
-  const payVar=mpay(loanAmt,vals.eibor+1.5,n);
-
-  document.getElementById('grand-3').textContent=aed(pay3+ins+totalLiving);
-  document.getElementById('grand-5').textContent=aed(pay5+ins+totalLiving);
-  document.getElementById('grand-var').textContent=aed(payVar+ins+totalLiving);
+  document.getElementById('grand-3').textContent=aed(mpay(loanAmt,3.99,n)+ins+totalLiving);
+  document.getElementById('grand-5').textContent=aed(mpay(loanAmt,4.19,n)+ins+totalLiving);
+  document.getElementById('grand-var').textContent=aed(mpay(loanAmt,vals.eibor+1.5,n)+ins+totalLiving);
 }
 
 function calc(){
