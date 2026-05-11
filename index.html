@@ -8,280 +8,301 @@
 <meta name="apple-mobile-web-app-title" content="Dubai Calc">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <style>
+:root{
+  --bg:#F7F6F2;--card:#FFF;--border:rgba(0,0,0,0.08);--text:#111;--muted:#999;--subtle:#C8C5BE;--track:#E8E5DF;
+  --green:#2D6A2D;--green-bg:#EAF3E0;--green-bd:#B8D9A0;
+  --blue:#1A4F8A;--blue-bg:#E8F0FB;--blue-bd:#A8C4ED;
+  --amber:#8A5A00;--amber-bg:#FDF3DC;--amber-bd:#E8CC80;
+  --red:#9B2A2A;--red-bg:#FCEEEE;--red-bd:#E8AAAA;
+}
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:system-ui,-apple-system,sans-serif;background:#f5f5f0;color:#1a1a1a;padding:1.5rem}
-h1{font-size:18px;font-weight:500;margin-bottom:1.5rem}
-.section{background:#fff;border-radius:12px;border:0.5px solid rgba(0,0,0,0.12);padding:1.25rem;margin-bottom:1rem}
-.stitle{font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.06em;color:#888;margin-bottom:1.25rem}
-.slider-field{margin-bottom:1.25rem}
-.slider-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;gap:12px}
-.slider-label{font-size:13px;color:#555;flex-shrink:0}
-.slider-input{font-size:14px;font-weight:500;color:#1a1a1a;border:0.5px solid rgba(0,0,0,0.18);border-radius:8px;padding:5px 10px;width:150px;text-align:right;background:#fff}
-.slider-input:focus{outline:none;border-color:rgba(0,0,0,0.4);background:#fafafa}
-input[type=range]{width:100%;height:4px;-webkit-appearance:none;appearance:none;background:#e0ddd6;border-radius:2px;outline:none;cursor:pointer;margin-bottom:4px}
-input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:#1a1a1a;cursor:pointer;border:3px solid #fff;box-shadow:0 0 0 1px rgba(0,0,0,0.2)}
-input[type=range]::-moz-range-thumb{width:20px;height:20px;border-radius:50%;background:#1a1a1a;cursor:pointer;border:3px solid #fff;box-shadow:0 0 0 1px rgba(0,0,0,0.2)}
-.slider-minmax{display:flex;justify-content:space-between;font-size:11px;color:#bbb}
-.fixed-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:0.5px solid rgba(0,0,0,0.07)}
-.fixed-row:last-child{border-bottom:none}
-.fixed-label{font-size:13px;color:#888}
-.fixed-val{font-size:13px;font-weight:500;color:#1a1a1a}
-.metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px;margin-bottom:1rem}
-.metric{background:#f5f5f0;border-radius:10px;padding:11px 13px}
-.ml{font-size:11px;color:#888;margin-bottom:3px}
-.mv{font-size:15px;font-weight:500;color:#1a1a1a;line-height:1.3}
-.ms{font-size:11px;color:#aaa;margin-top:2px}
-.red{color:#D85A30!important}.amber{color:#BA7517!important}.green{color:#3B6D11!important}.blue{color:#185FA5!important}
-.breakdown{width:100%;border-collapse:collapse;font-size:13px}
-.breakdown td{padding:7px 0;border-bottom:0.5px solid rgba(0,0,0,0.08)}
-.breakdown tr:last-child td{border-bottom:none;font-weight:500;padding-top:10px}
-.breakdown td:last-child{text-align:right;font-weight:500}
-.divider{height:0.5px;background:rgba(0,0,0,0.08);margin:1rem 0}
-.verdict{border-radius:10px;padding:1rem 1.1rem;margin-top:1rem;border:0.5px solid}
-.verdict.ok{background:#EAF3DE;border-color:#C0DD97}
-.verdict.warn{background:#FAEEDA;border-color:#FAC775}
-.verdict.bad{background:#FCEBEB;border-color:#F09595}
-.vt{font-size:13px;font-weight:500;margin-bottom:4px}
-.verdict.ok .vt{color:#27500A}.verdict.warn .vt{color:#633806}.verdict.bad .vt{color:#791F1F}
-.vb{font-size:13px;line-height:1.6}
-.verdict.ok .vb{color:#3B6D11}.verdict.warn .vb{color:#854F0B}.verdict.bad .vb{color:#A32D2D}
-.bar-bg{background:#f0ede6;border-radius:6px;height:12px;overflow:hidden;margin-bottom:5px}
-.bar-fill{height:100%;border-radius:6px;transition:width .25s}
-.bar-labels{display:flex;justify-content:space-between;font-size:11px;color:#888;margin-bottom:1rem}
-.fab-note{font-size:12px;color:#185FA5;background:#E6F1FB;border-radius:8px;padding:10px 12px;margin-bottom:1.25rem;line-height:1.8;border:0.5px solid #B5D4F4}
-.three-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:1rem}
-.pc{border-radius:10px;padding:12px 14px;border:0.5px solid}
-.pc-3{background:#EAF3DE;border-color:#C0DD97}
-.pc-5{background:#E6F1FB;border-color:#B5D4F4}
-.pc-var{background:#FAEEDA;border-color:#FAC775}
-.pc-label{font-size:11px;font-weight:500;margin-bottom:4px}
-.pc-3 .pc-label{color:#27500A}.pc-5 .pc-label{color:#0C447C}.pc-var .pc-label{color:#633806}
-.pc-val{font-size:15px;font-weight:500}
-.pc-3 .pc-val{color:#3B6D11}.pc-5 .pc-val{color:#185FA5}.pc-var .pc-val{color:#854F0B}
-.pc-sub{font-size:11px;margin-top:3px}
-.pc-3 .pc-sub{color:#3B6D11}.pc-5 .pc-sub{color:#185FA5}.pc-var .pc-sub{color:#854F0B}
-.lrow{display:flex;align-items:center;padding:10px 0;border-bottom:0.5px solid rgba(0,0,0,0.07)}
-.lrow:last-of-type{border-bottom:none}
-.lrow-left{flex:1;min-width:0;padding-right:12px}
-.lrow-name{font-size:13px;color:#1a1a1a}
-.lrow-note{font-size:11px;color:#aaa;margin-top:2px}
-.lrow-right{display:flex;align-items:center;gap:8px;flex-shrink:0}
-.lrow-input{font-size:13px;font-weight:500;color:#1a1a1a;border:0.5px solid rgba(0,0,0,0.15);border-radius:8px;padding:5px 10px;width:100px;text-align:right;background:#f5f5f0;flex-shrink:0}
-.lrow-input:focus{outline:none;border-color:rgba(0,0,0,0.3);background:#fff}
-.lrow-unit{font-size:11px;color:#aaa;width:72px;flex-shrink:0;white-space:nowrap}
-.auto-tag{font-size:10px;background:#E6F1FB;color:#185FA5;border-radius:4px;padding:1px 5px;margin-left:4px;vertical-align:middle;font-weight:400}
-.total-box{background:#f5f5f0;border-radius:10px;padding:12px 14px;margin-top:1rem}
-.auto-tag{font-size:10px;background:#E6F1FB;color:#185FA5;border-radius:4px;padding:1px 5px;margin-left:4px;vertical-align:middle;font-weight:400}
-.total-box-label{font-size:11px;color:#888;margin-bottom:8px;text-transform:uppercase;letter-spacing:.05em}
-.trow{display:flex;justify-content:space-between;align-items:baseline;padding:3px 0}
-.trow-name{font-size:13px;color:#555}
-.trow-val{font-size:15px;font-weight:500}
+html{-webkit-text-size-adjust:100%}
+body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text',system-ui,sans-serif;background:var(--bg);color:var(--text);padding:20px 16px 48px;max-width:540px;margin:0 auto}
+.hdr{margin-bottom:24px}
+.hdr h1{font-size:24px;font-weight:700;letter-spacing:-0.6px}
+.hdr p{font-size:13px;color:var(--muted);margin-top:3px}
+.card{background:var(--card);border-radius:20px;border:1px solid var(--border);padding:20px;margin-bottom:10px;box-shadow:0 1px 3px rgba(0,0,0,0.04)}
+.ctitle{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);margin-bottom:20px}
+.banner{background:var(--blue-bg);border:1px solid var(--blue-bd);border-radius:12px;padding:12px 14px;margin-bottom:20px;font-size:12px;color:var(--blue);line-height:1.75}
+.banner strong{font-weight:600}
+.field{margin-bottom:20px}
+.field:last-child{margin-bottom:0}
+.ftop{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;gap:10px}
+.flabel{font-size:14px;color:var(--text);flex-shrink:0;display:flex;align-items:center;gap:7px}
+.finput{font-size:15px;font-weight:500;color:var(--text);border:1px solid var(--border);border-radius:10px;padding:7px 13px;width:148px;text-align:right;background:var(--bg);transition:border .15s,background .15s}
+.finput:focus{outline:none;border-color:rgba(0,0,0,0.25);background:#fff}
+input[type=range]{width:100%;height:3px;-webkit-appearance:none;appearance:none;background:var(--track);border-radius:2px;outline:none;cursor:pointer;margin-bottom:6px;display:block}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:var(--text);cursor:pointer;border:3px solid #fff;box-shadow:0 1px 5px rgba(0,0,0,0.22)}
+input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;background:var(--text);cursor:pointer;border:3px solid #fff;box-shadow:0 1px 5px rgba(0,0,0,0.22)}
+.rlabels{display:flex;justify-content:space-between;font-size:11px;color:var(--subtle)}
+.fnote{font-size:11px;color:var(--muted);margin-top:5px;line-height:1.5}
+.tag{font-size:10px;font-weight:600;border-radius:6px;padding:2px 8px;letter-spacing:.02em;transition:all .2s}
+.tag-auto{background:var(--blue-bg);color:var(--blue)}
+.tag-manual{background:var(--amber-bg);color:var(--amber)}
+.srow{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border)}
+.srow:last-child{border-bottom:none}
+.srow-label{font-size:14px;color:var(--muted)}
+.srow-val{font-size:14px;font-weight:500}
+.rate-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:20px}
+.rc{border-radius:14px;padding:13px;border:1px solid}
+.rc.g{background:var(--green-bg);border-color:var(--green-bd)}
+.rc.b{background:var(--blue-bg);border-color:var(--blue-bd)}
+.rc.a{background:var(--amber-bg);border-color:var(--amber-bd)}
+.rc-lbl{font-size:10px;font-weight:500;margin-bottom:6px;line-height:1.4}
+.rc.g .rc-lbl{color:var(--green)}.rc.b .rc-lbl{color:var(--blue)}.rc.a .rc-lbl{color:var(--amber)}
+.rc-val{font-size:14px;font-weight:700}
+.rc.g .rc-val{color:var(--green)}.rc.b .rc-val{color:var(--blue)}.rc.a .rc-val{color:var(--amber)}
+.rc-sub{font-size:10px;margin-top:3px;opacity:.65}
+.rc.g .rc-sub{color:var(--green)}.rc.b .rc-sub{color:var(--blue)}.rc.a .rc-sub{color:var(--amber)}
+.sec-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);margin-bottom:10px}
+.metrics{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px}
+.metric{background:var(--bg);border-radius:12px;padding:13px 14px}
+.m-lbl{font-size:11px;color:var(--muted);margin-bottom:4px}
+.m-val{font-size:16px;font-weight:700;color:var(--text);letter-spacing:-0.3px}
+.m-sub{font-size:11px;color:var(--muted);margin-top:2px}
+.cg{color:var(--green)!important}.cb{color:var(--blue)!important}.ca{color:var(--amber)!important}.cr{color:var(--red)!important}
+.pbar-track{background:var(--track);border-radius:4px;height:6px;overflow:hidden;margin-bottom:5px}
+.pbar-fill{height:100%;border-radius:4px;transition:width .3s,background .3s}
+.pbar-lbls{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-bottom:18px}
+.brow{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--border)}
+.brow:last-child{border-bottom:none;font-weight:600}
+.brow-lbl{font-size:13px;color:var(--muted)}
+.brow-val{font-size:13px;font-weight:500}
+.verdict{border-radius:14px;padding:14px 16px;margin-top:14px;border:1px solid}
+.verdict.ok{background:var(--green-bg);border-color:var(--green-bd)}
+.verdict.warn{background:var(--amber-bg);border-color:var(--amber-bd)}
+.verdict.bad{background:var(--red-bg);border-color:var(--red-bd)}
+.v-title{font-size:13px;font-weight:700;margin-bottom:4px}
+.verdict.ok .v-title{color:var(--green)}.verdict.warn .v-title{color:var(--amber)}.verdict.bad .v-title{color:var(--red)}
+.v-body{font-size:13px;line-height:1.55}
+.verdict.ok .v-body{color:var(--green)}.verdict.warn .v-body{color:var(--amber)}.verdict.bad .v-body{color:var(--red)}
+.totals{background:var(--bg);border-radius:14px;padding:16px;margin-top:20px}
+.t-sec{margin-bottom:12px}
+.t-sec:last-child{margin-bottom:0}
+.t-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);margin-bottom:10px}
+.trow{display:flex;justify-content:space-between;align-items:baseline;padding:4px 0}
+.t-name{font-size:13px;color:var(--muted)}
+.t-val{font-size:16px;font-weight:700;letter-spacing:-0.3px}
+.div{height:1px;background:var(--border);margin:14px 0}
 </style>
 </head>
 <body>
-<h1>Dubai Property Purchase Calculator</h1>
 
-<!-- PROPERTY -->
-<div class="section">
-  <div class="stitle">Property</div>
-  <div class="slider-field">
-    <div class="slider-top"><span class="slider-label">Property price</span><input class="slider-input" id="t-price" value="2,900,000"></div>
+<div class="hdr">
+  <h1>Dubai Property</h1>
+  <p>Purchase calculator</p>
+</div>
+
+<div class="card">
+  <div class="ctitle">Property</div>
+  <div class="field">
+    <div class="ftop"><span class="flabel">Price</span><input class="finput" id="t-price" value="2,900,000"></div>
     <input type="range" id="price" min="1000000" max="6000000" step="50000" value="2900000">
-    <div class="slider-minmax"><span>AED 1,000,000</span><span>AED 6,000,000</span></div>
+    <div class="rlabels"><span>AED 1M</span><span>AED 6M</span></div>
   </div>
-  <div class="slider-field">
-    <div class="slider-top"><span class="slider-label">Property size (sqft)</span><input class="slider-input" id="t-sqft" value="1,500"></div>
+  <div class="field">
+    <div class="ftop"><span class="flabel">Size (sqft)</span><input class="finput" id="t-sqft" value="1,500"></div>
     <input type="range" id="sqft" min="600" max="3000" step="10" value="1500">
-    <div class="slider-minmax"><span>600 sqft</span><span>3,000 sqft</span></div>
+    <div class="rlabels"><span>600</span><span>3,000</span></div>
   </div>
-  <div class="slider-field">
-    <div class="slider-top"><span class="slider-label">Your cash available</span><input class="slider-input" id="t-cash" value="800,000"></div>
+  <div class="field">
+    <div class="ftop"><span class="flabel">Cash available</span><input class="finput" id="t-cash" value="800,000"></div>
     <input type="range" id="cash" min="200000" max="3000000" step="50000" value="800000">
-    <div class="slider-minmax"><span>AED 200,000</span><span>AED 3,000,000</span></div>
+    <div class="rlabels"><span>AED 200K</span><span>AED 3M</span></div>
   </div>
-  <div class="fixed-row"><span class="fixed-label">DLD fee</span><span class="fixed-val">4%</span></div>
-  <div class="fixed-row"><span class="fixed-label">Agency fee</span><span class="fixed-val">2%</span></div>
-  <div class="fixed-row"><span class="fixed-label">FAB valuation fee</span><span class="fixed-val">AED 3,150</span></div>
+  <div class="srow"><span class="srow-label">DLD fee</span><span class="srow-val">4%</span></div>
+  <div class="srow"><span class="srow-label">Agency fee</span><span class="srow-val">2%</span></div>
+  <div class="srow"><span class="srow-label">FAB valuation fee</span><span class="srow-val">AED 3,150</span></div>
 </div>
 
-<!-- MORTGAGE -->
-<div class="section">
-  <div class="stitle">FAB Mortgage</div>
-  <div class="fab-note">
+<div class="card">
+  <div class="ctitle">FAB Mortgage</div>
+  <div class="banner">
     Approved: <strong>AED 2,604,000</strong> · Valid until <strong>13 Jun 2026</strong><br>
-    Option A: <strong>3.99%</strong> fixed 36 months · Option B: <strong>4.19%</strong> fixed 60 months<br>
-    Then variable: <strong>EIBOR + 1.50%</strong> · FAB benchmark: <strong>AED 15,154.35/mo</strong>
+    3.99% fixed 36 mo &nbsp;·&nbsp; 4.19% fixed 60 mo &nbsp;·&nbsp; then <strong>EIBOR + 1.50%</strong><br>
+    FAB benchmark: <strong>AED 15,154.35/mo</strong>
   </div>
-  <div class="slider-field">
-    <div class="slider-top"><span class="slider-label">FAB approved amount</span><input class="slider-input" id="t-approved" value="2,604,000"></div>
+  <div class="field">
+    <div class="ftop"><span class="flabel">FAB approved</span><input class="finput" id="t-approved" value="2,604,000"></div>
     <input type="range" id="approved" min="500000" max="5000000" step="50000" value="2604000">
-    <div class="slider-minmax"><span>AED 500,000</span><span>AED 5,000,000</span></div>
+    <div class="rlabels"><span>AED 500K</span><span>AED 5M</span></div>
   </div>
-  <div class="slider-field">
-    <div class="slider-top"><span class="slider-label">Down payment (%)</span><input class="slider-input" id="t-down" value="20"></div>
-    <input type="range" id="down" min="20" max="50" step="1" value="20">
-    <div class="slider-minmax"><span>20% (minimum)</span><span>50%</span></div>
+  <div class="field">
+    <div class="ftop">
+      <span class="flabel">Down payment <span id="down-tag" class="tag tag-auto">auto</span></span>
+      <input class="finput" id="t-down" value="20">
+    </div>
+    <input type="range" id="down" min="20" max="80" step="1" value="20">
+    <div class="rlabels"><span>20% (min)</span><span>80%</span></div>
   </div>
-  <div class="slider-field">
-    <div class="slider-top"><span class="slider-label">Loan term (years)</span><input class="slider-input" id="t-years" value="25"></div>
-    <input type="range" id="years" min="5" max="25" step="1" value="25">
-    <div class="slider-minmax"><span>5 years</span><span>25 years</span></div>
+  <div class="field">
+    <div class="ftop"><span class="flabel">Loan term (years)</span><input class="finput" id="t-years" value="25"></div>
+    <input type="range" id="years" min="1" max="25" step="1" value="25">
+    <div class="rlabels"><span>1</span><span>25</span></div>
   </div>
-  <div class="slider-field">
-    <div class="slider-top"><span class="slider-label">Expected EIBOR (%)</span><input class="slider-input" id="t-eibor" value="3.45"></div>
+  <div class="field">
+    <div class="ftop"><span class="flabel">Expected EIBOR (%)</span><input class="finput" id="t-eibor" value="3.45"></div>
     <input type="range" id="eibor" min="1" max="6" step="0.05" value="3.45">
-    <div class="slider-minmax"><span>1% (optimistic)</span><span>6% (stress)</span></div>
+    <div class="rlabels"><span>1% optimistic</span><span>6% stress</span></div>
   </div>
 </div>
 
-<!-- MONTHLY PAYMENTS -->
-<div class="section">
-  <div class="stitle">Monthly payment — all periods</div>
-  <div class="three-grid">
-    <div class="pc pc-3"><div class="pc-label">3.99% · months 1–36</div><div class="pc-val" id="pay-3">—</div><div class="pc-sub">fixed rate</div></div>
-    <div class="pc pc-5"><div class="pc-label">4.19% · months 1–60</div><div class="pc-val" id="pay-5">—</div><div class="pc-sub">fixed rate</div></div>
-    <div class="pc pc-var"><div class="pc-label">Variable · month 37/61+</div><div class="pc-val" id="pay-var">—</div><div class="pc-sub" id="var-sub">EIBOR + 1.50%</div></div>
+<div class="card">
+  <div class="ctitle">Monthly mortgage — principal + interest</div>
+  <div class="rate-grid">
+    <div class="rc g"><div class="rc-lbl">3.99%<br>months 1–36</div><div class="rc-val" id="pay-3">—</div><div class="rc-sub">fixed</div></div>
+    <div class="rc b"><div class="rc-lbl">4.19%<br>months 1–60</div><div class="rc-val" id="pay-5">—</div><div class="rc-sub">fixed</div></div>
+    <div class="rc a"><div class="rc-lbl">Variable<br>37/61+</div><div class="rc-val" id="pay-var">—</div><div class="rc-sub" id="var-sub">EIBOR+1.5%</div></div>
   </div>
-  <div class="stitle">Summary</div>
+  <div class="sec-lbl">Summary</div>
   <div class="metrics" id="metrics"></div>
-  <div class="bar-bg"><div class="bar-fill" id="cashbar"></div></div>
-  <div class="bar-labels"><span>AED 0</span><span id="barlabel"></span></div>
-  <div class="divider"></div>
-  <div class="stitle">Upfront costs</div>
-  <table class="breakdown" id="breakdown"></table>
+  <div class="pbar-track"><div class="pbar-fill" id="cashbar"></div></div>
+  <div class="pbar-lbls"><span>AED 0</span><span id="barlabel"></span></div>
+  <div class="sec-lbl">Upfront costs</div>
+  <div id="breakdown"></div>
   <div id="verdict"></div>
 </div>
 
-<!-- MONTHLY LIVING COSTS -->
-<div class="section">
-  <div class="stitle">Monthly living costs</div>
-
-  <div class="slider-field">
-    <div class="slider-top">
-      <span class="slider-label">DEWA <span class="auto-tag">auto</span></span>
-      <input class="slider-input" id="t-dewa" value="1,275">
+<div class="card">
+  <div class="ctitle">Monthly living costs</div>
+  <div class="field">
+    <div class="ftop">
+      <span class="flabel">DEWA <span id="dewa-tag" class="tag tag-auto">auto</span></span>
+      <input class="finput" id="t-dewa" value="1,275">
     </div>
-    <input type="range" id="dewa" min="200" max="4000" step="25" value="1275">
-    <div class="slider-minmax"><span>AED 200</span><span>AED 4,000</span></div>
-    <div style="font-size:11px;color:#aaa;margin-top:2px" id="dewa-note">Electricity + water + housing fee (5% annual rental value) · district cooling included</div>
+    <input type="range" id="dewa" min="0" max="4000" step="25" value="1275">
+    <div class="rlabels"><span>AED 0</span><span>AED 4,000</span></div>
+    <div class="fnote" id="dewa-note">Electricity + water + housing fee (5% rental value) · district cooling included</div>
   </div>
-
-  <div class="slider-field">
-    <div class="slider-top">
-      <span class="slider-label">Service charge</span>
-      <input class="slider-input" id="t-sc" value="23">
+  <div class="field">
+    <div class="ftop"><span class="flabel">Service charge</span><input class="finput" id="t-sc" value="23"></div>
+    <input type="range" id="sc" min="0" max="35" step="1" value="23">
+    <div class="rlabels"><span id="sc-note">AED/sqft/yr · monthly average</span><span></span></div>
+  </div>
+  <div class="field">
+    <div class="ftop"><span class="flabel">Internet</span><input class="finput" id="t-internet" value="360"></div>
+    <input type="range" id="internet" min="0" max="600" step="10" value="360">
+    <div class="rlabels"><span>AED 0</span><span>AED 600</span></div>
+  </div>
+  <div class="field">
+    <div class="ftop"><span class="flabel">Gas</span><input class="finput" id="t-gas" value="55"></div>
+    <input type="range" id="gas" min="0" max="300" step="5" value="55">
+    <div class="rlabels"><span>AED 0</span><span>AED 300</span></div>
+    <div class="fnote">Lootah BCGas · billed quarterly · monthly average</div>
+  </div>
+  <div class="totals">
+    <div class="t-sec">
+      <div class="t-lbl">Monthly all-in</div>
+      <div class="trow"><span class="t-name">Mortgage 3.99% + living</span><span class="t-val cg" id="grand-3">—</span></div>
+      <div class="trow"><span class="t-name">Mortgage 4.19% + living</span><span class="t-val cb" id="grand-5">—</span></div>
+      <div class="trow"><span class="t-name">Variable rate + living</span><span class="t-val ca" id="grand-var">—</span></div>
     </div>
-    <input type="range" id="sc" min="13" max="35" step="0.5" value="23">
-    <div class="slider-minmax"><span id="sc-note">AED/sqft/yr · shown as monthly average</span><span></span></div>
-  </div>
-
-  <div class="slider-field">
-    <div class="slider-top">
-      <span class="slider-label">Internet</span>
-      <input class="slider-input" id="t-internet" value="360">
+    <div class="div"></div>
+    <div class="t-sec">
+      <div class="t-lbl">Annual all-in</div>
+      <div class="trow"><span class="t-name">Mortgage 3.99% + living</span><span class="t-val cg" id="grand-3-yr">—</span></div>
+      <div class="trow"><span class="t-name">Mortgage 4.19% + living</span><span class="t-val cb" id="grand-5-yr">—</span></div>
+      <div class="trow"><span class="t-name">Variable rate + living</span><span class="t-val ca" id="grand-var-yr">—</span></div>
     </div>
-    <input type="range" id="internet" min="100" max="600" step="10" value="360">
-    <div class="slider-minmax"><span>AED 100</span><span>AED 600</span></div>
-  </div>
-
-  <div class="slider-field">
-    <div class="slider-top">
-      <span class="slider-label">Gas</span>
-      <input class="slider-input" id="t-gas" value="52.5">
-    </div>
-    <input type="range" id="gas" min="20" max="300" step="2.5" value="52.5">
-    <div class="slider-minmax"><span>AED 20</span><span>AED 300</span></div>
-    <div style="font-size:11px;color:#aaa;margin-top:2px">Billed quarterly · shown as monthly average</div>
-  </div>
-
-  <div class="total-box">
-    <div class="total-box-label">Total monthly all-in</div>
-    <div class="trow"><span class="trow-name">Mortgage 3.99% + living costs</span><span class="trow-val green" id="grand-3">—</span></div>
-    <div class="trow"><span class="trow-name">Mortgage 4.19% + living costs</span><span class="trow-val blue" id="grand-5">—</span></div>
-    <div class="trow"><span class="trow-name">Variable rate + living costs</span><span class="trow-val amber" id="grand-var">—</span></div>
   </div>
 </div>
 
 <script>
 const vals={price:2900000,cash:800000,approved:2604000,down:20,years:25,eibor:3.45,sqft:1500};
-const DEWA_PER_SQFT=0.85, GAS_PER_SQFT=0.05, SQFT_BASE=1500;
-let dewaEdited=false, gasEdited=false;
+const DEWA_PER_SQFT=0.85;
+let dewaEdited=false,downManual=false;
 
-function getNum(id){return parseFloat(document.getElementById(id).value.replace(/[^0-9.]/g,''))||0;}
+function getNum(id){const v=parseFloat(document.getElementById(id).value.replace(/[^0-9.]/g,''));return isNaN(v)?0:v;}
 function clamp(v,mn,mx){return Math.min(mx,Math.max(mn,v));}
-function fmtAED(n){return Math.round(n).toLocaleString('en-US');}
+function fmtN(n){return Math.round(n).toLocaleString('en-US');}
+function aed(n){return 'AED '+fmtN(n);}
+function aed2(n){return 'AED '+n.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});}
+function mpay(loan,rate,months){
+  const r=rate/100/12,n=months;
+  if(r===0||n===0)return loan/(n||1);
+  return loan*r*Math.pow(1+r,n)/(Math.pow(1+r,n)-1);
+}
 function fmtDisplay(key,v){
   if(['price','cash','approved','sqft'].includes(key)) return v.toLocaleString('en-US');
   if(key==='down'||key==='years') return String(Math.round(v));
   if(key==='eibor') return v.toFixed(2);
   return String(v);
 }
-
-// Main sliders (top sections)
+function setTag(id,manual){
+  const el=document.getElementById(id);
+  el.textContent=manual?'manual':'auto';
+  el.className='tag '+(manual?'tag-manual':'tag-auto');
+}
+function autoDown(){
+  const fees=vals.price*0.06+3150;
+  const pct=clamp(Math.floor((vals.cash-fees)/vals.price*100),20,80);
+  vals.down=pct;
+  document.getElementById('down').value=pct;
+  document.getElementById('t-down').value=String(pct);
+  downManual=false;setTag('down-tag',false);
+}
+function autoUpdateDewa(sqft){
+  if(dewaEdited)return;
+  const v=Math.round(DEWA_PER_SQFT*sqft);
+  document.getElementById('dewa').value=v;
+  document.getElementById('t-dewa').value=fmtN(v);
+}
 function fromSlider(key){
   const v=parseFloat(document.getElementById(key).value);
   vals[key]=v;
   const tin=document.getElementById('t-'+key);
-  if(document.activeElement!==tin) tin.value=fmtDisplay(key,v);
-  if(key==='sqft') autoUpdateLiving(v);
+  if(document.activeElement!==tin)tin.value=fmtDisplay(key,v);
+  if(key==='sqft')autoUpdateDewa(v);
+  if(key==='cash')autoDown();
+  else if(key==='price'&&!downManual)autoDown();
   calc();
 }
 function fromText(key){
-  let raw=document.getElementById('t-'+key).value.replace(/[^0-9.]/g,'');
-  let v=parseFloat(raw)||0;
-  const slider=document.getElementById(key);
-  v=clamp(v,parseFloat(slider.min),parseFloat(slider.max));
-  vals[key]=v; slider.value=v;
-  if(key==='sqft') autoUpdateLiving(v);
+  let v=parseFloat(document.getElementById('t-'+key).value.replace(/[^0-9.]/g,''))||0;
+  const s=document.getElementById(key);
+  v=clamp(v,parseFloat(s.min),parseFloat(s.max));
+  vals[key]=v;s.value=v;
+  if(key==='sqft')autoUpdateDewa(v);
+  if(key==='cash')autoDown();
+  else if(key==='price'&&!downManual)autoDown();
   calc();
 }
 function blurText(key){document.getElementById('t-'+key).value=fmtDisplay(key,vals[key]);}
 
 ['price','cash','approved','down','years','eibor','sqft'].forEach(key=>{
-  document.getElementById(key).addEventListener('input',()=>fromSlider(key));
+  document.getElementById(key).addEventListener('input',()=>{
+    if(key==='down'){downManual=true;setTag('down-tag',true);}
+    fromSlider(key);
+  });
   const tin=document.getElementById('t-'+key);
-  tin.addEventListener('input',()=>fromText(key));
+  tin.addEventListener('input',()=>{
+    if(key==='down'){downManual=true;setTag('down-tag',true);}
+    fromText(key);
+  });
   tin.addEventListener('blur',()=>blurText(key));
   tin.addEventListener('keydown',e=>{if(e.key==='Enter'){blurText(key);tin.blur();}});
 });
 
-// Living sliders
 function fromLivingSlider(key){
   const v=parseFloat(document.getElementById(key).value);
   const tin=document.getElementById('t-'+key);
-  if(document.activeElement!==tin) tin.value=fmtAED(v);
-  if(key==='dewa') dewaEdited=true;
-  if(key==='gas') gasEdited=true;
+  if(document.activeElement!==tin)tin.value=fmtN(v);
+  if(key==='dewa'){dewaEdited=true;setTag('dewa-tag',true);}
   calcLiving();
 }
 function fromLivingText(key){
-  let v=parseFloat(document.getElementById('t-'+key).value.replace(/[^0-9.]/g,''))||0;
-  const slider=document.getElementById(key);
-  v=clamp(v,parseFloat(slider.min),parseFloat(slider.max));
-  slider.value=v;
-  if(key==='dewa') dewaEdited=true;
-  if(key==='gas') gasEdited=true;
+  let v=parseFloat(document.getElementById('t-'+key).value.replace(/[^0-9.]/g,''));
+  if(isNaN(v))v=0;
+  const s=document.getElementById(key);
+  v=clamp(v,parseFloat(s.min),parseFloat(s.max));
+  s.value=v;
+  if(key==='dewa'){dewaEdited=true;setTag('dewa-tag',true);}
   calcLiving();
 }
 function blurLiving(key){
   const v=parseFloat(document.getElementById(key).value);
-  document.getElementById('t-'+key).value=fmtAED(v);
+  document.getElementById('t-'+key).value=isNaN(v)?'0':fmtN(v);
 }
-
-// sc uses AED/sqft/yr not AED
-function fromScSlider(){
-  const v=parseFloat(document.getElementById('sc').value);
-  const tin=document.getElementById('t-sc');
-  if(document.activeElement!==tin) tin.value=v.toFixed(1);
-  calcLiving();
-}
-function fromScText(){
-  let v=parseFloat(document.getElementById('t-sc').value.replace(/[^0-9.]/g,''))||23;
-  v=clamp(v,13,35);
-  document.getElementById('sc').value=v;
-  calcLiving();
-}
-
 ['dewa','gas','internet'].forEach(key=>{
   document.getElementById(key).addEventListener('input',()=>fromLivingSlider(key));
   const tin=document.getElementById('t-'+key);
@@ -289,101 +310,94 @@ function fromScText(){
   tin.addEventListener('blur',()=>blurLiving(key));
   tin.addEventListener('keydown',e=>{if(e.key==='Enter'){blurLiving(key);tin.blur();}});
 });
-document.getElementById('sc').addEventListener('input',fromScSlider);
-document.getElementById('t-sc').addEventListener('input',fromScText);
-document.getElementById('t-sc').addEventListener('blur',()=>{
-  document.getElementById('t-sc').value=parseFloat(document.getElementById('sc').value).toFixed(1);
+
+function scVal(){return isNaN(parseFloat(document.getElementById('sc').value))?23:parseFloat(document.getElementById('sc').value);}
+document.getElementById('sc').addEventListener('input',()=>{
+  if(document.activeElement!==document.getElementById('t-sc'))document.getElementById('t-sc').value=Math.round(scVal());
+  calcLiving();
 });
+document.getElementById('t-sc').addEventListener('input',()=>{
+  let v=parseFloat(document.getElementById('t-sc').value.replace(/[^0-9.]/g,''));
+  if(isNaN(v))v=0;
+  document.getElementById('sc').value=clamp(v,0,35);
+  calcLiving();
+});
+document.getElementById('t-sc').addEventListener('blur',()=>{document.getElementById('t-sc').value=Math.round(scVal());});
 
-function autoUpdateLiving(sqft){
-  dewaEdited=false;
-  const vd=Math.round(DEWA_PER_SQFT*sqft);
-  document.getElementById('dewa').value=vd;
-  document.getElementById('t-dewa').value=fmtAED(vd);
-}
-
-function aed(n){return 'AED '+Math.round(n).toLocaleString('en-US');}
-function aed2(n){return 'AED '+n.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});}
-function mpay(loan,rate,months){
-  const r=rate/100/12,n=months;
-  if(r===0)return loan/n;
-  return loan*r*Math.pow(1+r,n)/(Math.pow(1+r,n)-1);
-}
+document.getElementById('sqft').addEventListener('input',()=>{dewaEdited=false;setTag('dewa-tag',false);});
+document.getElementById('t-sqft').addEventListener('input',()=>{dewaEdited=false;setTag('dewa-tag',false);});
 
 function calcLiving(){
   const sqft=vals.sqft||1500;
-  const scRate=parseFloat(document.getElementById('sc').value)||23;
-  const scMonthly=Math.round(sqft*scRate/12);
-  document.getElementById('sc-note').textContent=
-    aed(scMonthly)+'/mo  ·  '+sqft.toLocaleString('en-US')+' sqft × AED '+scRate.toFixed(1)+' ÷ 12  ·  shown as monthly average';
-  document.getElementById('dewa-note').textContent=
-    'Electricity + water + housing fee (5% annual rental value) · district cooling included'+(dewaEdited?' · manually set':' · auto');
+  const rate=scVal();
+  const scMo=Math.round(sqft*rate/12);
+  document.getElementById('sc-note').textContent=aed(scMo)+'/mo · '+sqft.toLocaleString('en-US')+' sqft × '+rate+' ÷ 12';
+  document.getElementById('dewa-note').textContent='Electricity + water + housing fee (5% rental value) · district cooling included'+(dewaEdited?' · manual':'');
   const dewa=parseFloat(document.getElementById('dewa').value)||0;
   const gas=parseFloat(document.getElementById('gas').value)||0;
   const internet=parseFloat(document.getElementById('internet').value)||0;
-  const totalLiving=scMonthly+dewa+gas+internet;
-  const loanAmt=vals.price-vals.price*vals.down/100;
+  const living=scMo+dewa+gas+internet;
+  const loan=vals.price-vals.price*vals.down/100;
   const n=vals.years*12;
-  const ins=loanAmt*0.000112+vals.price*0.0005/12;
-  document.getElementById('grand-3').textContent=aed(mpay(loanAmt,3.99,n)+ins+totalLiving);
-  document.getElementById('grand-5').textContent=aed(mpay(loanAmt,4.19,n)+ins+totalLiving);
-  document.getElementById('grand-var').textContent=aed(mpay(loanAmt,vals.eibor+1.5,n)+ins+totalLiving);
+  const ins=loan*0.000112+vals.price*0.0005/12;
+  const t3=mpay(loan,3.99,n)+ins+living;
+  const t5=mpay(loan,4.19,n)+ins+living;
+  const tv=mpay(loan,vals.eibor+1.5,n)+ins+living;
+  document.getElementById('grand-3').textContent=aed(t3);
+  document.getElementById('grand-5').textContent=aed(t5);
+  document.getElementById('grand-var').textContent=aed(tv);
+  document.getElementById('grand-3-yr').textContent=aed(t3*12);
+  document.getElementById('grand-5-yr').textContent=aed(t5*12);
+  document.getElementById('grand-var-yr').textContent=aed(tv*12);
 }
 
 function calc(){
-  const price=vals.price,cash=vals.cash,approved=vals.approved;
-  const downPct=vals.down,years=vals.years,eibor=vals.eibor;
-  const varRate=eibor+1.5,n=years*12;
-  const downAmt=price*downPct/100,loanAmt=price-downAmt;
-  const dldAmt=price*0.04,agencyAmt=price*0.02;
-  const propIns=price*0.0005,lifeIns=loanAmt*0.000112,VAL=3150;
-  const insMonthly=lifeIns+propIns/12;
-  const pay3=mpay(loanAmt,3.99,n),pay5=mpay(loanAmt,4.19,n),payVar=mpay(loanAmt,varRate,n);
-  const total3=pay3+insMonthly,total5=pay5+insMonthly,totalVar=payVar+insMonthly;
-
-  document.getElementById('pay-3').textContent=aed2(pay3);
-  document.getElementById('pay-5').textContent=aed2(pay5);
-  document.getElementById('pay-var').textContent=aed2(payVar);
-  document.getElementById('var-sub').textContent=varRate.toFixed(2)+'% (EIBOR '+eibor.toFixed(2)+'% + 1.50%)';
-
-  const totalUpfront=downAmt+dldAmt+agencyAmt+VAL;
-  const remainder=cash-totalUpfront;
-  const pct=cash>0?Math.min(100,Math.round(totalUpfront/cash*100)):100;
-  const canAfford=loanAmt<=approved,enoughCash=cash>=totalUpfront;
-  const insNote='(incl. AED '+Math.round(insMonthly).toLocaleString('en-US')+'/mo ins.)';
-
+  const{price,cash,approved,down:dp,years,eibor}=vals;
+  const vr=eibor+1.5,n=years*12;
+  const da=price*dp/100,loan=price-da;
+  const dld=price*0.04,ag=price*0.02,VAL=3150;
+  const ins=loan*0.000112+price*0.0005/12;
+  const p3=mpay(loan,3.99,n),p5=mpay(loan,4.19,n),pv=mpay(loan,vr,n);
+  document.getElementById('pay-3').textContent=aed2(p3);
+  document.getElementById('pay-5').textContent=aed2(p5);
+  document.getElementById('pay-var').textContent=aed2(pv);
+  document.getElementById('var-sub').textContent=vr.toFixed(2)+'%';
+  const up=da+dld+ag+VAL,rem=cash-up;
+  const pct=cash>0?Math.min(100,Math.round(up/cash*100)):100;
+  const ok=loan<=approved,enough=cash>=up;
+  const insNote='incl. '+aed(ins)+'/mo insurance';
   document.getElementById('metrics').innerHTML=`
-    <div class="metric"><div class="ml">Down payment</div><div class="mv">${aed(downAmt)}</div><div class="ms">${downPct}% cash</div></div>
-    <div class="metric"><div class="ml">Mortgage loan</div><div class="mv ${canAfford?'green':'red'}">${aed(loanAmt)}</div><div class="ms">${canAfford?'within FAB limit':'exceeds limit'}</div></div>
-    <div class="metric"><div class="ml">Monthly 3.99%</div><div class="mv green">${aed2(total3)}</div><div class="ms">${insNote}</div></div>
-    <div class="metric"><div class="ml">Monthly 4.19%</div><div class="mv blue">${aed2(total5)}</div><div class="ms">${insNote}</div></div>
-    <div class="metric"><div class="ml">Monthly variable</div><div class="mv amber">${aed2(totalVar)}</div><div class="ms">${insNote}</div></div>
-    <div class="metric"><div class="ml">Cash remaining</div><div class="mv ${remainder>=0?'green':'red'}">${aed(remainder)}</div><div class="ms">after closing</div></div>
+    <div class="metric"><div class="m-lbl">Down payment</div><div class="m-val">${aed(da)}</div><div class="m-sub">${dp}%</div></div>
+    <div class="metric"><div class="m-lbl">Mortgage loan</div><div class="m-val ${ok?'cg':'cr'}">${aed(loan)}</div><div class="m-sub">${ok?'within limit':'exceeds limit'}</div></div>
+    <div class="metric"><div class="m-lbl">Monthly 3.99%</div><div class="m-val cg">${aed2(p3+ins)}</div><div class="m-sub">${insNote}</div></div>
+    <div class="metric"><div class="m-lbl">Monthly 4.19%</div><div class="m-val cb">${aed2(p5+ins)}</div><div class="m-sub">${insNote}</div></div>
+    <div class="metric"><div class="m-lbl">Monthly variable</div><div class="m-val ca">${aed2(pv+ins)}</div><div class="m-sub">${insNote}</div></div>
+    <div class="metric"><div class="m-lbl">Cash remaining</div><div class="m-val ${rem>=0?'cg':'cr'}">${aed(rem)}</div><div class="m-sub">after closing</div></div>
   `;
-
-  const barColor=!enoughCash?'#E24B4A':pct>85?'#EF9F27':'#639922';
-  document.getElementById('cashbar').style.cssText=`width:${pct}%;background:${barColor}`;
+  const bc=!enough?'#D85A30':pct>85?'#BA7517':'#2D6A2D';
+  document.getElementById('cashbar').style.cssText=`width:${pct}%;background:${bc}`;
   document.getElementById('barlabel').textContent=pct+'% of cash used at closing';
-
   document.getElementById('breakdown').innerHTML=`
-    <tr><td style="color:#888">Down payment (${downPct}%)</td><td>${aed(downAmt)}</td></tr>
-    <tr><td style="color:#888">DLD fee (4%)</td><td>${aed(dldAmt)}</td></tr>
-    <tr><td style="color:#888">Agency fee (2%)</td><td>${aed(agencyAmt)}</td></tr>
-    <tr><td style="color:#888">FAB valuation fee</td><td>${aed(VAL)}</td></tr>
-    <tr><td>Total at closing</td><td style="color:${enoughCash?'#3B6D11':'#D85A30'}">${aed(totalUpfront)}</td></tr>
+    <div class="brow"><span class="brow-lbl">Down payment (${dp}%)</span><span class="brow-val">${aed(da)}</span></div>
+    <div class="brow"><span class="brow-lbl">DLD fee (4%)</span><span class="brow-val">${aed(dld)}</span></div>
+    <div class="brow"><span class="brow-lbl">Agency fee (2%)</span><span class="brow-val">${aed(ag)}</span></div>
+    <div class="brow"><span class="brow-lbl">FAB valuation</span><span class="brow-val">${aed(VAL)}</span></div>
+    <div class="brow"><span class="brow-lbl">Total at closing</span><span class="brow-val" style="color:${enough?'var(--green)':'var(--red)'}">${aed(up)}</span></div>
   `;
-
   let vc,vt,vb;
-  if(!canAfford){vc='bad';vt=`Loan ${aed(loanAmt)} exceeds FAB limit of ${aed(approved)}`;vb=`Max property price at ${downPct}% down: ${aed(Math.round(approved/(1-downPct/100)))}. Or increase your down payment.`;}
-  else if(!enoughCash){vc='bad';vt=`Short ${aed(totalUpfront-cash)} in cash`;vb=`You need ${aed(totalUpfront)} at closing but have ${aed(cash)}.`;}
-  else if(pct>85){vc='warn';vt=`Low cash buffer — ${aed(remainder)} left after closing`;vb=`Consider keeping more as a safety net before committing.`;}
-  else{vc='ok';vt=`All good — ${aed(remainder)} remaining after closing`;vb=`Loan ${aed(loanAmt)} within FAB limit. FAB approval valid until 13 Jun 2026.`;}
-  document.getElementById('verdict').innerHTML=`<div class="verdict ${vc}"><div class="vt">${vt}</div><div class="vb">${vb}</div></div>`;
-
+  if(!ok){vc='bad';vt='Loan exceeds FAB limit';vb=`${aed(loan)} vs approved ${aed(approved)}. Max price at ${dp}% down: ${aed(Math.round(approved/(1-dp/100)))}.`;}
+  else if(!enough){vc='bad';vt=`Short ${aed(up-cash)} in cash`;vb=`Need ${aed(up)} at closing, have ${aed(cash)}.`;}
+  else if(pct>85){vc='warn';vt='Low cash buffer';vb=`${aed(rem)} remaining after closing.`;}
+  else{vc='ok';vt=`All good — ${aed(rem)} remaining`;vb='Loan within FAB limit. Approval valid until 13 Jun 2026.';}
+  document.getElementById('verdict').innerHTML=`<div class="verdict ${vc}"><div class="v-title">${vt}</div><div class="v-body">${vb}</div></div>`;
   calcLiving();
 }
 
-calc();
+document.getElementById('t-dewa').value=fmtN(1275);document.getElementById('dewa').value=1275;
+document.getElementById('t-sc').value='23';document.getElementById('sc').value=23;
+document.getElementById('t-internet').value=fmtN(360);document.getElementById('internet').value=360;
+document.getElementById('t-gas').value=fmtN(55);document.getElementById('gas').value=55;
+autoDown();calc();
 </script>
 </body>
 </html>
