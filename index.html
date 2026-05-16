@@ -29,9 +29,9 @@ html{-webkit-text-size-adjust:100%}
 body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text',system-ui,sans-serif;background:var(--bg);color:var(--text);padding:20px 16px 60px;max-width:540px;margin:0 auto;transition:background .3s,color .3s}
 
 /* Splash */
-#splash{position:fixed;inset:0;background:#1C1C1E;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:999;transition:opacity .5s ease}
+#splash{position:fixed;inset:0;background:#1C1C1E;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:999;transition:opacity .35s ease}
 #splash.hide{opacity:0;pointer-events:none}
-.splash-icon{width:80px;height:80px;margin-bottom:20px;animation:splashPop .5s cubic-bezier(.34,1.56,.64,1) forwards}
+.splash-icon{width:80px;height:80px;margin-bottom:20px;animation:splashPop .4s cubic-bezier(.34,1.56,.64,1) forwards}
 .splash-title{font-size:24px;font-weight:700;color:#fff;letter-spacing:-0.5px}
 .splash-sub{font-size:14px;color:#666;margin-top:6px}
 @keyframes splashPop{from{transform:scale(.6);opacity:0}to{transform:scale(1);opacity:1}}
@@ -48,19 +48,18 @@ body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text',system-ui,sans-s
 .curr-btn.on{background:var(--text);color:var(--bg)}
 
 /* Theme toggle */
-.theme-btn{width:36px;height:36px;border-radius:10px;border:1px solid var(--border);background:var(--card);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:17px;box-shadow:var(--shadow)}
+.theme-btn{min-width:52px;height:36px;border-radius:10px;border:1px solid var(--border);background:var(--card);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:3px;font-size:13px;font-weight:500;color:var(--muted);padding:0 10px;box-shadow:var(--shadow)}
 
 /* Cards */
 .card{background:var(--card);border-radius:20px;border:1px solid var(--border);padding:20px;margin-bottom:10px;box-shadow:var(--shadow);transition:background .3s,border .3s}
-.card-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;cursor:pointer;user-select:none}
-.card-head.open{margin-bottom:20px}
-.card-head.closed{margin-bottom:0}
+.card-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:0;cursor:pointer;user-select:none}
 .ctitle{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--muted)}
-.chevron{font-size:12px;color:var(--muted);transition:transform .25s}
+.chevron{font-size:12px;color:var(--muted);transition:transform .35s cubic-bezier(.4,0,.2,1)}
 .chevron.open{transform:rotate(180deg)}
-.card-body{overflow:hidden;transition:max-height .35s cubic-bezier(.4,0,.2,1),opacity .25s}
-.card-body.closed{max-height:0!important;opacity:0}
-.card-body.open{opacity:1}
+.card-body-wrap{display:grid;grid-template-rows:0fr;transition:grid-template-rows .4s cubic-bezier(.4,0,.2,1)}
+.card-body-wrap.open{grid-template-rows:1fr}
+.card-body-inner{overflow:hidden;padding-top:0;transition:padding-top .4s cubic-bezier(.4,0,.2,1)}
+.card-body-wrap.open .card-body-inner{padding-top:20px}
 
 /* Banner */
 .banner{background:var(--blue-bg);border:1px solid var(--blue-bd);border-radius:12px;padding:12px 14px;margin-bottom:20px;font-size:12px;color:var(--blue);line-height:1.75}
@@ -69,9 +68,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text',system-ui,sans-s
 /* Fields */
 .field{margin-bottom:20px}
 .field:last-child{margin-bottom:0}
-.ftop{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;gap:10px}
-.flabel{font-size:14px;color:var(--text);flex-shrink:0;display:flex;align-items:center;gap:7px}
-.finput{font-size:15px;font-weight:500;color:var(--text);border:1px solid var(--border);border-radius:10px;padding:7px 13px;width:148px;text-align:right;background:var(--bg);transition:border .15s,background .15s,color .15s}
+.ftop{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;gap:12px}
+.flabel{font-size:14px;color:var(--text);flex:1;min-width:0;display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.finput{font-size:15px;font-weight:500;color:var(--text);border:1px solid var(--border);border-radius:10px;padding:7px 13px;width:120px;flex-shrink:0;text-align:right;background:var(--bg);transition:border .15s,background .15s,color .15s}
 .finput:focus{outline:none;border-color:var(--green);background:var(--card)}
 input[type=range]{width:100%;height:3px;-webkit-appearance:none;appearance:none;background:var(--track);border-radius:2px;outline:none;cursor:pointer;margin-bottom:6px;display:block;transition:background .3s}
 input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:var(--text);cursor:pointer;border:3px solid var(--card);box-shadow:0 1px 5px rgba(0,0,0,0.22);transition:transform .1s}
@@ -175,11 +174,11 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
 
 <!-- PROPERTY -->
 <div class="card" id="card-property">
-  <div class="card-head open" onclick="toggleCard('property')">
+  <div class="card-head" onclick="toggleCard('property')">
     <span class="ctitle">Property</span>
     <span class="chevron open" id="chev-property">▼</span>
   </div>
-  <div class="card-body open" id="body-property">
+  <div class="card-body-wrap open" id="body-property"><div class="card-body-inner">
     <div class="field">
       <div class="ftop"><span class="flabel">Price</span><input class="finput" id="t-price" value="2,900,000"></div>
       <input type="range" id="price" min="1000000" max="6000000" step="50000" value="2900000">
@@ -195,27 +194,23 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
       <input type="range" id="cash" min="200000" max="3000000" step="50000" value="800000">
       <div class="rlabels"><span id="rl-cash-min">AED 200K</span><span id="rl-cash-max">AED 3M</span></div>
     </div>
-    <div class="srow"><span class="srow-label">DLD fee</span><span class="srow-val">4%</span></div>
-    <div class="srow"><span class="srow-label">Agency fee</span><span class="srow-val">2%</span></div>
+    <div class="srow"><span class="srow-label">DLD fee</span><input class="finput" id="t-dld" value="4%" style="width:72px" oninput="vals.dld=parseFloat(this.value.replace(/[^0-9.]/g,''))||4;calc();" onblur="this.value=vals.dld+'%'" onfocus="this.value=vals.dld"></div>
+    <div class="srow"><span class="srow-label">Agency fee</span><input class="finput" id="t-agency" value="2%" style="width:72px" oninput="vals.agency=parseFloat(this.value.replace(/[^0-9.]/g,''))||2;calc();" onblur="this.value=vals.agency+'%'" onfocus="this.value=vals.agency"></div>
     <div class="srow"><span class="srow-label">FAB valuation fee</span><span class="srow-val" id="sv-val">AED 3,150</span></div>
+  </div>
   </div>
 </div>
 
 <!-- MORTGAGE -->
 <div class="card" id="card-mortgage">
-  <div class="card-head open" onclick="toggleCard('mortgage')">
-    <span class="ctitle">FAB Mortgage</span>
+  <div class="card-head" onclick="toggleCard('mortgage')">
+    <span class="ctitle">Mortgage</span>
     <span class="chevron open" id="chev-mortgage">▼</span>
   </div>
-  <div class="card-body open" id="body-mortgage">
-    <div class="banner">
-      Approved: <strong id="b-approved">AED 2,604,000</strong> · Valid until <strong>13 Jun 2026</strong><br>
-      3.99% fixed 36 mo &nbsp;·&nbsp; 4.19% fixed 60 mo &nbsp;·&nbsp; then <strong>EIBOR + 1.50%</strong><br>
-      FAB benchmark: <strong>AED 15,154.35/mo</strong>
-    </div>
+  <div class="card-body-wrap open" id="body-mortgage"><div class="card-body-inner">
     <div class="field">
-      <div class="ftop"><span class="flabel">FAB approved</span><input class="finput" id="t-approved" value="2,604,000"></div>
-      <input type="range" id="approved" min="500000" max="5000000" step="50000" value="2604000">
+      <div class="ftop"><span class="flabel">Approved amount</span><input class="finput" id="t-approved" value="2,600,000"></div>
+      <input type="range" id="approved" min="500000" max="5000000" step="50000" value="2600000">
       <div class="rlabels"><span id="rl-appr-min">AED 500K</span><span id="rl-appr-max">AED 5M</span></div>
     </div>
     <div class="field">
@@ -231,25 +226,44 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
       <input type="range" id="years" min="1" max="25" step="1" value="25">
       <div class="rlabels"><span>1</span><span>25</span></div>
     </div>
+
+    <!-- Fixed rate selector -->
+    <div class="field">
+      <div class="ftop"><span class="flabel">Fixed rate (%)</span><input class="finput" id="t-fixrate" value="4.19"></div>
+      <div style="display:flex;gap:8px;margin-top:10px">
+        <button class="curr-btn" id="btn-rate3" onclick="setFixRate(3.99,3,'btn-rate3')" style="flex:1;border-radius:10px;border:1px solid var(--border);padding:8px;font-size:12px;cursor:pointer">3.99% · 3yr</button>
+        <button class="curr-btn on" id="btn-rate5" onclick="setFixRate(4.19,5,'btn-rate5')" style="flex:1;border-radius:10px;border:1px solid var(--border);padding:8px;font-size:12px;cursor:pointer">4.19% · 5yr</button>
+      </div>
+    </div>
+
+    <div class="field">
+      <div class="ftop">
+        <span class="flabel">Fixed period (years) <span id="fixperiod-tag" class="tag tag-auto">auto</span></span>
+        <input class="finput" id="t-fixperiod" value="5">
+      </div>
+      <input type="range" id="fixperiod" min="1" max="10" step="1" value="5">
+      <div class="rlabels"><span>1 year</span><span>10 years</span></div>
+    </div>
+
     <div class="field">
       <div class="ftop"><span class="flabel">Expected EIBOR (%)</span><input class="finput" id="t-eibor" value="3.45"></div>
       <input type="range" id="eibor" min="1" max="6" step="0.05" value="3.45">
       <div class="rlabels"><span>1% optimistic</span><span>6% stress</span></div>
     </div>
   </div>
+  </div>
 </div>
 
 <!-- RESULTS -->
 <div class="card" id="card-results">
-  <div class="card-head open" onclick="toggleCard('results')">
+  <div class="card-head" onclick="toggleCard('results')">
     <span class="ctitle">Monthly mortgage</span>
     <span class="chevron open" id="chev-results">▼</span>
   </div>
-  <div class="card-body open" id="body-results">
-    <div class="rate-grid">
-      <div class="rc g"><div class="rc-lbl">3.99%<br>months 1–36</div><div class="rc-val" id="pay-3">—</div><div class="rc-sub">fixed</div></div>
-      <div class="rc b"><div class="rc-lbl">4.19%<br>months 1–60</div><div class="rc-val" id="pay-5">—</div><div class="rc-sub">fixed</div></div>
-      <div class="rc a"><div class="rc-lbl">Variable<br>37/61+</div><div class="rc-val" id="pay-var">—</div><div class="rc-sub" id="var-sub">EIBOR+1.5%</div></div>
+  <div class="card-body-wrap open" id="body-results"><div class="card-body-inner">
+    <div class="rate-grid" style="grid-template-columns:1fr 1fr">
+      <div class="rc g"><div class="rc-lbl">Fixed rate<br><span id="rc-fixrate-lbl">4.19% · 5yr</span></div><div class="rc-val" id="pay-3">—</div><div class="rc-sub">principal + interest</div></div>
+      <div class="rc a"><div class="rc-lbl">Variable<br>after fixed period</div><div class="rc-val" id="pay-var">—</div><div class="rc-sub" id="var-sub">EIBOR+1.5%</div></div>
     </div>
     <div class="sec-lbl">Summary</div>
     <div class="metrics" id="metrics"></div>
@@ -258,16 +272,21 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
     <div class="sec-lbl">Upfront costs</div>
     <div id="breakdown"></div>
     <div id="verdict"></div>
+
+    <div style="height:1px;background:var(--border);margin:16px 0"></div>
+    <div class="sec-lbl">Total cost over loan term</div>
+    <div id="total-cost"></div>
+  </div>
   </div>
 </div>
 
 <!-- LIVING COSTS -->
 <div class="card" id="card-living">
-  <div class="card-head open" onclick="toggleCard('living')">
+  <div class="card-head" onclick="toggleCard('living')">
     <span class="ctitle">Monthly living costs</span>
     <span class="chevron open" id="chev-living">▼</span>
   </div>
-  <div class="card-body open" id="body-living">
+  <div class="card-body-wrap open" id="body-living"><div class="card-body-inner">
     <div class="field">
       <div class="ftop">
         <span class="flabel">DEWA <span id="dewa-tag" class="tag tag-auto">auto</span></span>
@@ -295,22 +314,69 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
     </div>
     <div class="totals">
       <div class="t-lbl">Monthly all-in</div>
-      <div class="trow"><span class="t-name">Mortgage 3.99% + living</span><span class="t-val cg" id="grand-3">—</span></div>
-      <div class="trow"><span class="t-name">Mortgage 4.19% + living</span><span class="t-val cb" id="grand-5">—</span></div>
+      <div class="trow"><span class="t-name">Fixed rate + living</span><span class="t-val cg" id="grand-3">—</span></div>
       <div class="trow"><span class="t-name">Variable rate + living</span><span class="t-val ca" id="grand-var">—</span></div>
       <div class="div"></div>
       <div class="t-lbl">Annual all-in</div>
-      <div class="trow"><span class="t-name">Mortgage 3.99% + living</span><span class="t-val cg" id="grand-3-yr">—</span></div>
-      <div class="trow"><span class="t-name">Mortgage 4.19% + living</span><span class="t-val cb" id="grand-5-yr">—</span></div>
+      <div class="trow"><span class="t-name">Fixed rate + living</span><span class="t-val cg" id="grand-3-yr">—</span></div>
       <div class="trow"><span class="t-name">Variable rate + living</span><span class="t-val ca" id="grand-var-yr">—</span></div>
     </div>
-    <button class="share-btn" onclick="share()">
-      <span>↑</span> Share summary
-    </button>
+  </div>
   </div>
 </div>
 
 <div class="toast" id="toast">Copied to clipboard ✓</div>
+
+<!-- PREPAYMENT CALCULATOR -->
+<div class="card" id="card-prepay" style="margin-top:0">
+  <div class="card-head" onclick="toggleCard('prepay')">
+    <span class="ctitle">Early repayment</span>
+    <span class="chevron" id="chev-prepay">▼</span>
+  </div>
+  <div class="card-body-wrap" id="body-prepay"><div class="card-body-inner">
+
+    <!-- Month of prepayment -->
+    <div class="field">
+      <div class="ftop"><span class="flabel">Prepayment at month</span><input class="finput" id="t-pp-month" value="12"></div>
+      <input type="range" id="pp-month" min="1" max="300" step="1" value="12">
+      <div class="rlabels"><span>Month 1</span><span>Month 300</span></div>
+      <div class="fnote" id="pp-month-note"></div>
+    </div>
+
+    <!-- Prepayment amount -->
+    <div class="field">
+      <div class="ftop"><span class="flabel">Prepayment amount</span><input class="finput" id="t-pp-amt" value="200,000"></div>
+      <input type="range" id="pp-amt" min="0" max="2000000" step="10000" value="200000">
+      <div class="rlabels"><span id="pp-amt-min">AED 0</span><span id="pp-amt-max">AED 2M</span></div>
+    </div>
+
+    <!-- Mode toggle -->
+    <div style="display:flex;gap:8px;margin-bottom:20px">
+      <button class="curr-btn on" id="pp-btn-term" onclick="setPPMode('term')" style="flex:1;border-radius:10px;border:1px solid var(--border);padding:9px;font-size:13px;cursor:pointer">Reduce term</button>
+      <button class="curr-btn" id="pp-btn-pay" onclick="setPPMode('payment')" style="flex:1;border-radius:10px;border:1px solid var(--border);padding:9px;font-size:13px;cursor:pointer">Reduce payment</button>
+    </div>
+
+    <!-- Investment return for comparison -->
+    <div class="field" style="margin-bottom:16px">
+      <div class="ftop">
+        <span class="flabel">Investment return (%)</span>
+        <input class="finput" id="t-inv-rate" value="5.00">
+      </div>
+      <input type="range" id="inv-rate" min="1" max="15" step="0.25" value="5">
+      <div class="rlabels"><span>1% deposit</span><span>15% stocks</span></div>
+    </div>
+
+    <!-- Results -->
+    <div class="totals" id="pp-results" style="min-height:200px;overflow:hidden">
+      <div style="text-align:center;color:var(--muted);font-size:13px;padding:8px 0">Adjust sliders to see calculation</div>
+    </div>
+
+    <!-- Strategy comparison -->
+    <div id="pp-strategy" style="margin-top:10px"></div>
+
+  </div>
+  </div>
+</div>
 
 <script>
 // ─── Constants ───────────────────────────────────────────
@@ -318,54 +384,51 @@ const USD_RATE = 3.6725;
 const DEWA_PER_SQFT = 0.85;
 let currency = 'AED';
 let dewaEdited = false, downManual = false;
-const vals = {price:2900000,cash:800000,approved:2604000,down:20,years:25,eibor:3.45,sqft:1500};
+const vals = {price:2900000,cash:800000,approved:2600000,down:20,years:25,eibor:3.45,sqft:1500,fixrate:4.19,fixperiod:5,dld:4,agency:2};
+let fixPeriodManual = false;
 
 // ─── Splash ───────────────────────────────────────────────
 setTimeout(()=>{
   document.getElementById('splash').classList.add('hide');
-  setTimeout(()=>document.getElementById('splash').remove(),600);
-},1600);
+  setTimeout(()=>{const s=document.getElementById('splash');if(s)s.remove();},400);
+},800);
 
 // ─── Theme ───────────────────────────────────────────────
 const sysDark = window.matchMedia('(prefers-color-scheme: dark)');
-let userTheme = null;
-let darkMode = sysDark.matches;
+let themeMode = 'auto'; // 'auto' | 'light' | 'dark'
 
 function applyTheme(){
-  document.documentElement.setAttribute('data-theme',darkMode?'dark':'light');
-  document.getElementById('theme-btn').textContent=darkMode?'☀️':'🌙';
+  const isDark = themeMode==='dark' || (themeMode==='auto' && sysDark.matches);
+  document.documentElement.setAttribute('data-theme', isDark?'dark':'light');
+  const btn = document.getElementById('theme-btn');
+  const icon = isDark ? '🌙' : '☀️';
+  const label = themeMode==='auto' ? '<span style="font-size:10px;opacity:0.6">auto</span>' : '';
+  btn.innerHTML = icon + label;
 }
 function toggleTheme(){
-  darkMode=!darkMode;
-  userTheme=darkMode;
+  if(themeMode==='auto') themeMode='light';
+  else if(themeMode==='light') themeMode='dark';
+  else themeMode='auto';
   applyTheme();
 }
-// Follow system unless user manually toggled
-sysDark.addEventListener('change',e=>{
-  if(userTheme===null){darkMode=e.matches;applyTheme();}
-});
+sysDark.addEventListener('change', ()=>{ if(themeMode==='auto') applyTheme(); });
 applyTheme();
 
 // ─── Collapsible sections ─────────────────────────────────
-const cardHeights = {};
 function toggleCard(id){
-  const body=document.getElementById('body-'+id);
+  const wrap=document.getElementById('body-'+id);
   const chev=document.getElementById('chev-'+id);
-  const head=document.querySelector(`#card-${id} .card-head`);
-  const isOpen=body.classList.contains('open');
+  const isOpen=wrap.classList.contains('open');
   if(isOpen){
-    body.style.maxHeight=body.scrollHeight+'px';
-    requestAnimationFrame(()=>{body.style.maxHeight='0';body.classList.remove('open');body.classList.add('closed');});
-    chev.classList.remove('open');head.classList.remove('open');head.classList.add('closed');
+    wrap.classList.remove('open');
+    chev.classList.remove('open');
   } else {
-    body.classList.remove('closed');body.classList.add('open');
-    body.style.maxHeight=body.scrollHeight+'px';
-    setTimeout(()=>body.style.maxHeight='',400);
-    chev.classList.add('open');head.classList.remove('closed');head.classList.add('open');
+    wrap.classList.add('open');
+    chev.classList.add('open');
   }
 }
-// Init heights
-document.querySelectorAll('.card-body.open').forEach(b=>{b.style.maxHeight='';});
+// Init — prepay starts closed
+
 
 // ─── Currency ─────────────────────────────────────────────
 function refreshInputs(){
@@ -400,7 +463,7 @@ function setCurr(c){
   document.getElementById('rl-gas-min').textContent=isUSD?'$0':'AED 0';
   document.getElementById('rl-gas-max').textContent=isUSD?'$82':'AED 300';
   document.getElementById('sv-val').textContent=fmt(3150);
-  document.getElementById('b-approved').textContent=fmt(2604000);
+  document.getElementById('b-approved').textContent=fmt(2600000);
   refreshInputs();
   calc();
 }
@@ -442,9 +505,43 @@ function fmtDisplay(key,v){
   }
   if(key==='sqft') return v.toLocaleString('en-US');
   if(key==='down'||key==='years') return String(Math.round(v));
-  if(key==='eibor') return v.toFixed(2);
+  if(key==='eibor'||key==='fixrate') return v.toFixed(2);
   return String(v);
 }
+
+function setFixRate(r,yrs,btnId){
+  vals.fixrate=r;
+  document.getElementById('t-fixrate').value=r.toFixed(2);
+  ['btn-rate3','btn-rate5'].forEach(id=>document.getElementById(id).classList.remove('on'));
+  document.getElementById(btnId).classList.add('on');
+  // Always reset period to auto when pressing preset button
+  fixPeriodManual=false;
+  vals.fixperiod=yrs;
+  document.getElementById('fixperiod').value=yrs;
+  document.getElementById('t-fixperiod').value=String(yrs);
+  setTag('fixperiod-tag',false);
+  calc();
+}
+
+// Wire fixperiod slider
+document.getElementById('fixperiod').addEventListener('input',()=>{
+  const v=parseInt(document.getElementById('fixperiod').value);
+  vals.fixperiod=v;
+  document.getElementById('t-fixperiod').value=String(v);
+  fixPeriodManual=true;setTag('fixperiod-tag',true);
+  calc();
+});
+document.getElementById('t-fixperiod').addEventListener('input',()=>{
+  let v=parseInt(document.getElementById('t-fixperiod').value.replace(/[^0-9]/g,''))||1;
+  v=Math.min(10,Math.max(1,v));
+  vals.fixperiod=v;
+  document.getElementById('fixperiod').value=v;
+  fixPeriodManual=true;setTag('fixperiod-tag',true);
+  calc();
+});
+document.getElementById('t-fixperiod').addEventListener('blur',()=>{
+  document.getElementById('t-fixperiod').value=String(vals.fixperiod);
+});
 function setTag(id,manual){
   const el=document.getElementById(id);
   el.textContent=manual?'manual':'auto';
@@ -508,6 +605,22 @@ function blurText(key){document.getElementById('t-'+key).value=fmtDisplay(key,va
   });
   tin.addEventListener('blur',()=>blurText(key));
   tin.addEventListener('keydown',e=>{if(e.key==='Enter'){blurText(key);tin.blur();}});
+});
+
+// Fixed rate manual input
+document.getElementById('t-fixrate').addEventListener('input',()=>{
+  const v=parseFloat(document.getElementById('t-fixrate').value.replace(/[^0-9.]/g,''));
+  if(!isNaN(v)&&v>0&&v<=15){
+    vals.fixrate=v;
+    ['btn-rate3','btn-rate5'].forEach(id=>document.getElementById(id).classList.remove('on'));
+    calc();
+  }
+});
+document.getElementById('t-fixrate').addEventListener('blur',()=>{
+  document.getElementById('t-fixrate').value=vals.fixrate.toFixed(2);
+});
+document.getElementById('t-fixrate').addEventListener('keydown',e=>{
+  if(e.key==='Enter'){document.getElementById('t-fixrate').blur();}
 });
 
 // ─── Living sliders ───────────────────────────────────────
@@ -574,30 +687,27 @@ function calcLiving(){
   const loan=vals.price-vals.price*vals.down/100;
   const n=vals.years*12;
   const ins=loan*0.000112+vals.price*0.0005/12;
-  const t3=mpay(loan,3.99,n)+ins+living;
-  const t5=mpay(loan,4.19,n)+ins+living;
+  const tf=mpay(loan,vals.fixrate,n)+ins+living;
   const tv=mpay(loan,vals.eibor+1.5,n)+ins+living;
-  document.getElementById('grand-3').textContent=fmt(t3);
-  document.getElementById('grand-5').textContent=fmt(t5);
+  document.getElementById('grand-3').textContent=fmt(tf);
   document.getElementById('grand-var').textContent=fmt(tv);
-  document.getElementById('grand-3-yr').textContent=fmt(t3*12);
-  document.getElementById('grand-5-yr').textContent=fmt(t5*12);
+  document.getElementById('grand-3-yr').textContent=fmt(tf*12);
   document.getElementById('grand-var-yr').textContent=fmt(tv*12);
 }
 
 // ─── calc ─────────────────────────────────────────────────
 function calc(){
-  const{price,cash,approved,down:dp,years,eibor}=vals;
+  const{price,cash,approved,down:dp,years,eibor,fixrate}=vals;
   const vr=eibor+1.5,n=years*12;
   const da=price*dp/100,loan=price-da;
-  const dld=price*0.04,ag=price*0.02,VAL=3150;
+  const dld=price*vals.dld/100,ag=price*vals.agency/100,VAL=3150;
   const ins=loan*0.000112+price*0.0005/12;
-  const p3=mpay(loan,3.99,n),p5=mpay(loan,4.19,n),pv=mpay(loan,vr,n);
+  const pf=mpay(loan,fixrate,n),pv=mpay(loan,vr,n);
 
-  document.getElementById('pay-3').textContent=fmt2(p3);
-  document.getElementById('pay-5').textContent=fmt2(p5);
+  document.getElementById('pay-3').textContent=fmt2(pf);
   document.getElementById('pay-var').textContent=fmt2(pv);
   document.getElementById('var-sub').textContent=vr.toFixed(2)+'%';
+  document.getElementById('rc-fixrate-lbl').textContent=fixrate.toFixed(2)+'% · '+vals.fixperiod+'yr';
 
   const up=da+dld+ag+VAL,rem=cash-up;
   const pct=cash>0?Math.min(100,Math.round(up/cash*100)):100;
@@ -607,10 +717,10 @@ function calc(){
   document.getElementById('metrics').innerHTML=`
     <div class="metric"><div class="m-lbl">Down payment</div><div class="m-val">${fmt(da)}</div><div class="m-sub">${dp}%</div></div>
     <div class="metric"><div class="m-lbl">Mortgage loan</div><div class="m-val ${ok?'cg':'cr'}">${fmt(loan)}</div><div class="m-sub">${ok?'within limit':'exceeds limit'}</div></div>
-    <div class="metric"><div class="m-lbl">Monthly 3.99%</div><div class="m-val cg">${fmt2(p3+ins)}</div><div class="m-sub">${insNote}</div></div>
-    <div class="metric"><div class="m-lbl">Monthly 4.19%</div><div class="m-val cb">${fmt2(p5+ins)}</div><div class="m-sub">${insNote}</div></div>
+    <div class="metric"><div class="m-lbl">Monthly fixed ${fixrate.toFixed(2)}%</div><div class="m-val cg">${fmt2(pf+ins)}</div><div class="m-sub">${insNote}</div></div>
     <div class="metric"><div class="m-lbl">Monthly variable</div><div class="m-val ca">${fmt2(pv+ins)}</div><div class="m-sub">${insNote}</div></div>
     <div class="metric"><div class="m-lbl">Cash remaining</div><div class="m-val ${rem>=0?'cg':'cr'}">${fmt(rem)}</div><div class="m-sub">after closing</div></div>
+    <div class="metric"><div class="m-lbl">Total at closing</div><div class="m-val ${enough?'':'cr'}">${fmt(up)}</div><div class="m-sub">${enough?'covered':'insufficient'}</div></div>
   `;
 
   const bc=!enough?'#D85A30':pct>85?'#BA7517':'#2D6A2D';
@@ -620,18 +730,54 @@ function calc(){
 
   document.getElementById('breakdown').innerHTML=`
     <div class="brow"><span class="brow-lbl">Down payment (${dp}%)</span><span class="brow-val">${fmt(da)}</span></div>
-    <div class="brow"><span class="brow-lbl">DLD fee (4%)</span><span class="brow-val">${fmt(dld)}</span></div>
-    <div class="brow"><span class="brow-lbl">Agency fee (2%)</span><span class="brow-val">${fmt(ag)}</span></div>
-    <div class="brow"><span class="brow-lbl">FAB valuation</span><span class="brow-val">${fmt(VAL)}</span></div>
+    <div class="brow"><span class="brow-lbl">DLD fee (${vals.dld}%)</span><span class="brow-val">${fmt(dld)}</span></div>
+    <div class="brow"><span class="brow-lbl">Agency fee (${vals.agency}%)</span><span class="brow-val">${fmt(ag)}</span></div>
+    <div class="brow"><span class="brow-lbl">Valuation fee</span><span class="brow-val">${fmt(VAL)}</span></div>
     <div class="brow"><span class="brow-lbl">Total at closing</span><span class="brow-val" style="color:${enough?'var(--green)':'var(--red)'}">${fmt(up)}</span></div>
   `;
 
   let vc,vt,vb;
-  if(!ok){vc='bad';vt='Loan exceeds FAB limit';vb=`${fmt(loan)} vs approved ${fmt(approved)}. Max price at ${dp}% down: ${fmt(Math.round(approved/(1-dp/100)))}.`;}
+  if(!ok){vc='bad';vt='Loan exceeds approved amount';vb=`${fmt(loan)} vs approved ${fmt(approved)}. Max price at ${dp}% down: ${fmt(Math.round(approved/(1-dp/100)))}.`;}
   else if(!enough){vc='bad';vt=`Short ${fmt(up-cash)} in cash`;vb=`Need ${fmt(up)} at closing, have ${fmt(cash)}.`;}
-  else if(pct>85){vc='warn';vt='Low cash buffer';vb=`${fmt(rem)} remaining after closing.`;}
-  else{vc='ok';vt=`All good — ${fmt(rem)} remaining`;vb='Loan within FAB limit. Approval valid until 13 Jun 2026.';}
-  document.getElementById('verdict').innerHTML=`<div class="verdict ${vc}"><div class="v-title">${vt}</div><div class="v-body">${vb}</div></div>`;
+  else{vc=null;}
+  document.getElementById('verdict').innerHTML=vc?`<div class="verdict ${vc}"><div class="v-title">${vt}</div><div class="v-body">${vb}</div></div>`:'';
+
+  // Total cost of ownership
+  const totalMortgagePayments = mpay(loan,fixrate,n)*n;
+  const totalInterest = totalMortgagePayments - loan;
+  const totalNoLiving = up + totalMortgagePayments;
+
+  const dewa=parseFloat(document.getElementById('dewa').value)||0;
+  const gas=parseFloat(document.getElementById('gas').value)||0;
+  const internet=parseFloat(document.getElementById('internet').value)||0;
+  const scRate=parseFloat(document.getElementById('sc').value)||23;
+  const scMo=Math.round(vals.sqft*scRate/12);
+  const livingMo=scMo+dewa+gas+internet;
+  const totalLivingOver=livingMo*12*vals.years;
+  const totalWithLiving = totalNoLiving + totalLivingOver;
+
+  document.getElementById('total-cost').innerHTML=`
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px">
+      <div class="metric" style="grid-column:1/-1">
+        <div class="m-lbl">Total you pay over ${vals.years} years</div>
+        <div class="m-val cg" style="font-size:20px">${fmt(totalWithLiving)}</div>
+        <div class="m-sub">incl. all costs</div>
+      </div>
+      <div class="metric">
+        <div class="m-lbl">Without living costs</div>
+        <div class="m-val" style="font-size:15px">${fmt(totalNoLiving)}</div>
+        <div class="m-sub">closing + mortgage</div>
+      </div>
+      <div class="metric">
+        <div class="m-lbl">Living costs total</div>
+        <div class="m-val" style="font-size:15px">${fmt(totalLivingOver)}</div>
+        <div class="m-sub">${vals.years} yrs × ${fmt(livingMo)}/mo</div>
+      </div>
+    </div>
+    <div class="brow"><span class="brow-lbl">Upfront at closing</span><span class="brow-val">${fmt(up)}</span></div>
+    <div class="brow"><span class="brow-lbl">Mortgage payments (${vals.years} yrs)</span><span class="brow-val">${fmt(totalMortgagePayments)}</span></div>
+    <div class="brow" style="border-bottom:none"><span class="brow-lbl">Of which interest</span><span class="brow-val cr">${fmt(totalInterest)}</span></div>
+  `;
 
   calcLiving();
 }
@@ -669,7 +815,214 @@ Rate: 1 USD = 3.6725 AED`;
   }
 }
 
-// ─── Init ─────────────────────────────────────────────────
+// ─── Prepayment calculator ────────────────────────────────
+let ppMode = 'term'; // 'term' or 'payment'
+
+function setPPMode(m){
+  ppMode=m;
+  document.getElementById('pp-btn-term').classList.toggle('on',m==='term');
+  document.getElementById('pp-btn-pay').classList.toggle('on',m==='payment');
+  calcPP();
+}
+
+function updatePPResults(html){
+  document.getElementById('pp-results').innerHTML=html;
+}
+
+function calcPP(){
+  const loanAED = vals.price - vals.price*vals.down/100;
+  const totalMonths = vals.years*12;
+  const monthRate = vals.fixrate/100/12; // FIX: use actual fixrate not hardcoded 3.99
+  const ppMonth = parseInt(document.getElementById('pp-month').value)||1;
+  const ppAmt = parseFloat(document.getElementById('pp-amt').value)||0;
+
+  if(loanAED<=0){
+    updatePPResults('<div style="text-align:center;color:var(--muted);font-size:13px;padding:8px 0">Set loan parameters above</div>');
+    return;
+  }
+
+  // Calculate balance at month of prepayment
+  const monthlyPayment = mpay(loanAED,vals.fixrate,totalMonths);
+  let balance = loanAED;
+  for(let i=0;i<ppMonth-1;i++){
+    const interest = balance*monthRate;
+    const principal = monthlyPayment - interest;
+    balance -= principal;
+  }
+  balance = Math.max(0, balance);
+
+  // FAB penalty check (25% rule for variable period after month 36)
+  const limit25 = balance * 0.25;
+  const limit15 = balance * 0.15;
+  const isSalaryTransfer = true; // assume salary transfer
+  const penaltyFreeLimit = ppMonth > 36 ? (isSalaryTransfer ? limit25 : limit15) : 0;
+  const excessAmt = Math.max(0, ppAmt - penaltyFreeLimit);
+  const penalty = ppMonth <= 36 ? Math.min(ppAmt*0.01, 10000) :
+                  excessAmt > 0 ? excessAmt * 0.01 : 0;
+  const isFullSettlement = ppAmt >= balance;
+  const fullSettlePenalty = isFullSettlement ? Math.min(balance*0.01, 10000) : 0;
+  const actualPenalty = isFullSettlement ? fullSettlePenalty : penalty;
+
+  // If no prepayment amount, just show balance info
+  if(ppAmt<=0){
+    updatePPResults(`
+      <div style="background:var(--bg);border-radius:12px;padding:12px 14px">
+        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:8px">Balance info</div>
+        <div class="trow"><span class="t-name">Outstanding balance at month ${ppMonth}</span><span style="font-size:14px;font-weight:600">${fmt(balance)}</span></div>
+        <div class="trow"><span class="t-name">Penalty-free limit (25%/yr after month 36)</span><span style="font-size:14px;font-weight:600">${ppMonth>36?fmt(balance*0.25):'—'}</span></div>
+        <div class="trow"><span class="t-name">Monthly payment</span><span style="font-size:14px;font-weight:600">${fmt2(monthlyPayment)}</span></div>
+      </div>`);
+    return;
+  }
+  const remainingMonths = totalMonths - ppMonth;
+
+  // New balance after prepayment
+  const newBalance = Math.max(0, balance - ppAmt);
+  let html = '';
+  const penaltyColor = actualPenalty > 0 ? 'var(--amber)' : 'var(--green)';
+  const penaltyBg = actualPenalty > 0 ? 'var(--amber-bg)' : 'var(--green-bg)';
+  const penaltyBd = actualPenalty > 0 ? 'var(--amber-bd)' : 'var(--green-bd)';
+  html += `<div style="background:${penaltyBg};border:1px solid ${penaltyBd};border-radius:12px;padding:12px 14px;margin-bottom:14px">
+    <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:${penaltyColor};margin-bottom:8px">Penalty assessment</div>
+    <div class="trow"><span class="t-name">Outstanding balance at month ${ppMonth}</span><span style="font-size:14px;font-weight:600">${fmt(balance)}</span></div>
+    <div class="trow"><span class="t-name">Penalty-free limit ${ppMonth>36?'(25%/yr)':'(fixed period)'}</span><span style="font-size:14px;font-weight:600">${ppMonth>36?fmt(penaltyFreeLimit):'—'}</span></div>
+    <div class="trow"><span class="t-name">Prepayment amount</span><span style="font-size:14px;font-weight:600">${fmt(ppAmt)}</span></div>
+    <div style="height:1px;background:${penaltyBd};margin:10px 0"></div>
+    <div class="trow"><span class="t-name" style="font-weight:600">Penalty</span><span style="font-size:16px;font-weight:700;color:${penaltyColor}">${actualPenalty>0?fmt(actualPenalty):'None ✓'}</span></div>
+  </div>`;
+
+  if(isFullSettlement){
+    html += `<div style="background:var(--green-bg);border:1px solid var(--green-bd);border-radius:12px;padding:12px 14px">
+      <div style="font-size:13px;font-weight:700;color:var(--green);margin-bottom:6px">Full settlement</div>
+      <div style="font-size:13px;color:var(--green);line-height:1.6">Loan fully paid off at month ${ppMonth}. Total paid back: ${fmt(monthlyPayment*ppMonth + ppAmt)}. Penalty: ${fmt(fullSettlePenalty)}.</div>
+    </div>`;
+  } else if(ppMode==='term'){
+    // Same payment, fewer months
+    const newMonths = Math.round(Math.log(monthlyPayment/(monthlyPayment-newBalance*monthRate))/Math.log(1+monthRate));
+    const monthsSaved = remainingMonths - newMonths;
+    const interestSaved = monthlyPayment*monthsSaved;
+    html += `<div class="t-lbl" style="margin-bottom:10px">Reduce term (same monthly payment)</div>
+    <div class="trow"><span class="t-name">New balance after prepayment</span><span style="font-size:14px;font-weight:600">${fmt(newBalance)}</span></div>
+    <div class="trow"><span class="t-name">Months remaining (before)</span><span style="font-size:14px;font-weight:600">${remainingMonths} mo</span></div>
+    <div class="trow"><span class="t-name">Months remaining (after)</span><span style="font-size:14px;font-weight:600;color:var(--green)">${Math.max(0,newMonths)} mo</span></div>
+    <div style="height:1px;background:var(--border);margin:10px 0"></div>
+    <div class="trow"><span class="t-name">Months saved</span><span style="font-size:16px;font-weight:700;color:var(--green)">${Math.max(0,monthsSaved)} months</span></div>
+    <div class="trow"><span class="t-name">Interest saved</span><span style="font-size:16px;font-weight:700;color:var(--green)">${fmt(Math.max(0,interestSaved))}</span></div>
+    <div class="trow"><span class="t-name">Monthly payment stays</span><span style="font-size:14px;font-weight:600">${fmt2(monthlyPayment)}</span></div>`;
+  } else {
+    // Same term, lower payment
+    const newPayment = mpay(newBalance, vals.fixrate, remainingMonths);
+    const paymentSaved = monthlyPayment - newPayment;
+    const totalSaved = paymentSaved * remainingMonths;
+    html += `<div class="t-lbl" style="margin-bottom:10px">Reduce payment (same term)</div>
+    <div class="trow"><span class="t-name">New balance after prepayment</span><span style="font-size:14px;font-weight:600">${fmt(newBalance)}</span></div>
+    <div class="trow"><span class="t-name">Old monthly payment</span><span style="font-size:14px;font-weight:600">${fmt2(monthlyPayment)}</span></div>
+    <div class="trow"><span class="t-name">New monthly payment</span><span style="font-size:14px;font-weight:600;color:var(--green)">${fmt2(newPayment)}</span></div>
+    <div style="height:1px;background:var(--border);margin:10px 0"></div>
+    <div class="trow"><span class="t-name">Monthly saving</span><span style="font-size:16px;font-weight:700;color:var(--green)">${fmt2(paymentSaved)}</span></div>
+    <div class="trow"><span class="t-name">Total interest saved</span><span style="font-size:16px;font-weight:700;color:var(--green)">${fmt(totalSaved)}</span></div>
+    <div class="trow"><span class="t-name">Term stays</span><span style="font-size:14px;font-weight:600">${remainingMonths} months</span></div>`;
+  }
+
+  updatePPResults(html);
+
+  // Strategy comparison — fair comparison using same discount rate
+  const invRate = parseFloat(document.getElementById('inv-rate').value)||5;
+  const newPaymentForComp = mpay(newBalance, vals.fixrate, remainingMonths);
+  const monthlySavingForComp = monthlyPayment - newPaymentForComp;
+
+  // Reduce term: interest saved (simple — actual cash not paid)
+  const newMonthsForComp = Math.round(Math.log(monthlyPayment/(monthlyPayment-newBalance*monthRate))/Math.log(1+monthRate));
+  const monthsSavedForComp = Math.max(0, remainingMonths - newMonthsForComp);
+  const termSaving = monthlyPayment * monthsSavedForComp;
+
+  // Invest the monthly saving: future value at investment rate
+  // Fair comparison: invest ONLY wins if invRate > mortgage rate
+  // because both options start with same balance reduction
+  const invMonthRate = invRate/100/12;
+  let fvInvest = 0;
+  for(let i=0;i<remainingMonths;i++) fvInvest=(fvInvest+monthlySavingForComp)*(1+invMonthRate);
+
+  // Reduce term future value: reinvest freed months at investment rate too
+  // After loan ends early, you have monthlyPayment free for monthsSavedForComp months
+  let fvTerm = termSaving; // interest saved (immediate)
+  // Plus: invest the monthly payment for the saved months after loan ends
+  for(let i=0;i<monthsSavedForComp;i++) fvTerm = fvTerm*(1+invMonthRate) + monthlyPayment;
+
+  const betterInvest = monthlySavingForComp > 0 && fvInvest > fvTerm;
+  const stratEl = document.getElementById('pp-strategy');
+
+  if(isFullSettlement||monthlySavingForComp<=0){stratEl.innerHTML='';return;}
+
+  const sc = betterInvest?'var(--green)':'var(--blue)';
+  const sb = betterInvest?'var(--green-bg)':'var(--blue-bg)';
+  const sd = betterInvest?'var(--green-bd)':'var(--blue-bd)';
+  stratEl.innerHTML=`
+    <div style="background:${sb};border:1px solid ${sd};border-radius:14px;padding:14px 16px">
+      <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:${sc};margin-bottom:8px">Strategy verdict at ${invRate}% investment return</div>
+      <div style="font-size:14px;font-weight:700;color:${sc};margin-bottom:8px">${betterInvest?'Invest the difference':'Reduce term'} wins by ${fmt(Math.abs(fvInvest-fvTerm))}</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+        <div style="background:var(--card);border-radius:10px;padding:10px">
+          <div style="font-size:10px;color:var(--muted);margin-bottom:4px">Reduce term (total benefit)</div>
+          <div style="font-size:15px;font-weight:700;color:var(--text)">${fmt(fvTerm)}</div>
+          <div style="font-size:10px;color:var(--muted);margin-top:2px">savings + reinvested payments</div>
+        </div>
+        <div style="background:var(--card);border-radius:10px;padding:10px">
+          <div style="font-size:10px;color:var(--muted);margin-bottom:4px">Invest ${fmt2(monthlySavingForComp)}/mo</div>
+          <div style="font-size:15px;font-weight:700;color:var(--text)">${fmt(fvInvest)}</div>
+          <div style="font-size:10px;color:var(--muted);margin-top:2px">future value at ${invRate}%</div>
+        </div>
+      </div>
+      <div style="font-size:11px;color:${sc};opacity:.75;margin-top:10px;line-height:1.5">${betterInvest?'Investing the monthly saving beats paying off faster — but requires discipline.':'Your mortgage rate is a guaranteed return. Reducing term is the safer win.'}</div>
+    </div>`;
+
+  // Update month note
+  const yr = Math.floor((ppMonth-1)/12)+1;
+  const mo = ((ppMonth-1)%12)+1;
+  document.getElementById('pp-month-note').textContent=`Year ${yr}, month ${mo} of loan`;
+}
+
+// Wire up prepayment sliders
+document.getElementById('inv-rate').addEventListener('input',()=>{
+  const v=parseFloat(document.getElementById('inv-rate').value);
+  document.getElementById('t-inv-rate').value=v.toFixed(2);
+  calcPP();
+});
+document.getElementById('t-inv-rate').addEventListener('input',()=>{
+  let v=parseFloat(document.getElementById('t-inv-rate').value.replace(/[^0-9.]/g,''))||5;
+  v=Math.min(15,Math.max(1,v));
+  document.getElementById('inv-rate').value=v;
+  calcPP();
+});
+document.getElementById('t-inv-rate').addEventListener('blur',()=>{
+  document.getElementById('t-inv-rate').value=parseFloat(document.getElementById('inv-rate').value).toFixed(2);
+});
+document.getElementById('pp-month').addEventListener('input',()=>{
+  document.getElementById('t-pp-month').value=document.getElementById('pp-month').value;
+  calcPP();
+});
+document.getElementById('t-pp-month').addEventListener('input',()=>{
+  let v=parseInt(document.getElementById('t-pp-month').value)||1;
+  v=Math.min(300,Math.max(1,v));
+  document.getElementById('pp-month').value=v;
+  calcPP();
+});
+document.getElementById('pp-amt').addEventListener('input',()=>{
+  const v=parseFloat(document.getElementById('pp-amt').value)||0;
+  document.getElementById('t-pp-amt').value=currency==='USD'?Math.round(v/USD_RATE).toLocaleString('en-US'):Math.round(v).toLocaleString('en-US');
+  calcPP();
+});
+document.getElementById('t-pp-amt').addEventListener('input',()=>{
+  let v=parseFloat(document.getElementById('t-pp-amt').value.replace(/[^0-9.]/g,''))||0;
+  if(currency==='USD') v*=USD_RATE;
+  v=Math.min(2000000,Math.max(0,v));
+  document.getElementById('pp-amt').value=v;
+  calcPP();
+});
+document.getElementById('t-pp-amt').addEventListener('blur',()=>{
+  const v=parseFloat(document.getElementById('pp-amt').value)||0;
+  document.getElementById('t-pp-amt').value=currency==='USD'?Math.round(v/USD_RATE).toLocaleString('en-US'):Math.round(v).toLocaleString('en-US');
+});
 document.getElementById('t-dewa').value=fmtN(1275);
 document.getElementById('dewa').value=1275;
 document.getElementById('t-sc').value='23';
@@ -680,6 +1033,7 @@ document.getElementById('t-gas').value=fmtN(55);
 document.getElementById('gas').value=55;
 autoDown();
 calc();
+calcPP();
 </script>
 </body>
 </html>
