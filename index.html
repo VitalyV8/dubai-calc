@@ -362,7 +362,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
         <span class="flabel">Investment return (%)</span>
         <input class="finput" id="t-inv-rate" value="5.00">
       </div>
-      <input type="range" id="inv-rate" min="1" max="15" step="0.25" value="5">
+      <input type="range" id="inv-rate" min="1" max="15" step="0.01" value="5">
       <div class="rlabels"><span>1% deposit</span><span>15% stocks</span></div>
     </div>
 
@@ -926,30 +926,31 @@ function calcPP(){
 
   updatePPResults(html);
 
-  // Strategy comparison — fair comparison using same discount rate
+  // ── Strategy comparison ─────────────────────────────────
+  // After prepayment, newBalance is same for both options
+  // A (Reduce term):   pay monthlyPayment → finish in newMonthsRT → total interest = intA
+  // B (Reduce payment): pay newPmt × remainingMonths → total interest = intB
+  // termSaving = intB - intA  (extra interest you avoid by reducing term)
+  // fvInvest   = FV of investing (monthlyPayment - newPmt) each month at invRate
+  // If fvInvest > termSaving → invest wins (only when invRate > mortgage rate)
+
   const invRate = parseFloat(document.getElementById('inv-rate').value)||5;
-  const newPaymentForComp = mpay(newBalance, vals.fixrate, remainingMonths);
-  const monthlySavingForComp = monthlyPayment - newPaymentForComp;
-
-  // Reduce term: interest saved (simple — actual cash not paid)
-  const newMonthsForComp = Math.round(Math.log(monthlyPayment/(monthlyPayment-newBalance*monthRate))/Math.log(1+monthRate));
-  const monthsSavedForComp = Math.max(0, remainingMonths - newMonthsForComp);
-  const termSaving = monthlyPayment * monthsSavedForComp;
-
-  // Invest the monthly saving: future value at investment rate
-  // Fair comparison: invest ONLY wins if invRate > mortgage rate
-  // because both options start with same balance reduction
   const invMonthRate = invRate/100/12;
+  const newPaymentForComp = mpay(newBalance, vals.fixrate, remainingMonths);
+  const monthlySavingForComp = Math.max(0, monthlyPayment - newPaymentForComp);
+  const newMonthsRT = Math.max(1, Math.ceil(-Math.log(1 - newBalance*monthRate/monthlyPayment)/Math.log(1+monthRate)));
+  const monthsSavedForComp = Math.max(0, remainingMonths - newMonthsRT);
+
+  // Simple correct rule: invest wins only if invRate > mortgage rate
+  // Because prepaying mortgage = guaranteed return equal to mortgage rate
+  const betterInvest = monthlySavingForComp > 0 && invRate > vals.fixrate;
+
+  // For display: FV of both portfolios at same end point (month = remainingMonths)
+  let fvTerm = 0;
+  for(let i=0;i<monthsSavedForComp;i++) fvTerm=(fvTerm+monthlyPayment)*(1+invMonthRate);
   let fvInvest = 0;
   for(let i=0;i<remainingMonths;i++) fvInvest=(fvInvest+monthlySavingForComp)*(1+invMonthRate);
-
-  // Reduce term future value: reinvest freed months at investment rate too
-  // After loan ends early, you have monthlyPayment free for monthsSavedForComp months
-  let fvTerm = termSaving; // interest saved (immediate)
-  // Plus: invest the monthly payment for the saved months after loan ends
-  for(let i=0;i<monthsSavedForComp;i++) fvTerm = fvTerm*(1+invMonthRate) + monthlyPayment;
-
-  const betterInvest = monthlySavingForComp > 0 && fvInvest > fvTerm;
+  const termSaving = fvTerm;
   const stratEl = document.getElementById('pp-strategy');
 
   if(isFullSettlement||monthlySavingForComp<=0){stratEl.innerHTML='';return;}
@@ -963,17 +964,17 @@ function calcPP(){
       <div style="font-size:14px;font-weight:700;color:${sc};margin-bottom:8px">${betterInvest?'Invest the difference':'Reduce term'} wins by ${fmt(Math.abs(fvInvest-fvTerm))}</div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
         <div style="background:var(--card);border-radius:10px;padding:10px">
-          <div style="font-size:10px;color:var(--muted);margin-bottom:4px">Reduce term (total benefit)</div>
+          <div style="font-size:10px;color:var(--muted);margin-bottom:4px">Reduce term portfolio</div>
           <div style="font-size:15px;font-weight:700;color:var(--text)">${fmt(fvTerm)}</div>
-          <div style="font-size:10px;color:var(--muted);margin-top:2px">savings + reinvested payments</div>
+          <div style="font-size:10px;color:var(--muted);margin-top:2px">invest ${fmt2(monthlyPayment)}/mo × ${monthsSavedForComp}mo</div>
         </div>
         <div style="background:var(--card);border-radius:10px;padding:10px">
-          <div style="font-size:10px;color:var(--muted);margin-bottom:4px">Invest ${fmt2(monthlySavingForComp)}/mo</div>
+          <div style="font-size:10px;color:var(--muted);margin-bottom:4px">Invest diff portfolio</div>
           <div style="font-size:15px;font-weight:700;color:var(--text)">${fmt(fvInvest)}</div>
-          <div style="font-size:10px;color:var(--muted);margin-top:2px">future value at ${invRate}%</div>
+          <div style="font-size:10px;color:var(--muted);margin-top:2px">invest ${fmt2(monthlySavingForComp)}/mo × ${remainingMonths}mo</div>
         </div>
       </div>
-      <div style="font-size:11px;color:${sc};opacity:.75;margin-top:10px;line-height:1.5">${betterInvest?'Investing the monthly saving beats paying off faster — but requires discipline.':'Your mortgage rate is a guaranteed return. Reducing term is the safer win.'}</div>
+      <div style="font-size:11px;color:${sc};opacity:.75;margin-top:10px;line-height:1.5">${betterInvest?`Your investment return (${invRate}%) beats your mortgage rate (${vals.fixrate}%) — investing the monthly saving wins. Requires discipline.`:`Your mortgage rate (${vals.fixrate}%) is higher than your investment return (${invRate}%) — prepaying is a guaranteed better return.`}</div>
     </div>`;
 
   // Update month note
