@@ -140,8 +140,6 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
 /* Share */
 .share-btn{width:100%;margin-top:16px;padding:12px;background:var(--text);color:var(--bg);border:none;border-radius:12px;font-size:14px;font-weight:600;cursor:pointer;letter-spacing:.01em;transition:opacity .2s,transform .1s;display:flex;align-items:center;justify-content:center;gap:8px}
 .share-btn:active{transform:scale(.98);opacity:.85}
-.toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--text);color:var(--bg);padding:10px 20px;border-radius:20px;font-size:13px;font-weight:500;opacity:0;transition:all .3s;pointer-events:none;z-index:100}
-.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 </style>
 </head>
 <body>
@@ -325,7 +323,6 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
   </div>
 </div>
 
-<div class="toast" id="toast">Copied to clipboard ✓</div>
 
 <!-- PREPAYMENT CALCULATOR -->
 <div class="card" id="card-prepay" style="margin-top:0">
@@ -362,8 +359,8 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
         <span class="flabel">Investment return (%)</span>
         <input class="finput" id="t-inv-rate" value="5.00">
       </div>
-      <input type="range" id="inv-rate" min="1" max="15" step="0.01" value="5">
-      <div class="rlabels"><span>1% deposit</span><span>15% stocks</span></div>
+      <input type="range" id="inv-rate" min="1" max="10" step="0.05" value="5">
+      <div class="rlabels"><span>1% deposit</span><span>10% stocks</span></div>
     </div>
 
     <!-- Results -->
@@ -443,6 +440,12 @@ function refreshInputs(){
   document.getElementById('t-dewa').value=currency==='USD'?(Math.round(dewa/USD_RATE)).toLocaleString('en-US'):fmtN(dewa);
   document.getElementById('t-gas').value=currency==='USD'?(Math.round(gas/USD_RATE)).toLocaleString('en-US'):fmtN(gas);
   document.getElementById('t-internet').value=currency==='USD'?(Math.round(internet/USD_RATE)).toLocaleString('en-US'):fmtN(internet);
+  // Prepayment amount
+  const ppAmt=parseFloat(document.getElementById('pp-amt').value)||0;
+  document.getElementById('t-pp-amt').value=currency==='USD'?(Math.round(ppAmt/USD_RATE)).toLocaleString('en-US'):fmtN(ppAmt);
+  document.getElementById('pp-amt-min').textContent=currency==='USD'?'$0':'AED 0';
+  document.getElementById('pp-amt-max').textContent=currency==='USD'?'$545K':'AED 2M';
+  // Service charge range label stays AED/sqft — no conversion needed
 }
 
 function setCurr(c){
@@ -463,9 +466,10 @@ function setCurr(c){
   document.getElementById('rl-gas-min').textContent=isUSD?'$0':'AED 0';
   document.getElementById('rl-gas-max').textContent=isUSD?'$82':'AED 300';
   document.getElementById('sv-val').textContent=fmt(3150);
-  document.getElementById('b-approved').textContent=fmt(2600000);
   refreshInputs();
   calc();
+  calcLiving();
+  calcPP();
 }
 
 // ─── Format ───────────────────────────────────────────────
@@ -683,7 +687,11 @@ function calcLiving(){
   const dewa=parseFloat(document.getElementById('dewa').value)||0;
   const gas=parseFloat(document.getElementById('gas').value)||0;
   const internet=parseFloat(document.getElementById('internet').value)||0;
-  const living=scMo+dewa+gas+internet;
+  // Values in sliders are always AED internally, display fields may show USD
+  const dewaAED = dewa; // slider value is always AED
+  const gasAED = gas;
+  const internetAED = internet;
+  const living=scMo+dewaAED+gasAED+internetAED;
   const loan=vals.price-vals.price*vals.down/100;
   const n=vals.years*12;
   const ins=loan*0.000112+vals.price*0.0005/12;
@@ -782,39 +790,6 @@ function calc(){
   calcLiving();
 }
 
-// ─── Share ────────────────────────────────────────────────
-function share(){
-  const{price,cash,down:dp,years,eibor}=vals;
-  const loan=price-price*dp/100;
-  const n=years*12;
-  const ins=loan*0.000112+price*0.0005/12;
-  const p3=mpay(loan,3.99,n)+ins;
-  const fees=price*0.06+3150;
-  const text=`🏠 Dubai Property Summary
-━━━━━━━━━━━━━━━━
-Price: ${fmt(price)}
-Down (${dp}%): ${fmt(price*dp/100)}
-Mortgage loan: ${fmt(loan)}
-Total at closing: ${fmt(fees+price*dp/100)}
-
-Monthly 3.99%: ${fmt2(p3)}
-Monthly 4.19%: ${fmt2(mpay(loan,4.19,n)+ins)}
-Variable (EIBOR ${eibor}%+1.5%): ${fmt2(mpay(loan,eibor+1.5,n)+ins)}
-
-FAB approval valid: 13 Jun 2026
-Rate: 1 USD = 3.6725 AED`;
-
-  if(navigator.share){
-    navigator.share({title:'Dubai Property Calc',text}).catch(()=>{});
-  } else {
-    navigator.clipboard.writeText(text).then(()=>{
-      const t=document.getElementById('toast');
-      t.classList.add('show');
-      setTimeout(()=>t.classList.remove('show'),2200);
-    });
-  }
-}
-
 // ─── Prepayment calculator ────────────────────────────────
 let ppMode = 'term'; // 'term' or 'payment'
 
@@ -832,9 +807,18 @@ function updatePPResults(html){
 function calcPP(){
   const loanAED = vals.price - vals.price*vals.down/100;
   const totalMonths = vals.years*12;
-  const monthRate = vals.fixrate/100/12; // FIX: use actual fixrate not hardcoded 3.99
-  const ppMonth = parseInt(document.getElementById('pp-month').value)||1;
+  const monthRate = vals.fixrate/100/12;
+  let ppMonth = parseInt(document.getElementById('pp-month').value)||1;
   const ppAmt = parseFloat(document.getElementById('pp-amt').value)||0;
+
+  // Guard: prepayment month cannot exceed loan term
+  if(ppMonth >= totalMonths){
+    updatePPResults('<div style="text-align:center;color:var(--muted);font-size:13px;padding:8px 0">Prepayment month ('+ppMonth+') is at or beyond loan end ('+totalMonths+' months). Loan would be fully paid.</div>');
+    document.getElementById('pp-strategy').innerHTML='';
+    const yr=Math.floor((ppMonth-1)/12)+1,mo=((ppMonth-1)%12)+1;
+    document.getElementById('pp-month-note').textContent=`Year ${yr}, month ${mo} of loan`;
+    return;
+  }
 
   if(loanAED<=0){
     updatePPResults('<div style="text-align:center;color:var(--muted);font-size:13px;padding:8px 0">Set loan parameters above</div>');
@@ -991,7 +975,7 @@ document.getElementById('inv-rate').addEventListener('input',()=>{
 });
 document.getElementById('t-inv-rate').addEventListener('input',()=>{
   let v=parseFloat(document.getElementById('t-inv-rate').value.replace(/[^0-9.]/g,''))||5;
-  v=Math.min(15,Math.max(1,v));
+  v=Math.min(10,Math.max(1,v));
   document.getElementById('inv-rate').value=v;
   calcPP();
 });
