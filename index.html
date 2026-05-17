@@ -41,18 +41,14 @@ body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text',system-ui,sans-s
 .hdr-left h1{font-size:24px;font-weight:700;letter-spacing:-0.6px}
 .hdr-left p{font-size:13px;color:var(--muted);margin-top:3px}
 .hdr-right{display:flex;gap:8px;align-items:center;flex-shrink:0}
-
-/* Currency toggle */
 .curr-toggle{display:flex;background:var(--card);border:1px solid var(--border);border-radius:10px;overflow:hidden;box-shadow:var(--shadow)}
 .curr-btn{padding:6px 12px;font-size:13px;font-weight:500;cursor:pointer;color:var(--muted);background:transparent;border:none;transition:all .2s}
 .curr-btn.on{background:var(--text);color:var(--bg)}
-
-/* Theme toggle */
 .theme-btn{min-width:52px;height:36px;border-radius:10px;border:1px solid var(--border);background:var(--card);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:3px;font-size:13px;font-weight:500;color:var(--muted);padding:0 10px;box-shadow:var(--shadow)}
 
 /* Cards */
 .card{background:var(--card);border-radius:20px;border:1px solid var(--border);padding:20px;margin-bottom:10px;box-shadow:var(--shadow);transition:background .3s,border .3s}
-.card-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:0;cursor:pointer;user-select:none}
+.card-head{display:flex;justify-content:space-between;align-items:center;cursor:pointer;user-select:none}
 .ctitle{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--muted)}
 .chevron{font-size:12px;color:var(--muted);transition:transform .35s cubic-bezier(.4,0,.2,1)}
 .chevron.open{transform:rotate(180deg)}
@@ -61,10 +57,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text',system-ui,sans-s
 .card-body-inner{overflow:hidden;padding-top:0;transition:padding-top .4s cubic-bezier(.4,0,.2,1)}
 .card-body-wrap.open .card-body-inner{padding-top:20px}
 
-/* Banner */
-.banner{background:var(--blue-bg);border:1px solid var(--blue-bd);border-radius:12px;padding:12px 14px;margin-bottom:20px;font-size:12px;color:var(--blue);line-height:1.75}
-.banner strong{font-weight:600}
-
 /* Fields */
 .field{margin-bottom:20px}
 .field:last-child{margin-bottom:0}
@@ -72,10 +64,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text',system-ui,sans-s
 .flabel{font-size:14px;color:var(--text);flex:1;min-width:0;display:flex;align-items:center;gap:7px;flex-wrap:wrap}
 .finput{font-size:15px;font-weight:500;color:var(--text);border:1px solid var(--border);border-radius:10px;padding:7px 13px;width:120px;flex-shrink:0;text-align:right;background:var(--bg);transition:border .15s,background .15s,color .15s}
 .finput:focus{outline:none;border-color:var(--green);background:var(--card)}
-input[type=range]{width:100%;height:3px;-webkit-appearance:none;appearance:none;background:var(--track);border-radius:2px;outline:none;cursor:pointer;margin-bottom:6px;display:block;transition:background .3s}
+input[type=range]{width:100%;height:3px;-webkit-appearance:none;appearance:none;background:var(--track);border-radius:2px;outline:none;cursor:pointer;margin-bottom:6px;display:block}
 input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:var(--text);cursor:pointer;border:3px solid var(--card);box-shadow:0 1px 5px rgba(0,0,0,0.22);transition:transform .1s}
 input[type=range]:active::-webkit-slider-thumb{transform:scale(1.15)}
-input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;background:var(--text);cursor:pointer;border:3px solid var(--card);box-shadow:0 1px 5px rgba(0,0,0,0.22)}
+input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;background:var(--text);cursor:pointer;border:3px solid var(--card)}
 .rlabels{display:flex;justify-content:space-between;font-size:11px;color:var(--subtle)}
 .fnote{font-size:11px;color:var(--muted);margin-top:5px;line-height:1.5}
 .tag{font-size:10px;font-weight:600;border-radius:6px;padding:2px 8px;transition:all .25s}
@@ -86,21 +78,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
 .srow-label{font-size:14px;color:var(--muted)}
 .srow-val{font-size:14px;font-weight:500}
 
-/* Rate cards */
-.rate-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:20px}
-.rc{border-radius:14px;padding:13px;border:1px solid}
-.rc.g{background:var(--green-bg);border-color:var(--green-bd)}
-.rc.b{background:var(--blue-bg);border-color:var(--blue-bd)}
-.rc.a{background:var(--amber-bg);border-color:var(--amber-bd)}
-.rc-lbl{font-size:10px;font-weight:500;margin-bottom:6px;line-height:1.4}
-.rc.g .rc-lbl{color:var(--green)}.rc.b .rc-lbl{color:var(--blue)}.rc.a .rc-lbl{color:var(--amber)}
-.rc-val{font-size:14px;font-weight:700;transition:all .2s}
-.rc.g .rc-val{color:var(--green)}.rc.b .rc-val{color:var(--blue)}.rc.a .rc-val{color:var(--amber)}
-.rc-sub{font-size:10px;margin-top:3px;opacity:.65}
-.rc.g .rc-sub{color:var(--green)}.rc.b .rc-sub{color:var(--blue)}.rc.a .rc-sub{color:var(--amber)}
-
-/* Metrics */
-.sec-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);margin-bottom:10px}
+/* Metrics grid */
 .metrics{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px}
 .metric{background:var(--bg);border-radius:12px;padding:13px 14px;transition:background .3s}
 .m-lbl{font-size:11px;color:var(--muted);margin-bottom:4px}
@@ -108,38 +86,46 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
 .m-sub{font-size:11px;color:var(--muted);margin-top:2px}
 .cg{color:var(--green)!important}.cb{color:var(--blue)!important}.ca{color:var(--amber)!important}.cr{color:var(--red)!important}
 
-/* Progress */
+/* Result rows */
+.brow{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--border)}
+.brow:last-child{border-bottom:none}
+.brow-lbl{font-size:13px;color:var(--muted)}
+.brow-val{font-size:13px;font-weight:500}
+.sec-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);margin-bottom:10px}
+
+/* Progress bar */
 .pbar-track{background:var(--track);border-radius:4px;height:6px;overflow:hidden;margin-bottom:5px}
 .pbar-fill{height:100%;border-radius:4px;transition:width .35s cubic-bezier(.4,0,.2,1),background .3s}
 .pbar-lbls{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-bottom:18px}
 
-/* Breakdown */
-.brow{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--border)}
-.brow:last-child{border-bottom:none;font-weight:600}
-.brow-lbl{font-size:13px;color:var(--muted)}
-.brow-val{font-size:13px;font-weight:500;transition:all .2s}
-
 /* Verdict */
-.verdict{border-radius:14px;padding:14px 16px;margin-top:14px;border:1px solid}
+.verdict{border-radius:14px;padding:14px 16px;border:1px solid;margin-bottom:16px}
 .verdict.ok{background:var(--green-bg);border-color:var(--green-bd)}
-.verdict.warn{background:var(--amber-bg);border-color:var(--amber-bd)}
 .verdict.bad{background:var(--red-bg);border-color:var(--red-bd)}
 .v-title{font-size:13px;font-weight:700;margin-bottom:4px}
-.verdict.ok .v-title{color:var(--green)}.verdict.warn .v-title{color:var(--amber)}.verdict.bad .v-title{color:var(--red)}
+.verdict.ok .v-title{color:var(--green)}.verdict.bad .v-title{color:var(--red)}
 .v-body{font-size:13px;line-height:1.55}
-.verdict.ok .v-body{color:var(--green)}.verdict.warn .v-body{color:var(--amber)}.verdict.bad .v-body{color:var(--red)}
+.verdict.ok .v-body{color:var(--green)}.verdict.bad .v-body{color:var(--red)}
 
 /* Totals */
-.totals{background:var(--bg);border-radius:14px;padding:16px;margin-top:20px;transition:background .3s}
+.totals{background:var(--bg);border-radius:14px;padding:16px;margin-top:0}
 .t-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);margin-bottom:10px}
 .trow{display:flex;justify-content:space-between;align-items:baseline;padding:4px 0}
 .t-name{font-size:13px;color:var(--muted)}
-.t-val{font-size:16px;font-weight:700;letter-spacing:-0.3px;transition:all .2s}
+.t-val{font-size:16px;font-weight:700;letter-spacing:-0.3px}
 .div{height:1px;background:var(--border);margin:14px 0}
 
-/* Share */
-.share-btn{width:100%;margin-top:16px;padding:12px;background:var(--text);color:var(--bg);border:none;border-radius:12px;font-size:14px;font-weight:600;cursor:pointer;letter-spacing:.01em;transition:opacity .2s,transform .1s;display:flex;align-items:center;justify-content:center;gap:8px}
-.share-btn:active{transform:scale(.98);opacity:.85}
+/* Rate cards */
+.rate-grid{display:grid;gap:8px;margin-bottom:20px}
+.rc{border-radius:14px;padding:13px;border:1px solid}
+.rc.g{background:var(--green-bg);border-color:var(--green-bd)}
+.rc.a{background:var(--amber-bg);border-color:var(--amber-bd)}
+.rc-lbl{font-size:10px;font-weight:500;margin-bottom:6px;line-height:1.4}
+.rc.g .rc-lbl{color:var(--green)}.rc.a .rc-lbl{color:var(--amber)}
+.rc-val{font-size:14px;font-weight:700}
+.rc.g .rc-val{color:var(--green)}.rc.a .rc-val{color:var(--amber)}
+.rc-sub{font-size:10px;margin-top:3px;opacity:.65}
+.rc.g .rc-sub{color:var(--green)}.rc.a .rc-sub{color:var(--amber)}
 </style>
 </head>
 <body>
@@ -166,40 +152,40 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
       <button class="curr-btn on" id="btn-aed" onclick="setCurr('AED')">AED</button>
       <button class="curr-btn" id="btn-usd" onclick="setCurr('USD')">USD</button>
     </div>
-    <button class="theme-btn" onclick="toggleTheme()" id="theme-btn">🌙</button>
+    <button class="theme-btn" onclick="toggleTheme()" id="theme-btn">Auto</button>
   </div>
 </div>
 
-<!-- PROPERTY -->
+<!-- 1. PROPERTY & CASH -->
 <div class="card" id="card-property">
   <div class="card-head" onclick="toggleCard('property')">
-    <span class="ctitle">Property</span>
+    <span class="ctitle">Property & Cash</span>
     <span class="chevron open" id="chev-property">▼</span>
   </div>
   <div class="card-body-wrap open" id="body-property"><div class="card-body-inner">
     <div class="field">
-      <div class="ftop"><span class="flabel">Price</span><input class="finput" id="t-price" value="2,900,000"></div>
+      <div class="ftop"><span class="flabel">Property price</span><input class="finput" id="t-price" value="2,900,000"></div>
       <input type="range" id="price" min="1000000" max="6000000" step="50000" value="2900000">
       <div class="rlabels"><span id="rl-price-min">AED 1M</span><span id="rl-price-max">AED 6M</span></div>
     </div>
     <div class="field">
-      <div class="ftop"><span class="flabel">Size (sqft)</span><input class="finput" id="t-sqft" value="1,500"></div>
-      <input type="range" id="sqft" min="600" max="3000" step="10" value="1500">
-      <div class="rlabels"><span>600</span><span>3,000</span></div>
-    </div>
-    <div class="field">
-      <div class="ftop"><span class="flabel">Cash available</span><input class="finput" id="t-cash" value="800,000"></div>
+      <div class="ftop"><span class="flabel">Your cash available</span><input class="finput" id="t-cash" value="800,000"></div>
       <input type="range" id="cash" min="200000" max="3000000" step="50000" value="800000">
       <div class="rlabels"><span id="rl-cash-min">AED 200K</span><span id="rl-cash-max">AED 3M</span></div>
+      <div class="fnote">Down payment, DLD fee (4%), agency (2%), valuation — all come from here</div>
     </div>
-    <div class="srow"><span class="srow-label">DLD fee</span><input class="finput" id="t-dld" value="4%" style="width:72px" oninput="vals.dld=parseFloat(this.value.replace(/[^0-9.]/g,''))||4;calc();" onblur="this.value=vals.dld+'%'" onfocus="this.value=vals.dld"></div>
-    <div class="srow"><span class="srow-label">Agency fee</span><input class="finput" id="t-agency" value="2%" style="width:72px" oninput="vals.agency=parseFloat(this.value.replace(/[^0-9.]/g,''))||2;calc();" onblur="this.value=vals.agency+'%'" onfocus="this.value=vals.agency"></div>
-    <div class="srow"><span class="srow-label">FAB valuation fee</span><span class="srow-val" id="sv-val">AED 3,150</span></div>
-  </div>
-  </div>
+    <div class="field">
+      <div class="ftop"><span class="flabel">Property size (sqft)</span><input class="finput" id="t-sqft" value="1,500"></div>
+      <input type="range" id="sqft" min="600" max="3000" step="10" value="1500">
+      <div class="rlabels"><span>600 sqft</span><span>3,000 sqft</span></div>
+      <div class="fnote">Used to estimate DEWA and service charge</div>
+    </div>
+    <span id="sv-val" style="display:none"></span>
+    <div id="metrics" style="display:none"></div>
+  </div></div>
 </div>
 
-<!-- MORTGAGE -->
+<!-- 2. MORTGAGE -->
 <div class="card" id="card-mortgage">
   <div class="card-head" onclick="toggleCard('mortgage')">
     <span class="ctitle">Mortgage</span>
@@ -207,7 +193,7 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
   </div>
   <div class="card-body-wrap open" id="body-mortgage"><div class="card-body-inner">
     <div class="field">
-      <div class="ftop"><span class="flabel">Approved amount</span><input class="finput" id="t-approved" value="2,600,000"></div>
+      <div class="ftop"><span class="flabel">Bank approved amount</span><input class="finput" id="t-approved" value="2,600,000"></div>
       <input type="range" id="approved" min="500000" max="5000000" step="50000" value="2600000">
       <div class="rlabels"><span id="rl-appr-min">AED 500K</span><span id="rl-appr-max">AED 5M</span></div>
     </div>
@@ -217,68 +203,83 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
         <input class="finput" id="t-down" value="20">
       </div>
       <input type="range" id="down" min="20" max="80" step="1" value="20">
-      <div class="rlabels"><span>20% (min)</span><span>80%</span></div>
+      <div class="rlabels"><span>20% min</span><span>80%</span></div>
+      <div class="fnote">Auto-calculated to use max of your cash · tap to override</div>
     </div>
     <div class="field">
-      <div class="ftop"><span class="flabel">Loan term (years)</span><input class="finput" id="t-years" value="25"></div>
+      <div class="ftop"><span class="flabel">Loan term</span><input class="finput" id="t-years" value="25"></div>
       <input type="range" id="years" min="1" max="25" step="1" value="25">
-      <div class="rlabels"><span>1</span><span>25</span></div>
+      <div class="rlabels"><span>1 year</span><span>25 years</span></div>
     </div>
-
-    <!-- Fixed rate selector -->
     <div class="field">
-      <div class="ftop"><span class="flabel">Fixed rate (%)</span><input class="finput" id="t-fixrate" value="4.19"></div>
+      <div class="ftop"><span class="flabel">Fixed interest rate</span><input class="finput" id="t-fixrate" value="4.19"></div>
       <div style="display:flex;gap:8px;margin-top:10px">
-        <button class="curr-btn" id="btn-rate3" onclick="setFixRate(3.99,3,'btn-rate3')" style="flex:1;border-radius:10px;border:1px solid var(--border);padding:8px;font-size:12px;cursor:pointer">3.99% · 3yr</button>
-        <button class="curr-btn on" id="btn-rate5" onclick="setFixRate(4.19,5,'btn-rate5')" style="flex:1;border-radius:10px;border:1px solid var(--border);padding:8px;font-size:12px;cursor:pointer">4.19% · 5yr</button>
+        <button class="curr-btn" id="btn-rate3" onclick="setFixRate(3.99,3,'btn-rate3')" style="flex:1;border-radius:10px;border:1px solid var(--border);padding:8px;font-size:12px;cursor:pointer">3.99% · 3 years</button>
+        <button class="curr-btn on" id="btn-rate5" onclick="setFixRate(4.19,5,'btn-rate5')" style="flex:1;border-radius:10px;border:1px solid var(--border);padding:8px;font-size:12px;cursor:pointer">4.19% · 5 years</button>
       </div>
     </div>
-
     <div class="field">
-      <div class="ftop">
-        <span class="flabel">Fixed period (years) <span id="fixperiod-tag" class="tag tag-auto">auto</span></span>
-        <input class="finput" id="t-fixperiod" value="5">
-      </div>
-      <input type="range" id="fixperiod" min="1" max="10" step="1" value="5">
-      <div class="rlabels"><span>1 year</span><span>10 years</span></div>
-    </div>
-
-    <div class="field">
-      <div class="ftop"><span class="flabel">Expected EIBOR (%)</span><input class="finput" id="t-eibor" value="3.45"></div>
+      <div class="ftop"><span class="flabel">Expected EIBOR <span class="fnote" style="display:inline;font-size:11px">(variable rate after fixed)</span></span><input class="finput" id="t-eibor" value="3.45"></div>
       <input type="range" id="eibor" min="1" max="6" step="0.05" value="3.45">
-      <div class="rlabels"><span>1% optimistic</span><span>6% stress</span></div>
+      <div class="rlabels"><span>1% optimistic</span><span>6% stress test</span></div>
     </div>
-  </div>
-  </div>
+    <!-- Hidden fixperiod — still tracked in vals -->
+    <input type="hidden" id="fixperiod" value="5">
+    <input type="hidden" id="t-fixperiod" value="5">
+  </div></div>
 </div>
 
-<!-- RESULTS -->
+<!-- 3. RESULTS -->
 <div class="card" id="card-results">
   <div class="card-head" onclick="toggleCard('results')">
-    <span class="ctitle">Monthly mortgage</span>
+    <span class="ctitle">Results</span>
     <span class="chevron open" id="chev-results">▼</span>
   </div>
   <div class="card-body-wrap open" id="body-results"><div class="card-body-inner">
-    <div class="rate-grid" style="grid-template-columns:1fr 1fr">
-      <div class="rc g"><div class="rc-lbl">Fixed rate<br><span id="rc-fixrate-lbl">4.19% · 5yr</span></div><div class="rc-val" id="pay-3">—</div><div class="rc-sub">principal + interest</div></div>
-      <div class="rc a"><div class="rc-lbl">Variable<br>after fixed period</div><div class="rc-val" id="pay-var">—</div><div class="rc-sub" id="var-sub">EIBOR+1.5%</div></div>
-    </div>
-    <div class="sec-lbl">Summary</div>
-    <div class="metrics" id="metrics"></div>
-    <div class="pbar-track"><div class="pbar-fill" id="cashbar"></div></div>
-    <div class="pbar-lbls"><span id="pb-zero">AED 0</span><span id="barlabel"></span></div>
-    <div class="sec-lbl">Upfront costs</div>
-    <div id="breakdown"></div>
+
+    <!-- Closing cost verdict -->
     <div id="verdict"></div>
 
+    <!-- Upfront breakdown -->
+    <div class="sec-lbl">What you pay at closing</div>
+    <div id="breakdown" style="margin-bottom:16px"></div>
+    <div class="pbar-track"><div class="pbar-fill" id="cashbar"></div></div>
+    <div class="pbar-lbls"><span id="pb-zero">AED 0</span><span id="barlabel"></span></div>
+
+    <!-- Monthly payment -->
+    <div class="sec-lbl">Monthly payment</div>
+    <div class="rate-grid" style="grid-template-columns:1fr 1fr">
+      <div class="rc g">
+        <div class="rc-lbl">Fixed period<br><span id="rc-fixrate-lbl">4.19% · 5yr</span></div>
+        <div class="rc-val" id="pay-3">—</div>
+        <div class="rc-sub">incl. insurance</div>
+      </div>
+      <div class="rc a">
+        <div class="rc-lbl">Variable rate<br><span id="var-sub">after fixed period</span></div>
+        <div class="rc-val" id="pay-var">—</div>
+        <div class="rc-sub">incl. insurance</div>
+      </div>
+    </div>
+
+    <!-- All-in monthly -->
+    <div class="sec-lbl">Monthly all-in (mortgage + living costs)</div>
+    <div class="totals">
+      <div class="trow"><span class="t-name">Fixed rate period</span><span class="t-val cg" id="grand-3">—</span></div>
+      <div class="trow"><span class="t-name">Variable rate period</span><span class="t-val ca" id="grand-var">—</span></div>
+      <div class="div"></div>
+      <div class="t-lbl">Annual all-in</div>
+      <div class="trow"><span class="t-name">Fixed rate period</span><span class="t-val cg" id="grand-3-yr">—</span></div>
+      <div class="trow"><span class="t-name">Variable rate period</span><span class="t-val ca" id="grand-var-yr">—</span></div>
+    </div>
+
+    <!-- Total over term -->
     <div style="height:1px;background:var(--border);margin:16px 0"></div>
     <div class="sec-lbl">Total cost over loan term</div>
     <div id="total-cost"></div>
-  </div>
-  </div>
+  </div></div>
 </div>
 
-<!-- LIVING COSTS -->
+<!-- 4. LIVING COSTS -->
 <div class="card" id="card-living">
   <div class="card-head" onclick="toggleCard('living')">
     <span class="ctitle">Monthly living costs</span>
@@ -292,12 +293,13 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
       </div>
       <input type="range" id="dewa" min="0" max="4000" step="25" value="1275">
       <div class="rlabels"><span id="rl-dewa-min">AED 0</span><span id="rl-dewa-max">AED 4,000</span></div>
-      <div class="fnote" id="dewa-note">Electricity + water + housing fee (5% rental value) · district cooling included</div>
+      <div class="fnote" id="dewa-note">Electricity + water + housing fee · district cooling included</div>
     </div>
     <div class="field">
       <div class="ftop"><span class="flabel">Service charge</span><input class="finput" id="t-sc" value="23"></div>
       <input type="range" id="sc" min="0" max="35" step="1" value="23">
-      <div class="rlabels"><span id="sc-note">AED/sqft/yr · monthly average</span><span></span></div>
+      <div class="rlabels"><span id="sc-note">AED/sqft/yr</span><span></span></div>
+      <div class="fnote">Building maintenance fee — paid by owners only, not renters</div>
     </div>
     <div class="field">
       <div class="ftop"><span class="flabel">Internet</span><input class="finput" id="t-internet" value="360"></div>
@@ -308,71 +310,73 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
       <div class="ftop"><span class="flabel">Gas</span><input class="finput" id="t-gas" value="55"></div>
       <input type="range" id="gas" min="0" max="300" step="5" value="55">
       <div class="rlabels"><span id="rl-gas-min">AED 0</span><span id="rl-gas-max">AED 300</span></div>
-      <div class="fnote">Lootah BCGas · billed quarterly · monthly average</div>
+      <div class="fnote">Lootah BCGas · billed quarterly · monthly average shown</div>
     </div>
-    <div class="totals">
-      <div class="t-lbl">Monthly all-in</div>
-      <div class="trow"><span class="t-name">Fixed rate + living</span><span class="t-val cg" id="grand-3">—</span></div>
-      <div class="trow"><span class="t-name">Variable rate + living</span><span class="t-val ca" id="grand-var">—</span></div>
-      <div class="div"></div>
-      <div class="t-lbl">Annual all-in</div>
-      <div class="trow"><span class="t-name">Fixed rate + living</span><span class="t-val cg" id="grand-3-yr">—</span></div>
-      <div class="trow"><span class="t-name">Variable rate + living</span><span class="t-val ca" id="grand-var-yr">—</span></div>
-    </div>
-  </div>
-  </div>
+  </div></div>
 </div>
 
+<!-- 5. BUY VS RENT -->
+<div class="card" id="card-bvr">
+  <div class="card-head" onclick="toggleCard('bvr')">
+    <span class="ctitle">Buy vs Rent comparison</span>
+    <span class="chevron" id="chev-bvr">▼</span>
+  </div>
+  <div class="card-body-wrap" id="body-bvr"><div class="card-body-inner">
+    <div class="field">
+      <div class="ftop"><span class="flabel">Your current annual rent</span><input class="finput" id="t-rent" value="85,000"></div>
+      <input type="range" id="rent" min="50000" max="300000" step="1000" value="85000">
+      <div class="rlabels"><span id="rl-rent-min">AED 50K</span><span id="rl-rent-max">AED 300K</span></div>
+      <div class="fnote" id="rent-hint">What you currently pay to rent where you live</div>
+    </div>
+    <div class="field">
+      <div class="ftop"><span class="flabel">Annual rent increase</span><input class="finput" id="t-rent-inc" value="5.0"></div>
+      <input type="range" id="rent-inc" min="0" max="20" step="0.1" value="5">
+      <div class="rlabels"><span>0%</span><span>20%</span></div>
+      <div class="fnote">Dubai RERA average: 5–10%/year · set 0% for fixed contract</div>
+    </div>
+    <div class="field">
+      <div class="ftop"><span class="flabel">Property value growth</span><input class="finput" id="t-prop-growth" value="5.0"></div>
+      <input type="range" id="prop-growth" min="0" max="20" step="0.1" value="5">
+      <div class="rlabels"><span>0%</span><span>20%</span></div>
+      <div class="fnote">Creek Beach historical: ~5–8%/year · set 0% for conservative estimate</div>
+    </div>
+    <div id="bvr-results" style="margin-top:4px"></div>
+    <button id="bvr-living-btn" style="display:none"></button>
+  </div></div>
+</div>
 
-<!-- PREPAYMENT CALCULATOR -->
-<div class="card" id="card-prepay" style="margin-top:0">
+<!-- 6. EARLY REPAYMENT -->
+<div class="card" id="card-prepay">
   <div class="card-head" onclick="toggleCard('prepay')">
-    <span class="ctitle">Early repayment</span>
+    <span class="ctitle">Early repayment calculator</span>
     <span class="chevron" id="chev-prepay">▼</span>
   </div>
   <div class="card-body-wrap" id="body-prepay"><div class="card-body-inner">
-
-    <!-- Month of prepayment -->
     <div class="field">
       <div class="ftop"><span class="flabel">Prepayment at month</span><input class="finput" id="t-pp-month" value="12"></div>
       <input type="range" id="pp-month" min="1" max="300" step="1" value="12">
       <div class="rlabels"><span>Month 1</span><span>Month 300</span></div>
       <div class="fnote" id="pp-month-note"></div>
     </div>
-
-    <!-- Prepayment amount -->
     <div class="field">
       <div class="ftop"><span class="flabel">Prepayment amount</span><input class="finput" id="t-pp-amt" value="200,000"></div>
       <input type="range" id="pp-amt" min="0" max="2000000" step="10000" value="200000">
       <div class="rlabels"><span id="pp-amt-min">AED 0</span><span id="pp-amt-max">AED 2M</span></div>
     </div>
-
-    <!-- Mode toggle -->
     <div style="display:flex;gap:8px;margin-bottom:20px">
       <button class="curr-btn on" id="pp-btn-term" onclick="setPPMode('term')" style="flex:1;border-radius:10px;border:1px solid var(--border);padding:9px;font-size:13px;cursor:pointer">Reduce term</button>
       <button class="curr-btn" id="pp-btn-pay" onclick="setPPMode('payment')" style="flex:1;border-radius:10px;border:1px solid var(--border);padding:9px;font-size:13px;cursor:pointer">Reduce payment</button>
     </div>
-
-    <!-- Investment return for comparison -->
     <div class="field" style="margin-bottom:16px">
-      <div class="ftop">
-        <span class="flabel">Investment return (%)</span>
-        <input class="finput" id="t-inv-rate" value="5.00">
-      </div>
+      <div class="ftop"><span class="flabel">Investment return (%)</span><input class="finput" id="t-inv-rate" value="5.00"></div>
       <input type="range" id="inv-rate" min="1" max="10" step="0.05" value="5">
       <div class="rlabels"><span>1% deposit</span><span>10% stocks</span></div>
     </div>
-
-    <!-- Results -->
     <div class="totals" id="pp-results" style="min-height:200px;overflow:hidden">
       <div style="text-align:center;color:var(--muted);font-size:13px;padding:8px 0">Adjust sliders to see calculation</div>
     </div>
-
-    <!-- Strategy comparison -->
     <div id="pp-strategy" style="margin-top:10px"></div>
-
-  </div>
-  </div>
+  </div></div>
 </div>
 
 <script>
@@ -466,9 +470,12 @@ function setCurr(c){
   document.getElementById('rl-gas-min').textContent=isUSD?'$0':'AED 0';
   document.getElementById('rl-gas-max').textContent=isUSD?'$82':'AED 300';
   document.getElementById('sv-val').textContent=fmt(3150);
+  document.getElementById('rl-rent-min').textContent=isUSD?'$13,615':'AED 50,000';
+  document.getElementById('rl-rent-max').textContent=isUSD?'$81,693':'AED 300,000';
   refreshInputs();
   calc();
   calcLiving();
+  calcBvR();
   calcPP();
 }
 
@@ -701,6 +708,7 @@ function calcLiving(){
   document.getElementById('grand-var').textContent=fmt(tv);
   document.getElementById('grand-3-yr').textContent=fmt(tf*12);
   document.getElementById('grand-var-yr').textContent=fmt(tv*12);
+  calcBvR();
 }
 
 // ─── calc ─────────────────────────────────────────────────
@@ -790,7 +798,196 @@ function calc(){
   calcLiving();
 }
 
-// ─── Prepayment calculator ────────────────────────────────
+let bvrLiving = false;
+function toggleBvrLiving(){
+  bvrLiving = !bvrLiving;
+  const btn = document.getElementById('bvr-living-btn');
+  btn.textContent = bvrLiving ? 'On' : 'Off';
+  btn.style.background = bvrLiving ? 'var(--text)' : 'var(--bg)';
+  btn.style.color = bvrLiving ? 'var(--bg)' : 'var(--muted)';
+  btn.style.borderColor = bvrLiving ? 'var(--text)' : 'var(--border)';
+  calcBvR();
+}
+
+// ─── Buy vs Rent ──────────────────────────────────────────
+function calcBvR(){
+  const rentAnnual  = parseFloat(document.getElementById('rent').value)||85000;
+  const rentInc     = isNaN(parseFloat(document.getElementById('rent-inc').value))?5:parseFloat(document.getElementById('rent-inc').value);
+  const propGrowth  = isNaN(parseFloat(document.getElementById('prop-growth').value))?5:parseFloat(document.getElementById('prop-growth').value);
+  const years       = vals.years;
+  const price       = vals.price;
+  const loan        = price - price*vals.down/100;
+  const n           = years*12;
+  const ins         = loan*0.000112 + price*0.0005/12;
+  const mortgageAnn = (mpay(loan,vals.fixrate,n)+ins)*12;
+  const scRate      = parseFloat(document.getElementById('sc').value)||23;
+  const scAnn       = Math.round(vals.sqft*scRate/12)*12;
+  const upfront     = price*vals.down/100 + price*vals.dld/100 + price*vals.agency/100 + 3150;
+
+  // Living costs (shared: DEWA + gas + internet, owner-only: SC)
+  const dewaAnn  = (parseFloat(document.getElementById('dewa').value)||0)*12;
+  const gasAnn   = (parseFloat(document.getElementById('gas').value)||0)*12;
+  const inetAnn  = (parseFloat(document.getElementById('internet').value)||0)*12;
+  const sharedAnn = dewaAnn + gasAnn + inetAnn; // both pay this
+  // Owner pays extra: SC (already in mortgageAnn+scAnn)
+  // Renter pays: shared only (no SC)
+
+  let rentNow = rentAnnual;
+  let cumRentPaid = 0;
+  let cumBuyCosts = upfront;
+  let propVal = price;
+  let breakEvenYear = null;
+  const rows2 = [];
+
+  for(let yr=1; yr<=years; yr++){
+    propVal *= (1+propGrowth/100);
+    const appreciation = propVal - price;
+    cumRentPaid += rentNow + (bvrLiving ? sharedAnn : 0);
+    cumBuyCosts += mortgageAnn + scAnn + (bvrLiving ? sharedAnn : 0);
+    const netBuy = cumBuyCosts - appreciation;
+    const netRent = cumRentPaid;
+    rows2.push({yr, rentNow, cumRentPaid, cumBuyCosts, netBuy, netRent, appreciation, propVal});
+    if(!breakEvenYear && netBuy < netRent) breakEvenYear = yr;
+    rentNow *= (1+rentInc/100);
+  }
+
+  const bey = breakEvenYear;
+  const last = rows2[rows2.length-1];
+  const buyColor = bey?'var(--green)':'var(--amber)';
+  const buyBg    = bey?'var(--green-bg)':'var(--amber-bg)';
+  const buyBd    = bey?'var(--green-bd)':'var(--amber-bd)';
+
+  // Find break-even growth rate
+  let minGrowthForBEY = null;
+  for(let g=0; g<=20; g+=0.5){
+    let rn=rentAnnual, cr=0, cb=upfront, pv=price;
+    for(let yr=1;yr<=years;yr++){
+      pv*=(1+g/100);
+      cr+=rn+(bvrLiving?sharedAnn:0);
+      cb+=mortgageAnn+scAnn+(bvrLiving?sharedAnn:0);
+      if(cb-(pv-price)<cr){minGrowthForBEY=g;break;}
+      rn*=(1+rentInc/100);
+    }
+    if(minGrowthForBEY!==null) break;
+  }
+
+  const rentLost = last.cumRentPaid;
+  const netAdvantage = last.cumRentPaid - last.netBuy;
+
+
+  // Build chart data
+  const chartData = rows2;
+  const maxVal = Math.max(...chartData.map(r=>Math.max(r.netBuy, r.netRent)));
+  const minVal = Math.min(...chartData.map(r=>Math.min(r.netBuy, r.netRent)));
+  const range = maxVal - minVal || 1;
+
+  // SVG chart
+  const W=320, H=160, PAD_L=12, PAD_R=8, PAD_T=12, PAD_B=24;
+  const cW=W-PAD_L-PAD_R, cH=H-PAD_T-PAD_B;
+  const xScale=yr=>(yr-1)/(years-1)*cW;
+  const yScale=v=>cH-(v-minVal)/range*cH;
+
+  const rentPts=chartData.map(r=>`${PAD_L+xScale(r.yr)},${PAD_T+yScale(r.netRent)}`).join(' ');
+  const buyPts=chartData.map(r=>`${PAD_L+xScale(r.yr)},${PAD_T+yScale(r.netBuy)}`).join(' ');
+
+  // X axis labels (years)
+  const xLabels=[1,5,10,15,20,25].filter(y=>y<=years).map(y=>{
+    const x=PAD_L+xScale(y);
+    return `<text x="${x}" y="${H-4}" text-anchor="middle" font-size="9" fill="var(--muted)">${y}</text>`;
+  }).join('');
+
+  // Break-even dot
+  const beyDot = bey ? `<circle cx="${PAD_L+xScale(bey)}" cy="${PAD_T+yScale(rows2[bey-1].netBuy)}" r="5" fill="var(--green)" stroke="var(--card)" stroke-width="2"/>
+    <text x="${PAD_L+xScale(bey)}" y="${PAD_T+yScale(rows2[bey-1].netBuy)-10}" text-anchor="middle" font-size="9" fill="var(--green)" font-weight="600">yr${bey}</text>` : '';
+
+  // Zero line
+  const zeroY = PAD_T+yScale(0);
+  const zeroLine = (minVal<0&&maxVal>0) ? `<line x1="${PAD_L}" y1="${zeroY}" x2="${PAD_L+cW}" y2="${zeroY}" stroke="var(--border)" stroke-width="1" stroke-dasharray="3,3"/>` : '';
+
+  const svg = `<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;display:block;margin-bottom:12px">
+    ${zeroLine}
+    <polyline points="${rentPts}" fill="none" stroke="#E8AAAA" stroke-width="2.5" stroke-linejoin="round"/>
+    <polyline points="${buyPts}" fill="none" stroke="#B8D9A0" stroke-width="2.5" stroke-linejoin="round"/>
+    ${beyDot}
+    ${xLabels}
+    <text x="${PAD_L}" y="${H-4}" text-anchor="start" font-size="9" fill="var(--muted)">Year</text>
+  </svg>`;
+
+  // Legend
+  const legend = `<div style="display:flex;gap:16px;margin-bottom:12px;font-size:12px">
+    <span style="display:flex;align-items:center;gap:5px"><span style="display:inline-block;width:16px;height:3px;background:#E8AAAA;border-radius:2px"></span><span style="color:var(--muted)">Cumulative rent</span></span>
+    <span style="display:flex;align-items:center;gap:5px"><span style="display:inline-block;width:16px;height:3px;background:#B8D9A0;border-radius:2px"></span><span style="color:var(--muted)">Buy net cost</span></span>
+  </div>`;
+
+  let html = `
+    <div style="background:${buyBg};border:1px solid ${buyBd};border-radius:14px;padding:14px 16px;margin-bottom:12px">
+      <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:${buyColor};margin-bottom:6px">Verdict</div>
+      <div style="font-size:20px;font-weight:700;color:${buyColor};margin-bottom:4px">${bey?`Buying wins from year ${bey}`:`Renting cheaper over ${years} years`}</div>
+      <div style="font-size:12px;color:${buyColor};opacity:.85;line-height:1.5">${bey
+        ?`Net cost of owning drops below cumulative rent at year ${bey}`
+        :`At ${propGrowth}%/yr growth, appreciation doesn't offset higher buying costs`}</div>
+    </div>
+
+    ${legend}
+    <div style="background:var(--bg);border-radius:12px;padding:12px">
+      ${svg}
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px">
+      <div class="metric">
+        <div class="m-lbl">Rent paid after ${years} yrs</div>
+        <div class="m-val cr" style="font-size:14px">${fmt(rentLost)}</div>
+        <div class="m-sub">nothing to show for it</div>
+      </div>
+      <div class="metric">
+        <div class="m-lbl">${bey?'Buying saves vs renting':'Renting saves vs buying'}</div>
+        <div class="m-val ${netAdvantage>0?'cg':'cr'}" style="font-size:14px">${fmt(Math.abs(netAdvantage))}</div>
+        <div class="m-sub">after ${years} years</div>
+      </div>
+      <div class="metric">
+        <div class="m-lbl">Property value gain</div>
+        <div class="m-val ${last.appreciation>0?'cg':''}" style="font-size:14px">${fmt(last.appreciation)}</div>
+        <div class="m-sub">${propGrowth}%/yr over ${years} years</div>
+      </div>
+      <div class="metric">
+        <div class="m-lbl">Annual buy cost (mortgage+SC${bvrLiving?'+living':''})</div>
+        <div class="m-val cr" style="font-size:14px">${fmt(mortgageAnn+scAnn+(bvrLiving?sharedAnn:0))}</div>
+        <div class="m-sub">vs ${fmt(rentAnnual+(bvrLiving?sharedAnn:0))} renting${bvrLiving?'+living':''}</div>
+      </div>
+      <div class="metric">
+        <div class="m-lbl">Min growth for buying to win</div>
+        <div class="m-val" style="font-size:14px">${minGrowthForBEY!==null?minGrowthForBEY+'%/yr':'> 20%/yr'}</div>
+        <div class="m-sub">flat must grow at least this fast</div>
+      </div>
+    </div>`;
+  document.getElementById('bvr-results').innerHTML=html;
+
+
+
+}
+['rent','rent-inc','prop-growth'].forEach(key=>{
+  const slider=document.getElementById(key);
+  const tin=document.getElementById('t-'+key);
+  slider.addEventListener('input',()=>{
+    if(document.activeElement!==tin){
+      const v=parseFloat(slider.value);
+      if(key==='rent') tin.value=currency==='USD'?Math.round(v/USD_RATE).toLocaleString('en-US'):Math.round(v).toLocaleString('en-US');
+      else tin.value=v.toFixed(1);
+    }
+    calcBvR();
+  });
+  tin.addEventListener('input',()=>{
+    let v=parseFloat(tin.value.replace(/[^0-9.]/g,''))||0;
+    if(key==='rent'&&currency==='USD') v*=USD_RATE;
+    slider.value=v;
+    calcBvR();
+  });
+  tin.addEventListener('blur',()=>{
+    const v=parseFloat(slider.value)||0;
+    if(key==='rent') tin.value=currency==='USD'?Math.round(v/USD_RATE).toLocaleString('en-US'):Math.round(v).toLocaleString('en-US');
+    else tin.value=v.toFixed(1);
+  });
+});
 let ppMode = 'term'; // 'term' or 'payment'
 
 function setPPMode(m){
@@ -1018,6 +1215,7 @@ document.getElementById('t-gas').value=fmtN(55);
 document.getElementById('gas').value=55;
 autoDown();
 calc();
+calcBvR();
 calcPP();
 </script>
 </body>
