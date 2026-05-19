@@ -525,12 +525,10 @@ function setFixRate(r,yrs,btnId){
   document.getElementById('t-fixrate').value=r.toFixed(2);
   ['btn-rate3','btn-rate5'].forEach(id=>document.getElementById(id).classList.remove('on'));
   document.getElementById(btnId).classList.add('on');
-  // Always reset period to auto when pressing preset button
   fixPeriodManual=false;
   vals.fixperiod=yrs;
   document.getElementById('fixperiod').value=yrs;
   document.getElementById('t-fixperiod').value=String(yrs);
-  setTag('fixperiod-tag',false);
   calc();
 }
 
@@ -539,7 +537,7 @@ document.getElementById('fixperiod').addEventListener('input',()=>{
   const v=parseInt(document.getElementById('fixperiod').value);
   vals.fixperiod=v;
   document.getElementById('t-fixperiod').value=String(v);
-  fixPeriodManual=true;setTag('fixperiod-tag',true);
+  
   calc();
 });
 document.getElementById('t-fixperiod').addEventListener('input',()=>{
@@ -547,7 +545,7 @@ document.getElementById('t-fixperiod').addEventListener('input',()=>{
   v=Math.min(10,Math.max(1,v));
   vals.fixperiod=v;
   document.getElementById('fixperiod').value=v;
-  fixPeriodManual=true;setTag('fixperiod-tag',true);
+  
   calc();
 });
 document.getElementById('t-fixperiod').addEventListener('blur',()=>{
