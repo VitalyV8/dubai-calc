@@ -199,10 +199,10 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
 <!-- SIMPLE MODE -->
 <div id="view-simple">
   <div class="card" id="card-simple">
-    <div class="card-head" style="cursor:default;pointer-events:none">
-      <span class="ctitle">Property details</span>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;padding-bottom:14px;border-bottom:1px solid var(--border)">
+      <span style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--muted)">Quick estimate</span>
+      <span style="font-size:11px;color:var(--muted)">Tap Advanced for full control</span>
     </div>
-    <div class="card-body-wrap open"><div class="card-body-inner">
     <div class="field">
       <div class="ftop"><span class="flabel">Property price</span><input class="finput" id="s-price" type="text" inputmode="numeric" value="2,900,000" oninput="simpleCalc()"></div>
       <input type="range" id="s-price-range" min="1000000" max="6000000" step="50000" value="2900000" oninput="document.getElementById('s-price').value=fmtN(this.value);simpleCalc()">
@@ -228,7 +228,6 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
       </div>
       <div class="fnote">Fixed rate · after fixed period switches to EIBOR + 1.5%</div>
     </div>
-    </div></div>
   </div>
 
   <div id="s-result"></div>
@@ -294,8 +293,8 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
     <div class="field">
       <div class="ftop"><span class="flabel">Fixed interest rate</span><input class="finput" id="t-fixrate" value="4.19"></div>
       <div style="display:flex;gap:8px;margin-top:10px">
-        <button class="curr-btn" id="btn-rate3" onclick="setFixRate(3.99,3,'btn-rate3')" style="flex:1;border-radius:10px;border:1px solid var(--border);padding:8px;font-size:12px;cursor:pointer">3.99% · 3 years</button>
-        <button class="curr-btn on" id="btn-rate5" onclick="setFixRate(4.19,5,'btn-rate5')" style="flex:1;border-radius:10px;border:1px solid var(--border);padding:8px;font-size:12px;cursor:pointer">4.19% · 5 years</button>
+        <button class="curr-btn" id="btn-rate3" onclick="setFixRate(3.99,3,'btn-rate3')" style="flex:1;border-radius:10px;border:1px solid var(--border);padding:9px;font-size:13px;cursor:pointer">3.99% · 3yr</button>
+        <button class="curr-btn on" id="btn-rate5" onclick="setFixRate(4.19,5,'btn-rate5')" style="flex:1;border-radius:10px;border:1px solid var(--border);padding:9px;font-size:13px;cursor:pointer">4.19% · 5yr</button>
       </div>
     </div>
     <div class="field">
@@ -1042,10 +1041,8 @@ function calc(){
 
   document.getElementById('breakdown').innerHTML=`
     <div class="brow"><span class="brow-lbl">Down payment (${dp}%)</span><span class="brow-val">${fmt(da)}</span></div>
-    <div class="brow"><span class="brow-lbl">DLD fee (${vals.dld}%)</span><span class="brow-val">${fmt(dld)}</span></div>
-    <div class="brow"><span class="brow-lbl">Agency fee (${vals.agency}%)</span><span class="brow-val">${fmt(ag)}</span></div>
-    <div class="brow"><span class="brow-lbl">Valuation fee</span><span class="brow-val">${fmt(VAL)}</span></div>
-    <div class="brow"><span class="brow-lbl">Total at closing</span><span class="brow-val" style="color:${enough?'var(--green)':'var(--red)'}">${fmt(up)}</span></div>
+    <div class="brow"><span class="brow-lbl">DLD ${vals.dld}% + agency ${vals.agency}% + valuation</span><span class="brow-val">${fmt(dld+ag+VAL)}</span></div>
+    <div class="brow" style="padding-top:12px"><span class="brow-lbl" style="font-weight:700;color:var(--text);font-size:14px">Total at closing</span><span class="brow-val" style="font-size:18px;font-weight:700;color:${enough?'var(--green)':'var(--red)'}">${fmt(up)}</span></div>
   `;
 
   let vc,vt,vb;
@@ -1069,26 +1066,16 @@ function calc(){
   const totalWithLiving = totalNoLiving + totalLivingOver;
 
   document.getElementById('total-cost').innerHTML=`
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px">
-      <div class="metric" style="grid-column:1/-1">
-        <div class="m-lbl">Total you pay over ${vals.years} years</div>
-        <div class="m-val cg" style="font-size:20px">${fmt(totalWithLiving)}</div>
-        <div class="m-sub">incl. all costs</div>
+    <div class="totals">
+      <div style="text-align:center;padding:6px 0 14px;border-bottom:1px solid var(--border);margin-bottom:14px">
+        <div style="font-size:11px;color:var(--muted);margin-bottom:4px">Total over ${vals.years} years (incl. all costs)</div>
+        <div style="font-size:26px;font-weight:700;color:var(--green);letter-spacing:-0.5px">${fmt(totalWithLiving)}</div>
       </div>
-      <div class="metric">
-        <div class="m-lbl">Without living costs</div>
-        <div class="m-val" style="font-size:15px">${fmt(totalNoLiving)}</div>
-        <div class="m-sub">closing + mortgage</div>
-      </div>
-      <div class="metric">
-        <div class="m-lbl">Living costs total</div>
-        <div class="m-val" style="font-size:15px">${fmt(totalLivingOver)}</div>
-        <div class="m-sub">${vals.years} yrs × ${fmt(livingMo)}/mo</div>
-      </div>
+      <div class="brow"><span class="brow-lbl">Upfront at closing</span><span class="brow-val">${fmt(up)}</span></div>
+      <div class="brow"><span class="brow-lbl">Mortgage payments (${vals.years} yrs)</span><span class="brow-val">${fmt(totalMortgagePayments)}</span></div>
+      <div class="brow"><span class="brow-lbl">Living costs (${vals.years} yrs × ${fmt(livingMo)}/mo)</span><span class="brow-val">${fmt(totalLivingOver)}</span></div>
+      <div class="brow" style="border-bottom:none;padding-top:12px"><span class="brow-lbl" style="color:var(--red)">Of which mortgage interest</span><span class="brow-val cr">${fmt(totalInterest)}</span></div>
     </div>
-    <div class="brow"><span class="brow-lbl">Upfront at closing</span><span class="brow-val">${fmt(up)}</span></div>
-    <div class="brow"><span class="brow-lbl">Mortgage payments (${vals.years} yrs)</span><span class="brow-val">${fmt(totalMortgagePayments)}</span></div>
-    <div class="brow" style="border-bottom:none"><span class="brow-lbl">Of which interest</span><span class="brow-val cr">${fmt(totalInterest)}</span></div>
   `;
 
   calcLiving();
