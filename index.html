@@ -36,10 +36,19 @@ body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text',system-ui,sans-s
 .splash-sub{font-size:14px;color:#666;margin-top:6px}
 @keyframes splashPop{from{transform:scale(.6);opacity:0}to{transform:scale(1);opacity:1}}
 
-/* Mode toggle */
+/* Unified period toggle */
+.period-toggle{display:flex;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:3px;gap:3px}
+.period-btn{padding:5px 14px;border:none;border-radius:7px;font-size:12px;font-weight:600;cursor:pointer;background:transparent;color:var(--muted);transition:all .2s}
+.period-btn.on{background:var(--text);color:var(--bg)}
 .mode-toggle{display:flex;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:4px;margin-bottom:20px;box-shadow:var(--shadow);gap:4px}
 .mode-btn{flex:1;padding:10px;font-size:14px;font-weight:600;border:none;border-radius:10px;cursor:pointer;background:transparent;color:var(--muted);transition:all .25s}
 .mode-btn.on{background:var(--text);color:var(--bg);box-shadow:0 2px 8px rgba(0,0,0,0.15)}
+
+/* Segmented control */
+.seg{display:inline-flex;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:3px;gap:3px;box-shadow:var(--shadow)}
+.seg-full{display:flex;width:100%}
+.seg-btn{flex:1;padding:7px 14px;border:none;border-radius:9px;font-size:13px;font-weight:500;cursor:pointer;background:transparent;color:var(--muted);transition:all .2s cubic-bezier(.4,0,.2,1);white-space:nowrap}
+.seg-btn.on{background:var(--text);color:var(--bg);font-weight:600;box-shadow:0 1px 4px rgba(0,0,0,0.15)}
 .simple-card{background:var(--card);border-radius:20px;border:1px solid var(--border);padding:24px;margin-bottom:10px;box-shadow:var(--shadow)}
 .simple-field{margin-bottom:24px}
 .simple-field:last-child{margin-bottom:0}
@@ -182,9 +191,9 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
     <p>Mortgage calculator</p>
   </div>
   <div class="hdr-right">
-    <div class="curr-toggle">
-      <button class="curr-btn on" id="btn-aed" onclick="setCurr('AED')">AED</button>
-      <button class="curr-btn" id="btn-usd" onclick="setCurr('USD')">USD</button>
+    <div class="seg">
+      <button class="seg-btn on" id="btn-aed" onclick="setCurr('AED')">AED</button>
+      <button class="seg-btn" id="btn-usd" onclick="setCurr('USD')">USD</button>
     </div>
     <button class="theme-btn" onclick="toggleTheme()" id="theme-btn">Auto</button>
   </div>
@@ -222,9 +231,9 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
     </div>
     <div class="field">
       <div class="ftop"><span class="flabel">Fixed interest rate</span><input class="finput" id="s-rate" type="text" inputmode="decimal" value="4.19" oninput="simpleCalc()"></div>
-      <div style="display:flex;gap:8px;margin-top:10px">
-        <button id="s-btn-rate3" onclick="document.getElementById('s-rate').value='3.99';document.getElementById('s-btn-rate3').classList.add('on');document.getElementById('s-btn-rate5').classList.remove('on');simpleCalc()" class="curr-btn" style="flex:1;border-radius:10px;border:1px solid var(--border);padding:9px;font-size:13px;cursor:pointer">3.99% · 3yr</button>
-        <button id="s-btn-rate5" onclick="document.getElementById('s-rate').value='4.19';document.getElementById('s-btn-rate5').classList.add('on');document.getElementById('s-btn-rate3').classList.remove('on');simpleCalc()" class="curr-btn on" style="flex:1;border-radius:10px;border:1px solid var(--border);padding:9px;font-size:13px;cursor:pointer">4.19% · 5yr</button>
+      <div class="seg seg-full" style="margin-top:10px">
+        <button id="s-btn-rate3" onclick="document.getElementById('s-rate').value='3.99';document.getElementById('s-btn-rate3').classList.add('on');document.getElementById('s-btn-rate5').classList.remove('on');simpleCalc()" class="seg-btn">3.99% · 3yr</button>
+        <button id="s-btn-rate5" onclick="document.getElementById('s-rate').value='4.19';document.getElementById('s-btn-rate5').classList.add('on');document.getElementById('s-btn-rate3').classList.remove('on');simpleCalc()" class="seg-btn on">4.19% · 5yr</button>
       </div>
       <div class="fnote">Fixed rate · after fixed period switches to EIBOR + 1.5%</div>
     </div>
@@ -278,6 +287,15 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
     </div>
     <div class="field">
       <div class="ftop">
+        <span class="flabel">Bank valuation <span id="bval-tag" class="tag tag-auto">= price</span></span>
+        <input class="finput" id="t-bval" value="2,900,000">
+      </div>
+      <input type="range" id="bval" min="1000000" max="6000000" step="25000" value="2900000">
+      <div class="rlabels"><span id="rl-bval-min">AED 1M</span><span id="rl-bval-max">AED 6M</span></div>
+      <div class="fnote">Banks lend % of <strong>valuation</strong>, not price. If lower than price, you pay the gap in cash.</div>
+    </div>
+    <div class="field">
+      <div class="ftop">
         <span class="flabel">Down payment <span id="down-tag" class="tag tag-auto">auto</span></span>
         <input class="finput" id="t-down" value="20">
       </div>
@@ -292,9 +310,9 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
     </div>
     <div class="field">
       <div class="ftop"><span class="flabel">Fixed interest rate</span><input class="finput" id="t-fixrate" value="4.19"></div>
-      <div style="display:flex;gap:8px;margin-top:10px">
-        <button class="curr-btn" id="btn-rate3" onclick="setFixRate(3.99,3,'btn-rate3')" style="flex:1;border-radius:10px;border:1px solid var(--border);padding:9px;font-size:13px;cursor:pointer">3.99% · 3yr</button>
-        <button class="curr-btn on" id="btn-rate5" onclick="setFixRate(4.19,5,'btn-rate5')" style="flex:1;border-radius:10px;border:1px solid var(--border);padding:9px;font-size:13px;cursor:pointer">4.19% · 5yr</button>
+      <div class="seg seg-full" style="margin-top:10px">
+        <button class="seg-btn" id="btn-rate3" onclick="setFixRate(3.99,3,'btn-rate3')">3.99% · 3yr</button>
+        <button class="seg-btn on" id="btn-rate5" onclick="setFixRate(4.19,5,'btn-rate5')">4.19% · 5yr</button>
       </div>
     </div>
     <div class="field">
@@ -343,9 +361,9 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
     <!-- All-in with toggle -->
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
       <span class="sec-lbl" style="margin-bottom:0" id="adv-period-lbl">Monthly all-in</span>
-      <div style="display:flex;background:var(--bg);border-radius:10px;padding:2px;gap:2px">
-        <button onclick="setAdvPeriod('month')" id="adv-btn-month" style="padding:5px 12px;border:none;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;background:var(--text);color:var(--bg);transition:all .2s">Monthly</button>
-        <button onclick="setAdvPeriod('year')" id="adv-btn-year" style="padding:5px 12px;border:none;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;background:transparent;color:var(--muted);transition:all .2s">Annual</button>
+      <div class="seg">
+        <button onclick="setAdvPeriod('month')" id="adv-btn-month" class="seg-btn on">Monthly</button>
+        <button onclick="setAdvPeriod('year')" id="adv-btn-year" class="seg-btn">Annual</button>
       </div>
     </div>
     <div class="totals">
@@ -367,7 +385,13 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
 <div class="card" id="card-living">
   <div class="card-head" onclick="toggleCard('living')">
     <span class="ctitle">Monthly living costs</span>
-    <span class="chevron open" id="chev-living">▼</span>
+    <div style="display:flex;align-items:center;gap:8px" onclick="event.stopPropagation()">
+      <div class="seg">
+        <button id="rentout-btn-owner" class="seg-btn on" onclick="setRentOut(false)">Owner</button>
+        <button id="rentout-btn-rent" class="seg-btn" onclick="setRentOut(true)">Renting out</button>
+      </div>
+      <span class="chevron open" id="chev-living">▼</span>
+    </div>
   </div>
   <div class="card-body-wrap open" id="body-living"><div class="card-body-inner">
     <div class="field">
@@ -380,8 +404,8 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
       <div class="fnote" id="dewa-note">Electricity + water + housing fee · district cooling included</div>
     </div>
     <div class="field">
-      <div class="ftop"><span class="flabel">Service charge</span><input class="finput" id="t-sc" value="23"></div>
-      <input type="range" id="sc" min="0" max="35" step="1" value="23">
+      <div class="ftop"><span class="flabel">Service charge</span><input class="finput" id="t-sc" value="23.00"></div>
+      <input type="range" id="sc" min="0" max="35" step="0.1" value="23">
       <div class="rlabels"><span id="sc-note">AED/sqft/yr</span><span></span></div>
       <div class="fnote">Building maintenance fee — paid by owners only, not renters</div>
     </div>
@@ -453,9 +477,9 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
       <input type="range" id="pp-amt" min="0" max="2000000" step="10000" value="200000">
       <div class="rlabels"><span id="pp-amt-min">AED 0</span><span id="pp-amt-max">AED 2M</span></div>
     </div>
-    <div style="display:flex;gap:8px;margin-bottom:20px">
-      <button class="curr-btn on" id="pp-btn-term" onclick="setPPMode('term')" style="flex:1;border-radius:10px;border:1px solid var(--border);padding:9px;font-size:13px;cursor:pointer">Reduce term</button>
-      <button class="curr-btn" id="pp-btn-pay" onclick="setPPMode('payment')" style="flex:1;border-radius:10px;border:1px solid var(--border);padding:9px;font-size:13px;cursor:pointer">Reduce payment</button>
+    <div class="seg seg-full" style="margin-bottom:20px">
+      <button class="seg-btn on" id="pp-btn-term" onclick="setPPMode('term')">Reduce term</button>
+      <button class="seg-btn" id="pp-btn-pay" onclick="setPPMode('payment')">Reduce payment</button>
     </div>
     <div class="field" style="margin-bottom:16px">
       <div class="ftop"><span class="flabel">Investment return (%)</span><input class="finput" id="t-inv-rate" value="5.00"></div>
@@ -477,7 +501,7 @@ const USD_RATE = 3.6725;
 const DEWA_PER_SQFT = 0.85;
 let currency = 'AED';
 let dewaEdited = false, downManual = false;
-const vals = {price:2900000,cash:800000,approved:2600000,down:20,years:25,eibor:3.45,sqft:1500,fixrate:4.19,fixperiod:5,dld:4,agency:2};
+const vals = {price:2900000,cash:800000,approved:2600000,bval:2900000,down:20,years:25,eibor:3.45,sqft:1500,fixrate:4.19,fixperiod:5,dld:4,agency:2};
 let fixPeriodManual = false;
 
 // ─── Splash ───────────────────────────────────────────────
@@ -494,10 +518,8 @@ function setAdvPeriod(p){
   const bm = document.getElementById('adv-btn-month');
   const by = document.getElementById('adv-btn-year');
   if(!bm||!by) return;
-  bm.style.background = p==='month'?'var(--text)':'transparent';
-  bm.style.color      = p==='month'?'var(--bg)':'var(--muted)';
-  by.style.background = p==='year'?'var(--text)':'transparent';
-  by.style.color      = p==='year'?'var(--bg)':'var(--muted)';
+  bm.classList.toggle('on', p==='month');
+  by.classList.toggle('on', p==='year');
   const lbl = document.getElementById('adv-period-lbl');
   if(lbl) lbl.textContent = p==='month'?'Monthly all-in':'Annual all-in';
   const mult = p==='year'?12:1;
@@ -558,25 +580,25 @@ function simpleParseNum(str){
 }
 
 let sPeriod = 'month';
-let sMortgage = 0, sAllIn = 0;
+let sMortgage = 0, sAllIn = 0, sAllInSub = 'mortgage + DEWA + SC';
 
 function setSPeriod(p){
   sPeriod = p;
   const m = document.getElementById('s-btn-month');
   const y = document.getElementById('s-btn-year');
   if(!m||!y) return;
-  m.style.background = p==='month'?'var(--text)':'transparent';
-  m.style.color      = p==='month'?'var(--bg)':'var(--muted)';
-  y.style.background = p==='year'?'var(--text)':'transparent';
-  y.style.color      = p==='year'?'var(--bg)':'var(--muted)';
+  m.classList.toggle('on', p==='month');
+  y.classList.toggle('on', p==='year');
   const mult = p==='year'?12:1;
   const label = p==='year'?'per year':'per month';
   const vm = document.getElementById('s-val-mortgage');
   const va = document.getElementById('s-val-allin');
   const sm = document.getElementById('s-sub-mortgage');
+  const sa = document.getElementById('s-allin-sub');
   if(vm) vm.textContent = fmtSimple(sMortgage*mult);
   if(va) va.textContent = fmtSimple(sAllIn*mult);
   if(sm) sm.textContent = label;
+  if(sa) sa.textContent = sAllInSub;
 }
 
 function fmtSimple(v){
@@ -600,6 +622,8 @@ function simpleCalc(){
   if(cash>0){  vals.cash=cash;   document.getElementById('cash').value=cash;   document.getElementById('t-cash').value=fmtN(cash);   }
   if(rate>0){  vals.fixrate=rate; document.getElementById('t-fixrate').value=rate.toFixed(2); }
   vals.sqft=sqft; document.getElementById('sqft').value=sqft; document.getElementById('t-sqft').value=fmtN(sqft);
+  // Always keep bval = price unless manually overridden
+  if(!bvalManual){ vals.bval=vals.price; document.getElementById('bval').value=vals.price; document.getElementById('t-bval').value=fmtN(vals.price); }
   autoDown();
   autoUpdateDewa(sqft);
   if(!price||!cash){document.getElementById('s-result').innerHTML='';return;}
@@ -619,13 +643,14 @@ function simpleCalc(){
   const mortgageWithIns=monthly+ins; // matches Advanced "fixed payment"
 
   // Living costs using actual sqft
-  const dewaVal = Math.round(0.85*sqft);
+  const dewaVal = rentOut ? 0 : Math.round(0.85*sqft);
   const scRate  = parseFloat(document.getElementById('sc').value) || 23;
-  const scVal   = Math.round(sqft*scRate/12);
-  const inetVal = parseFloat(document.getElementById('internet').value) || 360;
-  const gasVal  = parseFloat(document.getElementById('gas').value) || 55;
-  const living  = dewaVal + scVal + inetVal + gasVal;
-  const allIn   = mortgageWithIns + living; // matches Advanced all-in
+  const scVal2  = Math.round(sqft*scRate/12);
+  const inetVal = rentOut ? 0 : (parseFloat(document.getElementById('internet').value) || 360);
+  const gasVal  = rentOut ? 0 : (parseFloat(document.getElementById('gas').value) || 55);
+  const living  = dewaVal + scVal2 + inetVal + gasVal;
+  const allIn   = mortgageWithIns + living;
+  const allInSub = rentOut ? 'mortgage + SC only' : 'mortgage + DEWA + SC + internet + gas'; // matches Advanced all-in
 
   const hasEnough=cash>=upfront;
   const loanOk=loan<=2600000;
@@ -643,6 +668,7 @@ function simpleCalc(){
 
   sMortgage = monthly;
   sAllIn = allIn;
+  sAllInSub = allInSub;
 
   document.getElementById('s-result').innerHTML=`
     <div class="card" style="margin-top:0">
@@ -658,9 +684,9 @@ function simpleCalc(){
       <!-- Period toggle -->
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
         <span class="sec-lbl" style="margin-bottom:0">Payment</span>
-        <div style="display:flex;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:3px;gap:2px">
-          <button onclick="setSPeriod('month')" id="s-btn-month" class="curr-btn on" style="border-radius:7px;border:none;padding:5px 12px;font-size:12px;font-weight:600;cursor:pointer">Monthly</button>
-          <button onclick="setSPeriod('year')" id="s-btn-year" class="curr-btn" style="border-radius:7px;border:none;padding:5px 12px;font-size:12px;font-weight:600;cursor:pointer">Annual</button>
+        <div class="seg">
+          <button onclick="setSPeriod('month')" id="s-btn-month" class="seg-btn on">Monthly</button>
+          <button onclick="setSPeriod('year')" id="s-btn-year" class="seg-btn">Annual</button>
         </div>
       </div>
 
@@ -674,7 +700,7 @@ function simpleCalc(){
         <div class="metric" style="background:var(--amber-bg);border:1px solid var(--amber-bd)">
           <div class="m-lbl" style="color:var(--amber)">All-in</div>
           <div class="m-val ca" style="font-size:18px" id="s-val-allin">${fmtSimple(allIn)}</div>
-          <div class="m-sub" style="color:var(--amber);opacity:.8">mortgage + DEWA + SC</div>
+          <div class="m-sub" style="color:var(--amber);opacity:.8" id="s-allin-sub">mortgage + DEWA + SC + internet + gas</div>
         </div>
       </div>
 
@@ -819,7 +845,7 @@ function fmtDisplay(key,v){
 function setFixRate(r,yrs,btnId){
   vals.fixrate=r;
   document.getElementById('t-fixrate').value=r.toFixed(2);
-  ['btn-rate3','btn-rate5'].forEach(id=>document.getElementById(id).classList.remove('on'));
+  ['btn-rate3','btn-rate5'].forEach(id=>{document.getElementById(id).classList.remove('on');});
   document.getElementById(btnId).classList.add('on');
   fixPeriodManual=false;
   vals.fixperiod=yrs;
@@ -847,20 +873,31 @@ document.getElementById('t-fixperiod').addEventListener('input',()=>{
 document.getElementById('t-fixperiod').addEventListener('blur',()=>{
   document.getElementById('t-fixperiod').value=String(vals.fixperiod);
 });
-function setTag(id,manual){
+function setTag(id,manual,text){
   const el=document.getElementById(id);
-  el.textContent=manual?'manual':'auto';
-  el.className='tag '+(manual?'tag-manual':'tag-auto');
+  if(!el)return;
+  if(text){
+    el.textContent=text;
+    el.className='tag '+(text==='low'?'tag-manual':text==='high'?'tag-auto':'tag-auto');
+  } else {
+    el.textContent=manual?'manual':'auto';
+    el.className='tag '+(manual?'tag-manual':'tag-auto');
+  }
 }
+let bvalManual=false;
 
 // ─── Auto down payment ────────────────────────────────────
 function autoDown(){
-  const fees=vals.price*0.06+3150;
-  const pct=clamp(Math.floor((vals.cash-fees)/vals.price*100),20,80);
-  vals.down=pct;
-  document.getElementById('down').value=pct;
-  document.getElementById('t-down').value=String(pct);
-  downManual=false;setTag('down-tag',false);
+  const fees = vals.price*vals.dld/100 + vals.price*vals.agency/100 + 3150;
+  const valuationGap = Math.max(0, vals.price - vals.bval);
+  // Available for down payment = cash - fees - valuation gap
+  const availForDown = vals.cash - fees - valuationGap;
+  // Down % based on valuation (bank's basis), min 20%
+  const pct = clamp(Math.floor(availForDown/vals.bval*100), 20, 80);
+  vals.down = pct;
+  document.getElementById('down').value = pct;
+  document.getElementById('t-down').value = String(pct);
+  downManual=false; setTag('down-tag',false);
 }
 
 // ─── Auto DEWA ────────────────────────────────────────────
@@ -880,25 +917,33 @@ function fromSlider(key){
   if(document.activeElement!==tin) tin.value=fmtDisplay(key,v);
   if(key==='sqft'){autoUpdateDewa(v);dewaEdited=false;setTag('dewa-tag',false);}
   if(key==='cash') autoDown();
-  else if(key==='price'&&!downManual) autoDown();
+  else if(key==='price'){
+    if(!downManual) autoDown();
+    if(!bvalManual){vals.bval=v;document.getElementById('bval').value=v;document.getElementById('t-bval').value=fmtDisplay('bval',v);setTag('bval-tag',false,'= price');}
+  }
+  if(key==='bval'){bvalManual=true;setTag('bval-tag',true,vals.bval<vals.price?'low':vals.bval>vals.price?'high':'= price');}
   if(navigator.vibrate) navigator.vibrate(1);
   calc();
 }
 function fromText(key){
   const raw=document.getElementById('t-'+key).value.replace(/[^0-9.]/g,'');
   let aedVal=parseFloat(raw)||0;
-  if(['price','cash','approved'].includes(key)&&currency==='USD') aedVal*=USD_RATE;
+  if(['price','cash','approved','bval'].includes(key)&&currency==='USD') aedVal*=USD_RATE;
   const s=document.getElementById(key);
   aedVal=clamp(aedVal,parseFloat(s.min),parseFloat(s.max));
   vals[key]=aedVal;s.value=aedVal;
   if(key==='sqft'){autoUpdateDewa(aedVal);dewaEdited=false;setTag('dewa-tag',false);}
   if(key==='cash') autoDown();
-  else if(key==='price'&&!downManual) autoDown();
+  else if(key==='price'){
+    if(!downManual) autoDown();
+    if(!bvalManual){vals.bval=aedVal;document.getElementById('bval').value=aedVal;}
+  }
+  if(key==='bval'){bvalManual=true;setTag('bval-tag',true,vals.bval<vals.price?'low':vals.bval>vals.price?'high':'= price');}
   calc();
 }
 function blurText(key){document.getElementById('t-'+key).value=fmtDisplay(key,vals[key]);}
 
-['price','cash','approved','down','years','eibor','sqft'].forEach(key=>{
+['price','cash','approved','bval','down','years','eibor','sqft'].forEach(key=>{
   document.getElementById(key).addEventListener('input',()=>{
     if(key==='down'){downManual=true;setTag('down-tag',true);}
     fromSlider(key);
@@ -965,7 +1010,7 @@ function blurLiving(key){
 // Service charge (AED/sqft - no currency conversion)
 function scVal(){return isNaN(parseFloat(document.getElementById('sc').value))?23:parseFloat(document.getElementById('sc').value);}
 document.getElementById('sc').addEventListener('input',()=>{
-  if(document.activeElement!==document.getElementById('t-sc')) document.getElementById('t-sc').value=Math.round(scVal());
+  if(document.activeElement!==document.getElementById('t-sc')) document.getElementById('t-sc').value=scVal().toFixed(2);
   calcLiving();
 });
 document.getElementById('t-sc').addEventListener('input',()=>{
@@ -974,7 +1019,21 @@ document.getElementById('t-sc').addEventListener('input',()=>{
   document.getElementById('sc').value=clamp(v,0,35);
   calcLiving();
 });
-document.getElementById('t-sc').addEventListener('blur',()=>{document.getElementById('t-sc').value=Math.round(scVal());});
+document.getElementById('t-sc').addEventListener('blur',()=>{document.getElementById('t-sc').value=scVal().toFixed(2);});
+
+let rentOut = false;
+function setRentOut(val){
+  rentOut = val;
+  document.getElementById('rentout-btn-owner').classList.toggle('on', !val);
+  document.getElementById('rentout-btn-rent').classList.toggle('on', val);
+  ['dewa','internet','gas'].forEach(id=>{
+    const field = document.getElementById(id)?.closest('.field');
+    if(field) field.style.opacity = val ? '0.35' : '1';
+  });
+  calcLiving();
+  simpleCalc();
+}
+function toggleRentOut(){ setRentOut(!rentOut); }
 
 // ─── calcLiving ───────────────────────────────────────────
 function calcLiving(){
@@ -988,10 +1047,10 @@ function calcLiving(){
   const dewa=parseFloat(document.getElementById('dewa').value)||0;
   const gas=parseFloat(document.getElementById('gas').value)||0;
   const internet=parseFloat(document.getElementById('internet').value)||0;
-  // Values in sliders are always AED internally, display fields may show USD
-  const dewaAED = dewa; // slider value is always AED
-  const gasAED = gas;
-  const internetAED = internet;
+  // When renting out: tenant pays DEWA/gas/internet, owner only pays SC + mortgage
+  const dewaAED    = rentOut ? 0 : dewa;
+  const gasAED     = rentOut ? 0 : gas;
+  const internetAED= rentOut ? 0 : internet;
   const living=scMo+dewaAED+gasAED+internetAED;
   const loan=vals.price-vals.price*vals.down/100;
   const n=vals.years*12;
@@ -1008,9 +1067,15 @@ function calcLiving(){
 
 // ─── calc ─────────────────────────────────────────────────
 function calc(){
-  const{price,cash,approved,down:dp,years,eibor,fixrate}=vals;
+  const{price,cash,approved,bval,down:dp,years,eibor,fixrate}=vals;
   const vr=eibor+1.5,n=years*12;
-  const da=price*dp/100,loan=price-da;
+  // Bank lends based on VALUATION, not price
+  // Loan = min(approved, valuation × (100-down)/100)
+  // If bval < price: buyer pays full down on bval + valuation gap (price - bval) in cash
+  const maxLoanFromValuation = bval*(100-dp)/100;
+  const loan = Math.min(approved, maxLoanFromValuation);
+  const da = price - loan; // total cash needed for property (down + valuation gap)
+  const valuationGap = Math.max(0, price - bval);
   const dld=price*vals.dld/100,ag=price*vals.agency/100,VAL=3150;
   const ins=loan*0.000112+price*0.0005/12;
   const pf=mpay(loan,fixrate,n),pv=mpay(loan,vr,n);
@@ -1040,14 +1105,16 @@ function calc(){
   document.getElementById('pb-zero').textContent=currency==='USD'?'$0':'AED 0';
 
   document.getElementById('breakdown').innerHTML=`
-    <div class="brow"><span class="brow-lbl">Down payment (${dp}%)</span><span class="brow-val">${fmt(da)}</span></div>
+    <div class="brow"><span class="brow-lbl">Down payment (${dp}% of ${valuationGap>0?'valuation':'price'})</span><span class="brow-val">${fmt(bval*dp/100)}</span></div>
+    ${valuationGap>0?`<div class="brow"><span class="brow-lbl" style="color:var(--red)">⚠ Valuation gap (paid in cash)</span><span class="brow-val cr">${fmt(valuationGap)}</span></div>`:''}
     <div class="brow"><span class="brow-lbl">DLD ${vals.dld}% + agency ${vals.agency}% + valuation</span><span class="brow-val">${fmt(dld+ag+VAL)}</span></div>
     <div class="brow" style="padding-top:12px"><span class="brow-lbl" style="font-weight:700;color:var(--text);font-size:14px">Total at closing</span><span class="brow-val" style="font-size:18px;font-weight:700;color:${enough?'var(--green)':'var(--red)'}">${fmt(up)}</span></div>
   `;
 
   let vc,vt,vb;
   if(!ok){vc='bad';vt='Loan exceeds approved amount';vb=`${fmt(loan)} vs approved ${fmt(approved)}. Max price at ${dp}% down: ${fmt(Math.round(approved/(1-dp/100)))}.`;}
-  else if(!enough){vc='bad';vt=`Short ${fmt(up-cash)} in cash`;vb=`Need ${fmt(up)} at closing, have ${fmt(cash)}.`;}
+  else if(!enough){vc='bad';vt=`Short ${fmt(up-cash)} in cash`;vb=valuationGap>0?`Need ${fmt(up)} at closing (incl. ${fmt(valuationGap)} valuation gap). Have ${fmt(cash)}.`:`Need ${fmt(up)} at closing, have ${fmt(cash)}.`;}
+  else if(valuationGap>0){vc='ok';vt=`Valuation ${fmt(valuationGap)} below price`;vb=`Bank lends on valuation ${fmt(bval)}, not price ${fmt(price)}. You cover the ${fmt(valuationGap)} gap in cash.`;}
   else{vc=null;}
   document.getElementById('verdict').innerHTML=vc?`<div class="verdict ${vc}"><div class="v-title">${vt}</div><div class="v-body">${vb}</div></div>`:'';
 
@@ -1514,6 +1581,11 @@ document.getElementById('t-internet').value=fmtN(360);
 document.getElementById('internet').value=360;
 document.getElementById('t-gas').value=fmtN(55);
 document.getElementById('gas').value=55;
+// Ensure bval = price on init
+bvalManual = false;
+vals.bval = vals.price;
+document.getElementById('bval').value = vals.price;
+document.getElementById('t-bval').value = fmtN(vals.price);
 autoDown();
 calc();
 simpleCalc();
