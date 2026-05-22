@@ -7,6 +7,8 @@
 <link rel="apple-touch-icon" href="icon.png">
 <meta name="apple-mobile-web-app-title" content="UAE Property">
 <meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
   --bg:#F7F6F2;--card:#FFF;--border:rgba(0,0,0,0.08);--text:#111;--muted:#999;--subtle:#C8C5BE;--track:#E8E5DF;
@@ -26,7 +28,7 @@
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html{-webkit-text-size-adjust:100%}
-body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text',system-ui,sans-serif;background:var(--bg);color:var(--text);padding:20px 16px 60px;max-width:540px;margin:0 auto;transition:background .3s,color .3s}
+body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);padding:20px 16px 60px;max-width:540px;margin:0 auto;transition:background .3s,color .3s}
 
 /* Splash */
 #splash{position:fixed;inset:0;background:#1C1C1E;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:999;transition:opacity .35s ease}
@@ -334,41 +336,48 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
   </div>
   <div class="card-body-wrap open" id="body-results"><div class="card-body-inner">
 
+    <!-- Income affordability -->
+    <div style="margin-bottom:20px">
+      <div class="brow" style="border-bottom:none;padding-bottom:0">
+        <span class="brow-lbl" style="font-size:14px;color:var(--text)">Monthly income <span style="font-size:11px;color:var(--muted);font-weight:400">(optional)</span></span>
+        <input class="finput" id="t-income" value="" placeholder="—" style="width:120px;text-align:right">
+      </div>
+      <div id="affordability" style="margin-top:10px"></div>
+    </div>
+    <input type="hidden" id="income" value="0">
+
     <!-- Closing cost verdict -->
     <div id="verdict"></div>
 
     <!-- Upfront breakdown -->
     <div class="sec-lbl">What you pay at closing</div>
     <div id="breakdown" style="margin-bottom:16px"></div>
-    <div class="pbar-track"><div class="pbar-fill" id="cashbar"></div></div>
-    <div class="pbar-lbls"><span id="pb-zero">AED 0</span><span id="barlabel"></span></div>
+    <span id="cashbar" style="display:none"></span><span id="pb-zero" style="display:none"></span><span id="barlabel" style="display:none"></span>
 
-    <!-- Monthly payment -->
-    <div class="sec-lbl">Monthly payment</div>
-    <div class="rate-grid" style="grid-template-columns:1fr 1fr">
-      <div class="rc g">
-        <div class="rc-lbl">Fixed period<br><span id="rc-fixrate-lbl">4.19% · 5yr</span></div>
-        <div class="rc-val" id="pay-3">—</div>
-        <div class="rc-sub">incl. insurance</div>
-      </div>
-      <div class="rc a">
-        <div class="rc-lbl">Variable rate<br><span id="var-sub">after fixed period</span></div>
-        <div class="rc-val" id="pay-var">—</div>
-        <div class="rc-sub">incl. insurance</div>
-      </div>
-    </div>
+    <!-- Hidden payment values for JS compatibility -->
+    <span id="pay-3" style="display:none">—</span>
+    <span id="pay-var" style="display:none">—</span>
+    <span id="rc-fixrate-lbl" style="display:none"></span>
+    <span id="var-sub" style="display:none"></span>
 
     <!-- All-in with toggle -->
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
       <span class="sec-lbl" style="margin-bottom:0" id="adv-period-lbl">Monthly all-in</span>
-      <div class="seg">
-        <button onclick="setAdvPeriod('month')" id="adv-btn-month" class="seg-btn on">Monthly</button>
-        <button onclick="setAdvPeriod('year')" id="adv-btn-year" class="seg-btn">Annual</button>
+      <div style="display:flex;gap:5px">
+        <div class="seg">
+          <button onclick="setAdvRateView('fixed')" id="adv-btn-fixed" class="seg-btn on">Fixed</button>
+          <button onclick="setAdvRateView('var')" id="adv-btn-var" class="seg-btn">Variable</button>
+        </div>
+        <div class="seg">
+          <button onclick="setAdvPeriod('month')" id="adv-btn-month" class="seg-btn on">Monthly</button>
+          <button onclick="setAdvPeriod('year')" id="adv-btn-year" class="seg-btn">Annual</button>
+        </div>
       </div>
     </div>
     <div class="totals">
-      <div class="trow"><span class="t-name">Fixed rate period</span><span class="t-val cg" id="grand-3">—</span></div>
-      <div class="trow"><span class="t-name">Variable rate period</span><span class="t-val ca" id="grand-var">—</span></div>
+      <div class="trow" id="allin-row"><span class="t-name" id="allin-label">Fixed · monthly</span><span class="t-val cg" id="grand-3">—</span></div>
+    </div>
+    <span id="grand-var" style="display:none">—</span>
     </div>
     <!-- Hidden annual values -->
     <span id="grand-3-yr" style="display:none">—</span>
@@ -379,12 +388,11 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
     <div class="sec-lbl">Total cost over loan term</div>
     <div id="total-cost"></div>
   </div></div>
-</div>
 
 <!-- 4. LIVING COSTS -->
 <div class="card" id="card-living">
   <div class="card-head" onclick="toggleCard('living')">
-    <span class="ctitle">Monthly living costs</span>
+    <span class="ctitle">Living costs / month</span>
     <div style="display:flex;align-items:center;gap:8px" onclick="event.stopPropagation()">
       <div class="seg">
         <button id="rentout-btn-owner" class="seg-btn on" onclick="setRentOut(false)">Owner</button>
@@ -426,36 +434,41 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
 <!-- 5. BUY VS RENT -->
 <div class="card" id="card-bvr">
   <div class="card-head" onclick="toggleCard('bvr')">
-    <span class="ctitle">Buy vs Rent comparison</span>
+    <span class="ctitle">Buy vs Rent</span>
     <span class="chevron" id="chev-bvr">▼</span>
   </div>
   <div class="card-body-wrap" id="body-bvr"><div class="card-body-inner">
+
     <div class="field">
       <div class="ftop"><span class="flabel">Your current annual rent</span><input class="finput" id="t-rent" value="85,000"></div>
       <input type="range" id="rent" min="50000" max="300000" step="1000" value="85000">
       <div class="rlabels"><span id="rl-rent-min">AED 50K</span><span id="rl-rent-max">AED 300K</span></div>
-      <div class="fnote" id="rent-hint">What you currently pay to rent where you live</div>
     </div>
+
     <div class="field">
-      <div class="ftop"><span class="flabel">Annual rent increase</span><input class="finput" id="t-rent-inc" value="5.0"></div>
-      <input type="range" id="rent-inc" min="0" max="20" step="0.1" value="5">
-      <div class="rlabels"><span>0%</span><span>20%</span></div>
-      <div class="fnote">UAE average: 5–10%/year · set 0% for fixed contract</div>
+      <div class="flabel" style="margin-bottom:10px">Scenario</div>
+      <div class="seg seg-full" id="bvr-scenario-seg">
+        <button class="seg-btn" id="bvr-sc-conservative" onclick="setBvrScenario('conservative')">Conservative</button>
+        <button class="seg-btn on" id="bvr-sc-balanced" onclick="setBvrScenario('balanced')">Balanced</button>
+        <button class="seg-btn" id="bvr-sc-optimistic" onclick="setBvrScenario('optimistic')">Optimistic</button>
+      </div>
+      <div id="bvr-scenario-note" class="fnote" style="margin-top:8px">Property +5%/yr · Rent +5%/yr</div>
     </div>
+
     <div class="field">
-      <div class="ftop"><span class="flabel">Property value growth</span><input class="finput" id="t-prop-growth" value="5.0"></div>
-      <input type="range" id="prop-growth" min="0" max="20" step="0.1" value="5">
-      <div class="rlabels"><span>0%</span><span>20%</span></div>
-      <div class="fnote">UAE average: ~5–8%/year · set 0% for conservative estimate</div>
-    </div>
-    <div class="field">
-      <div class="ftop"><span class="flabel">Investment return (renter's portfolio)</span><input class="finput" id="t-bvr-inv-rate" value="5.0"></div>
+      <div class="ftop"><span class="flabel">Renter invests at</span><input class="finput" id="t-bvr-inv-rate" value="5.0"></div>
       <input type="range" id="bvr-inv-rate" min="1" max="15" step="0.1" value="5" oninput="document.getElementById('t-bvr-inv-rate').value=parseFloat(this.value).toFixed(1);calcBvR()">
       <div class="rlabels"><span>1% deposit</span><span>15% stocks</span></div>
-      <div class="fnote">What return the renter earns by investing saved cash · UAE deposits ~5%, stocks ~8-10%</div>
+      <div class="fnote">What return the renter earns investing saved cash</div>
     </div>
+
+    <!-- Hidden inputs for compatibility -->
+    <input type="hidden" id="rent-inc" value="5">
+    <input type="hidden" id="t-rent-inc" value="5.0">
+    <input type="hidden" id="prop-growth" value="5">
+    <input type="hidden" id="t-prop-growth" value="5.0">
+
     <div id="bvr-results" style="margin-top:4px"></div>
-    <button id="bvr-living-btn" style="display:none"></button>
   </div></div>
 </div>
 
@@ -511,7 +524,15 @@ setTimeout(()=>{
 },800);
 
 let advPeriod = 'month';
+let advRateView = 'fixed';
 let advGrand3 = 0, advGrandVar = 0;
+
+function setAdvRateView(v){
+  advRateView = v;
+  document.getElementById('adv-btn-fixed').classList.toggle('on', v==='fixed');
+  document.getElementById('adv-btn-var').classList.toggle('on', v==='var');
+  updateAdvAllIn();
+}
 
 function setAdvPeriod(p){
   advPeriod = p;
@@ -522,11 +543,23 @@ function setAdvPeriod(p){
   by.classList.toggle('on', p==='year');
   const lbl = document.getElementById('adv-period-lbl');
   if(lbl) lbl.textContent = p==='month'?'Monthly all-in':'Annual all-in';
-  const mult = p==='year'?12:1;
-  const g3  = document.getElementById('grand-3');
-  const gv  = document.getElementById('grand-var');
-  if(g3) g3.textContent  = fmt(advGrand3*mult);
-  if(gv) gv.textContent  = fmt(advGrandVar*mult);
+  updateAdvAllIn();
+}
+
+function updateAdvAllIn(){
+  const mult    = advPeriod==='year'?12:1;
+  const isFixed = advRateView==='fixed';
+  const val     = isFixed ? advGrand3 : advGrandVar;
+  const el      = document.getElementById('grand-3');
+  const lbl     = document.getElementById('allin-label');
+  const bf      = document.getElementById('adv-btn-fixed');
+  const bv      = document.getElementById('adv-btn-var');
+  if(!el) return;
+  el.textContent  = fmt(val*mult);
+  el.className    = 't-val '+(isFixed?'cg':'ca');
+  if(lbl) lbl.textContent = (isFixed?'Fixed':'Variable')+' · '+(advPeriod==='month'?'monthly':'annual');
+  if(bf)  bf.classList.toggle('on', isFixed);
+  if(bv)  bv.classList.toggle('on', !isFixed);
 }
 
 // ─── Mode switching ───────────────────────────────────────
@@ -1021,6 +1054,7 @@ document.getElementById('t-sc').addEventListener('input',()=>{
 });
 document.getElementById('t-sc').addEventListener('blur',()=>{document.getElementById('t-sc').value=scVal().toFixed(2);});
 
+let calcLivingTotal = 0;
 let rentOut = false;
 function setRentOut(val){
   rentOut = val;
@@ -1052,6 +1086,7 @@ function calcLiving(){
   const gasAED     = rentOut ? 0 : gas;
   const internetAED= rentOut ? 0 : internet;
   const living=scMo+dewaAED+gasAED+internetAED;
+  calcLivingTotal = living;
   const loan=vals.price-vals.price*vals.down/100;
   const n=vals.years*12;
   const ins=loan*0.000112+vals.price*0.0005/12;
@@ -1059,7 +1094,7 @@ function calcLiving(){
   const tv=mpay(loan,vals.eibor+1.5,n)+ins+living;
   advGrand3 = tf;
   advGrandVar = tv;
-  setAdvPeriod(advPeriod);
+  updateAdvAllIn();
   document.getElementById('grand-3-yr').textContent=fmt(tf*12);
   document.getElementById('grand-var-yr').textContent=fmt(tv*12);
   calcBvR();
@@ -1118,6 +1153,23 @@ function calc(){
   else{vc=null;}
   document.getElementById('verdict').innerHTML=vc?`<div class="verdict ${vc}"><div class="v-title">${vt}</div><div class="v-body">${vb}</div></div>`:'';
 
+  // ── Affordability (income) ─────────────────────────────
+  const incRaw = document.getElementById('t-income').value.replace(/[^0-9.]/g,'');
+  const income = parseFloat(incRaw)||0;
+  const affEl  = document.getElementById('affordability');
+  if(income > 0){
+    const allInMo  = (pf+ins) + (calcLivingTotal||0);
+    const leftover = income - allInMo;
+    const lc = leftover>0?'var(--green)':'var(--red)';
+    affEl.innerHTML=`
+      <div class="brow" style="border-bottom:none;padding-top:4px">
+        <span class="brow-lbl" style="font-weight:700;color:var(--text)">Left after all costs</span>
+        <span class="brow-val" style="font-size:20px;font-weight:700;color:${lc}">${fmt(leftover)}</span>
+      </div>`;
+  } else {
+    affEl.innerHTML='';
+  }
+
   // Total cost of ownership
   const totalMortgagePayments = mpay(loan,fixrate,n)*n;
   const totalInterest = totalMortgagePayments - loan;
@@ -1128,7 +1180,8 @@ function calc(){
   const internet=parseFloat(document.getElementById('internet').value)||0;
   const scRate=parseFloat(document.getElementById('sc').value)||23;
   const scMo=Math.round(vals.sqft*scRate/12);
-  const livingMo=scMo+dewa+gas+internet;
+  // Respect rentOut — when renting out, tenant pays DEWA/gas/internet
+  const livingMo=scMo+(rentOut?0:dewa)+(rentOut?0:gas)+(rentOut?0:internet);
   const totalLivingOver=livingMo*12*vals.years;
   const totalWithLiving = totalNoLiving + totalLivingOver;
 
@@ -1156,6 +1209,28 @@ function toggleBvrLiving(){
   btn.style.background = bvrLiving ? 'var(--text)' : 'var(--bg)';
   btn.style.color = bvrLiving ? 'var(--bg)' : 'var(--muted)';
   btn.style.borderColor = bvrLiving ? 'var(--text)' : 'var(--border)';
+  calcBvR();
+}
+
+// ─── BvR Scenarios ────────────────────────────────────────
+const BVR_SCENARIOS = {
+  conservative: {propG:2, rentInc:3, note:'Property +2%/yr · Rent +3%/yr · cautious estimate'},
+  balanced:     {propG:5, rentInc:5, note:'Property +5%/yr · Rent +5%/yr · UAE historical avg'},
+  optimistic:   {propG:8, rentInc:8, note:'Property +8%/yr · Rent +8%/yr · strong market'},
+};
+let bvrScenario = 'balanced';
+
+function setBvrScenario(s){
+  bvrScenario = s;
+  ['conservative','balanced','optimistic'].forEach(k=>{
+    document.getElementById('bvr-sc-'+k).classList.toggle('on', k===s);
+  });
+  const sc = BVR_SCENARIOS[s];
+  document.getElementById('rent-inc').value = sc.rentInc;
+  document.getElementById('t-rent-inc').value = sc.rentInc.toFixed(1);
+  document.getElementById('prop-growth').value = sc.propG;
+  document.getElementById('t-prop-growth').value = sc.propG.toFixed(1);
+  document.getElementById('bvr-scenario-note').textContent = sc.note;
   calcBvR();
 }
 
@@ -1257,28 +1332,48 @@ function calcBvR(){
     ? `After ${years} years your property net worth beats the renter's investment portfolio.`
     : `The renter's portfolio grows faster than your property equity at ${invReturn}% return.`;
 
-  // SVG chart
-  const W=320, H=160, PL=12, PR=8, PT=12, PB=24;
+  // SVG chart — find precise crossover point
+  const W=320, H=170, PL=12, PR=8, PT=16, PB=24;
   const cW=W-PL-PR, cH=H-PT-PB;
   const maxVal = Math.max(...rows.map(r=>Math.max(r.buyerNetWorth,r.renterNetWorth)),1);
   const xS = yr=>(yr-1)/(years-1)*cW;
-  const yS = v=>cH-Math.min(v,maxVal)/maxVal*cH;
+  const yS = v=>cH-Math.min(Math.max(v,0),maxVal)/maxVal*cH;
 
   const buyerPts  = rows.map(r=>`${PL+xS(r.yr)},${PT+yS(r.buyerNetWorth)}`).join(' ');
   const renterPts = rows.map(r=>`${PL+xS(r.yr)},${PT+yS(r.renterNetWorth)}`).join(' ');
+
+  // Find crossover year (lines cross)
+  let crossYr = null, crossX = null, crossY = null;
+  for(let i=1; i<rows.length; i++){
+    const prev = rows[i-1], curr = rows[i];
+    const prevDiff = prev.buyerNetWorth - prev.renterNetWorth;
+    const currDiff = curr.buyerNetWorth - curr.renterNetWorth;
+    if(prevDiff * currDiff < 0){ // sign change = crossover
+      // Interpolate exact fraction
+      const frac = Math.abs(prevDiff) / (Math.abs(prevDiff) + Math.abs(currDiff));
+      const exactYr = prev.yr + frac;
+      const crossVal = prev.buyerNetWorth + frac*(curr.buyerNetWorth-prev.buyerNetWorth);
+      crossYr = exactYr;
+      crossX = PL + (exactYr-1)/(years-1)*cW;
+      crossY = PT + yS(crossVal);
+      break;
+    }
+  }
 
   const xLabels = [1,5,10,15,20,25].filter(y=>y<=years).map(y=>
     `<text x="${PL+xS(y)}" y="${H-4}" text-anchor="middle" font-size="9" fill="var(--muted)">${y}</text>`
   ).join('');
 
-  const beyDot = bey && !buyerWins ? `
-    <circle cx="${PL+xS(bey)}" cy="${PT+yS(rows[bey-1].buyerNetWorth)}" r="4" fill="var(--green)" stroke="var(--card)" stroke-width="2"/>
-    <text x="${PL+xS(bey)}" y="${PT+yS(rows[bey-1].buyerNetWorth)-8}" text-anchor="middle" font-size="9" fill="var(--green)" font-weight="600">yr${bey}</text>` : '';
+  const crossoverEl = crossYr ? `
+    <line x1="${crossX}" y1="${PT}" x2="${crossX}" y2="${PT+cH}" stroke="var(--border)" stroke-width="1" stroke-dasharray="3,3"/>
+    <circle cx="${crossX}" cy="${crossY}" r="5" fill="var(--text)" stroke="var(--card)" stroke-width="2.5"/>
+    <rect x="${Math.min(crossX+6,W-48)}" y="${crossY-14}" width="42" height="16" rx="4" fill="var(--text)"/>
+    <text x="${Math.min(crossX+7,W-47)}" y="${crossY-3}" font-size="9" font-weight="700" fill="var(--bg)">yr ${Math.round(crossYr*10)/10}</text>` : '';
 
-  const svg = `<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;display:block">
-    <polyline points="${renterPts}" fill="none" stroke="var(--blue-bd)" stroke-width="2.5" stroke-linejoin="round"/>
-    <polyline points="${buyerPts}"  fill="none" stroke="var(--green-bd)" stroke-width="2.5" stroke-linejoin="round"/>
-    ${beyDot}
+  const svg = `<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;display:block;font-family:inherit">
+    <polyline points="${renterPts}" fill="none" stroke="var(--blue-bd)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+    <polyline points="${buyerPts}"  fill="none" stroke="var(--green-bd)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+    ${crossoverEl}
     ${xLabels}
     <text x="${PL}" y="${H-4}" text-anchor="start" font-size="9" fill="var(--muted)">Year</text>
   </svg>`;
@@ -1286,41 +1381,29 @@ function calcBvR(){
   document.getElementById('bvr-results').innerHTML=`
     <div style="background:${winBg};border:1px solid ${winBd};border-radius:14px;padding:14px 16px;margin-bottom:14px">
       <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:${winColor};margin-bottom:6px">After ${years} years</div>
-      <div style="font-size:19px;font-weight:700;color:${winColor};margin-bottom:4px">${winTitle}</div>
-      <div style="font-size:12px;color:${winColor};opacity:.85;line-height:1.5">${winSub}</div>
-    </div>
-
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px">
-      <div class="metric" style="background:var(--green-bg);border:1px solid var(--green-bd)">
-        <div class="m-lbl" style="color:var(--green)">Buyer net worth</div>
-        <div class="m-val cg" style="font-size:16px">${fmt(last.buyerNetWorth)}</div>
-        <div class="m-sub">property ${fmt(last.propValue)} − loan ${fmt(last.loanBal)}</div>
-      </div>
-      <div class="metric" style="background:var(--blue-bg);border:1px solid var(--blue-bd)">
-        <div class="m-lbl" style="color:var(--blue)">Renter net worth</div>
-        <div class="m-val cb" style="font-size:16px">${fmt(last.renterNetWorth)}</div>
-        <div class="m-sub">investment portfolio at ${invReturn}%/yr</div>
-      </div>
-      <div class="metric">
-        <div class="m-lbl">Buyer annual cost</div>
-        <div class="m-val" style="font-size:15px">${fmt(last.buyerAnnualCost)}</div>
-        <div class="m-sub">mortgage + service charge</div>
-      </div>
-      <div class="metric">
-        <div class="m-lbl">Renter annual cost</div>
-        <div class="m-val" style="font-size:15px">${fmt(last.rentAnnualCost)}</div>
-        <div class="m-sub">current rent (yr ${years})</div>
+      <div style="font-size:18px;font-weight:700;color:${winColor};margin-bottom:6px">${winTitle}</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+        <div>
+          <div style="font-size:10px;color:${winColor};opacity:.7;margin-bottom:2px">🏠 Buyer net worth</div>
+          <div style="font-size:15px;font-weight:700;color:${winColor}">${fmt(last.buyerNetWorth)}</div>
+        </div>
+        <div>
+          <div style="font-size:10px;color:${winColor};opacity:.7;margin-bottom:2px">📈 Renter net worth</div>
+          <div style="font-size:15px;font-weight:700;color:${winColor}">${fmt(last.renterNetWorth)}</div>
+        </div>
       </div>
     </div>
 
-    <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:6px">Net worth over time</div>
-    <div style="display:flex;gap:14px;margin-bottom:8px;font-size:12px">
-      <span style="display:flex;align-items:center;gap:5px"><span style="display:inline-block;width:14px;height:3px;background:var(--green-bd);border-radius:2px"></span><span style="color:var(--muted)">Buyer</span></span>
-      <span style="display:flex;align-items:center;gap:5px"><span style="display:inline-block;width:14px;height:3px;background:var(--blue-bd);border-radius:2px"></span><span style="color:var(--muted)">Renter + investing</span></span>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+      <div style="display:flex;gap:12px;font-size:12px">
+        <span style="display:flex;align-items:center;gap:4px"><span style="display:inline-block;width:12px;height:3px;background:var(--green-bd);border-radius:2px"></span><span style="color:var(--muted)">Buyer</span></span>
+        <span style="display:flex;align-items:center;gap:4px"><span style="display:inline-block;width:12px;height:3px;background:var(--blue-bd);border-radius:2px"></span><span style="color:var(--muted)">Renter</span></span>
+        ${crossYr?`<span style="display:flex;align-items:center;gap:4px"><span style="display:inline-block;width:8px;height:8px;background:var(--text);border-radius:50%"></span><span style="color:var(--muted)">Cross yr ${Math.round(crossYr)}</span></span>`:''}
+      </div>
     </div>
-    <div style="background:var(--bg);border-radius:12px;padding:10px">${svg}</div>
-    <div style="font-size:11px;color:var(--muted);margin-top:10px;line-height:1.6;padding:0 2px">
-      Both start with <strong style="color:var(--text)">${fmt(cash)}</strong> cash. Buyer spends ${fmt(upfront)} upfront. Renter invests all cash + annual savings at ${invReturn}%/yr. DEWA/gas/internet excluded (same both ways).
+    <div style="background:var(--bg);border-radius:12px;padding:10px;margin-bottom:10px">${svg}</div>
+    <div style="font-size:11px;color:var(--muted);line-height:1.6">
+      Both start with <strong style="color:var(--text)">${fmt(cash)}</strong>. Buyer spends ${fmt(upfront)} at closing, renter invests all cash at ${invReturn}%/yr.
     </div>`;
 }
 document.getElementById('t-bvr-inv-rate').addEventListener('input',()=>{
@@ -1589,6 +1672,19 @@ document.getElementById('t-bval').value = fmtN(vals.price);
 autoDown();
 calc();
 simpleCalc();
+setBvrScenario('balanced');
+// Income field
+document.getElementById('t-income').addEventListener('input',()=>{
+  const raw=document.getElementById('t-income').value.replace(/[^0-9.]/g,'');
+  const v=parseFloat(raw)||0;
+  if(v>0) document.getElementById('t-income').value=Math.round(v).toLocaleString('en-US');
+  calc();
+});
+document.getElementById('t-income').addEventListener('focus',()=>{
+  const raw=document.getElementById('t-income').value.replace(/[^0-9,]/g,'').replace(/,/g,'');
+  document.getElementById('t-income').value=raw;
+});
+
 calcBvR();
 calcPP();
 </script>
