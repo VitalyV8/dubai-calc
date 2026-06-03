@@ -164,10 +164,13 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,s
 .field{margin-bottom:26px}
 .field:last-child{margin-bottom:0}
 .field:last-child{margin-bottom:0}
-.ftop{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;gap:12px}
-.lbl-group{display:inline-flex;align-items:center}
-.flabel{font-size:var(--fs-base);color:var(--text);flex:1;min-width:0;display:flex;align-items:center;gap:7px;flex-wrap:wrap}
-.finput{font-size:16px;font-weight:500;color:var(--text);border:1px solid var(--border);border-radius:10px;padding:7px 13px;width:120px;flex-shrink:0;text-align:right;background:var(--bg);transition:border .15s,background .15s,color .15s;-webkit-text-size-adjust:none}
+.ftop{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;gap:8px}
+.lbl-group{display:inline-flex;align-items:baseline;gap:6px;flex:1;min-width:0}
+.lbl-group .flabel{flex:0 1 auto}
+.flabel-opt{font-size:11px;color:var(--muted);font-weight:400;flex-shrink:0}
+.flabel > span{white-space:nowrap}
+.flabel{font-size:var(--fs-base);color:var(--text);flex:1;min-width:0;display:flex;align-items:center;gap:6px;flex-wrap:nowrap}
+.finput{font-size:16px;font-weight:500;color:var(--text);border:1px solid var(--border);border-radius:10px;padding:7px 11px;width:112px;flex-shrink:0;text-align:right;background:var(--bg);transition:border .15s,background .15s,color .15s;-webkit-text-size-adjust:none;margin-top:1px}
 .finput:focus{outline:none;border-color:var(--green);background:var(--card)}
 input[type=range]{width:100%;height:4px;-webkit-appearance:none;appearance:none;background:var(--track);border-radius:3px;outline:none;cursor:pointer;margin-bottom:6px;display:block}
 input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:var(--text);cursor:pointer;border:3px solid var(--card);box-shadow:0 1px 5px rgba(0,0,0,0.22);transition:transform .1s}
@@ -176,9 +179,12 @@ input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;bac
 input[type=range]::-moz-range-track{background:transparent;height:4px;border-radius:3px}
 .rlabels{display:flex;justify-content:space-between;font-size:var(--fs-xs);color:var(--subtle)}
 .fnote{font-size:var(--fs-sm);color:var(--muted);margin-top:5px;line-height:1.5}
-.tag{font-size:11px;font-weight:600;border-radius:6px;padding:2px 8px;transition:all .25s}
-.tag-auto{background:var(--blue-bg);color:var(--blue)}
-.tag-manual{background:var(--amber-bg);color:var(--amber)}
+.tag{font-size:10px;font-weight:600;border-radius:5px;padding:2px 6px;transition:all .25s;white-space:nowrap;flex-shrink:0}
+.tag[onclick]{cursor:pointer}
+.tag-auto{background:var(--blue-bg);color:var(--blue);transition:opacity .15s}
+.tag-auto[onclick]:hover{opacity:.75}
+.tag-manual{background:var(--amber-bg);color:var(--amber);transition:opacity .15s}
+.tag-manual[onclick]:hover{opacity:.75}
 .srow{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border)}
 .srow:last-child{border-bottom:none}
 .srow-label{font-size:14px;color:var(--muted)}
@@ -373,7 +379,7 @@ input[type=range]::-moz-range-track{background:transparent;height:4px;border-rad
     </span>
     <span style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted);font-weight:500">
       <span id="emi-rate">4% ownership fee</span>
-      <span style="font-size:11px">▼</span>
+      <span id="emi-arrow" class="chevron" style="font-size:11px">▼</span>
     </span>
   </div>
   <div id="emirate-list" style="display:none;position:absolute;left:0;right:0;top:calc(100% + 4px);background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:0 6px 24px rgba(0,0,0,0.12);z-index:50;overflow:hidden">
@@ -423,17 +429,17 @@ input[type=range]::-moz-range-track{background:transparent;height:4px;border-rad
     </div>
     <div class="field">
       <div class="ftop"><span class="flabel" data-i18n="field.sqft">Property size (sqft)</span><input class="finput" id="s-sqft" type="text" inputmode="numeric" value="800" oninput="simpleCalc()"></div>
-      <input type="range" id="s-sqft-range" min="300" max="8000" step="50" value="800" oninput="document.getElementById('s-sqft').value=fmtN(this.value);simpleCalc()">
-      <div class="rlabels"><span>300 <span data-i18n="units.sqft">sqft</span></span><span>8,000 <span data-i18n="units.sqft">sqft</span></span></div>
+      <input type="range" id="s-sqft-range" min="0" max="1000" step="1" value="427" oninput="document.getElementById('s-sqft').value=fmtN(sliderToVal('s-sqft-range',+this.value));simpleCalc()">
+      <div class="rlabels"><span>300 <span data-i18n="units.sqft">sqft</span></span><span>10,000 <span data-i18n="units.sqft">sqft</span></span></div>
       <div class="fnote" data-i18n="field.sqft.hint">Used to estimate DEWA and service charge</div>
     </div>
     <div class="field">
       <div class="ftop"><span class="flabel" data-i18n="field.rate">Fixed interest rate</span><input class="finput" id="s-rate" type="text" inputmode="decimal" value="4.19" oninput="simpleCalc()"></div>
       <div class="seg seg-full" style="margin-top:10px">
-        <button id="s-btn-rate3" onclick="document.getElementById('s-rate').value='3.99';document.getElementById('s-btn-rate3').classList.add('on');document.getElementById('s-btn-rate5').classList.remove('on');simpleCalc()" class="seg-btn"><span>3.99% · 3</span><span data-i18n='units.yr'>yr</span></button>
-        <button id="s-btn-rate5" onclick="document.getElementById('s-rate').value='4.19';document.getElementById('s-btn-rate5').classList.add('on');document.getElementById('s-btn-rate3').classList.remove('on');simpleCalc()" class="seg-btn on"><span>4.19% · 5</span><span data-i18n='units.yr'>yr</span></button>
+        <button id="s-btn-rate3" onclick="setSimpleRate('3')" class="seg-btn"><span id="s-lbl-rate3">3.99% · 3</span><span data-i18n='units.yr'>yr</span></button>
+        <button id="s-btn-rate5" onclick="setSimpleRate('5')" class="seg-btn on"><span id="s-lbl-rate5">4.19% · 5</span><span data-i18n='units.yr'>yr</span></button>
       </div>
-      <div class="fnote" data-i18n="rate.note">Fixed rate · after fixed period switches to EIBOR + 1.5%</div>
+      <div class="fnote" id="rate-note" data-i18n="rate.note">Fixed rate · after fixed period switches to EIBOR + 1.5%</div>
     </div>
   </div>
 
@@ -462,9 +468,13 @@ input[type=range]::-moz-range-track{background:transparent;height:4px;border-rad
     </div>
     <div class="field">
       <div class="ftop"><span class="flabel" data-i18n="field.sqft">Property size (sqft)</span><input class="finput" id="t-sqft" value="800"></div>
-      <input type="range" id="sqft" min="300" max="8000" step="50" value="800">
-      <div class="rlabels"><span>300 <span data-i18n="units.sqft">sqft</span></span><span>8,000 <span data-i18n="units.sqft">sqft</span></span></div>
+      <input type="range" id="sqft" min="0" max="1000" step="1" value="427">
+      <div class="rlabels"><span>300 <span data-i18n="units.sqft">sqft</span></span><span>10,000 <span data-i18n="units.sqft">sqft</span></span></div>
       <div class="fnote" data-i18n="field.sqft.hint">Used to estimate DEWA and service charge</div>
+    </div>
+    <div class="field">
+      <div class="ftop"><span class="lbl-group"><span class="flabel" data-i18n="income.label">Monthly income</span><span class="flabel-opt" data-i18n="income.optional">(optional)</span></span><input class="finput" id="t-income2" value="" placeholder="—" oninput="syncIncome(this.value)"></div>
+      <div class="fnote" data-i18n="income.hint">Used to estimate your bank approval & affordability</div>
     </div>
     <span id="sv-val" style="display:none"></span>
     <div id="metrics" style="display:none"></div>
@@ -479,13 +489,14 @@ input[type=range]::-moz-range-track{background:transparent;height:4px;border-rad
   </div>
   <div class="card-body-wrap open" id="body-mortgage"><div class="card-body-inner">
     <div class="field">
-      <div class="ftop"><span class="lbl-group"><span class="flabel" data-i18n="field.approved">Bank approved amount</span><button class="tip-btn" onclick="showTooltip('approved')" aria-label="info">i</button></span><input class="finput" id="t-approved" value="1,500,000"></div>
+      <div class="ftop"><span class="flabel" data-i18n="field.approved">Bank approved amount</span><button class="tip-btn" onclick="showTooltip('approved')" aria-label="info">i</button><span id="approved-tag" class="tag tag-auto" style="display:none;margin:0 4px 0 0" onclick="resetApprovedAuto()"></span><input class="finput" id="t-approved" value="1,500,000"></div>
       <input type="range" id="approved" min="0" max="1000" step="1" value="448">
       <div class="rlabels"><span id="rl-appr-min">AED 500K</span><span id="rl-appr-max">AED 15M</span></div>
     </div>
     <div class="field">
       <div class="ftop">
-        <span class="flabel"><span data-i18n="field.bval">Bank valuation</span><button class="tip-btn" onclick="showTooltip('bval')" aria-label="info">i</button><span id="bval-tag" style="margin-left:8px" class="tag tag-auto" data-i18n="field.bval.equal">= price</span></span>
+        <span class="flabel"><span data-i18n="field.bval">Bank valuation</span><button class="tip-btn" onclick="showTooltip('bval')" aria-label="info" style="flex-shrink:0">i</button></span>
+        <span id="bval-tag" class="tag tag-auto" onclick="resetBvalAuto()" style="flex-shrink:0">auto</span>
         <input class="finput" id="t-bval" value="1,500,000">
       </div>
       <input type="range" id="bval" min="0" max="1000" step="1" value="298">
@@ -494,7 +505,8 @@ input[type=range]::-moz-range-track{background:transparent;height:4px;border-rad
     </div>
     <div class="field">
       <div class="ftop">
-        <span class="flabel"><span data-i18n="field.down">Down payment</span><button class="tip-btn" onclick="showTooltip('down')" aria-label="info">i</button><span id="down-tag" style="margin-left:8px" class="tag tag-auto">auto</span></span>
+        <span class="flabel"><span data-i18n="field.down">Down payment</span><button class="tip-btn" onclick="showTooltip('down')" aria-label="info" style="flex-shrink:0">i</button></span>
+        <span id="down-tag" class="tag tag-auto" onclick="resetDownAuto()" style="flex-shrink:0">auto</span>
         <input class="finput" id="t-down" value="20">
       </div>
       <input type="range" id="down" min="20" max="80" step="1" value="20">
@@ -509,14 +521,19 @@ input[type=range]::-moz-range-track{background:transparent;height:4px;border-rad
     <div class="field">
       <div class="ftop"><span class="lbl-group"><span class="flabel" data-i18n="field.rate">Fixed interest rate</span><button class="tip-btn" onclick="showTooltip('fixperiod')" aria-label="info">i</button></span><input class="finput" id="t-fixrate" value="4.19"></div>
       <div class="seg seg-full" style="margin-top:10px">
-        <button class="seg-btn" id="btn-rate3" onclick="setFixRate(3.99,3,'btn-rate3')"><span>3.99% · 3</span><span data-i18n='units.yr'>yr</span></button>
-        <button class="seg-btn on" id="btn-rate5" onclick="setFixRate(4.19,5,'btn-rate5')"><span>4.19% · 5</span><span data-i18n='units.yr'>yr</span></button>
+        <button class="seg-btn on" id="btn-salary" onclick="setSalaryTransfer(true)" data-i18n="rate.salary">Salary transfer</button>
+        <button class="seg-btn" id="btn-nonsalary" onclick="setSalaryTransfer(false)" data-i18n="rate.nonsalary">Non-salary / self-employed</button>
+      </div>
+      <div class="seg seg-full" style="margin-top:8px">
+        <button class="seg-btn" id="btn-rate3" onclick="setFixRate('3',  'btn-rate3')"><span id="lbl-rate3">3.99% · 3</span><span data-i18n='units.yr'>yr</span></button>
+        <button class="seg-btn on" id="btn-rate5" onclick="setFixRate('5', 'btn-rate5')"><span id="lbl-rate5">4.19% · 5</span><span data-i18n='units.yr'>yr</span></button>
       </div>
     </div>
     <div class="field">
-      <div class="ftop"><span class="flabel"><span data-i18n="field.eibor">Expected EIBOR</span><button class="tip-btn" onclick="showTooltip('eibor')" aria-label="info">i</button><span class="fnote" style="margin-left:8px;display:inline;font-size:11px" data-i18n="field.eibor.hint">(variable rate after fixed)</span></span><input class="finput" id="t-eibor" value="3.45"></div>
+      <div class="ftop"><span class="flabel"><span data-i18n="field.eibor">Expected EIBOR</span><button class="tip-btn" onclick="showTooltip('eibor')" aria-label="info">i</button></span><input class="finput" id="t-eibor" value="3.45"></div>
       <input type="range" id="eibor" min="1" max="8" step="0.05" value="3.45">
       <div class="rlabels"><span data-i18n="field.eibor.opt">1% optimistic</span><span data-i18n="field.eibor.stress">8% stress test</span></div>
+      <div class="fnote" data-i18n="field.eibor.hint">(variable rate after fixed)</div>
     </div>
     <!-- Hidden fixperiod — still tracked in vals -->
     <input type="hidden" id="fixperiod" value="5">
@@ -537,13 +554,10 @@ input[type=range]::-moz-range-track{background:transparent;height:4px;border-rad
 
     <!-- Income affordability -->
     <div style="margin-bottom:20px">
-      <div class="brow" style="border-bottom:none;padding-bottom:0">
-        <span class="brow-lbl" style="font-size:14px;color:var(--text)"><span data-i18n="income.label">Monthly income</span> <span style="font-size:11px;color:var(--muted);font-weight:400" data-i18n="income.optional">(optional)</span></span>
-        <input class="finput" id="t-income" value="" placeholder="—" style="width:120px;text-align:right">
-      </div>
-      <div id="affordability" style="margin-top:10px"></div>
+      <div id="affordability"></div>
     </div>
     <input type="hidden" id="income" value="0">
+    <input type="hidden" id="t-income" value="">
 
     <!-- Closing cost verdict -->
     <div id="verdict"></div>
@@ -723,7 +737,7 @@ input[type=range]::-moz-range-track{background:transparent;height:4px;border-rad
   <div class="card-body-wrap open" id="body-living"><div class="card-body-inner">
     <div class="field">
       <div class="ftop">
-        <span class="flabel"><span data-i18n="living.dewa">DEWA</span> <span id="dewa-tag" class="tag tag-auto">auto</span></span>
+        <span class="flabel"><span data-i18n="living.dewa">DEWA</span><span id="dewa-tag" class="tag tag-auto" onclick="resetDewaAuto()">auto</span></span>
         <input class="finput" id="t-dewa" value="1,275">
       </div>
       <input type="range" id="dewa" min="0" max="8000" step="50" value="1275">
@@ -889,19 +903,48 @@ function setEmirate(e){
 
 function toggleEmiratePicker(){
   const list = document.getElementById('emirate-list');
-  list.style.display = list.style.display==='none' || !list.style.display ? 'block' : 'none';
+  const arrow = document.getElementById('emi-arrow');
+  const isHidden = list.style.opacity==='0' || list.style.display==='none' || !list.style.display;
+  if(isHidden){
+    list.style.display = 'block';
+    list.style.opacity = '0';
+    list.style.transform = 'translateY(-6px)';
+    if(arrow) arrow.classList.add('open');
+    requestAnimationFrame(()=>{
+      list.style.transition = 'opacity .25s ease, transform .25s ease';
+      list.style.opacity = '1';
+      list.style.transform = 'translateY(0)';
+    });
+  } else {
+    list.style.transition = 'opacity .2s ease, transform .2s ease';
+    list.style.opacity = '0';
+    list.style.transform = 'translateY(-6px)';
+    if(arrow) arrow.classList.remove('open');
+    setTimeout(()=>{ list.style.display = 'none'; }, 200);
+  }
 }
 function pickEmirate(e){
   setEmirate(e);
-  document.getElementById('emirate-list').style.display='none';
+  const list = document.getElementById('emirate-list');
+  const arrow = document.getElementById('emi-arrow');
+  list.style.transition = 'opacity .2s ease, transform .2s ease';
+  list.style.opacity = '0';
+  list.style.transform = 'translateY(-6px)';
+  if(arrow) arrow.classList.remove('open');
+  setTimeout(()=>{ list.style.display = 'none'; }, 200);
 }
 // Close on outside click
 document.addEventListener('click',(ev)=>{
   const list = document.getElementById('emirate-list');
   const disp = document.getElementById('emirate-display');
+  const arrow = document.getElementById('emi-arrow');
   if(!list||!disp) return;
-  if(!list.contains(ev.target) && !disp.contains(ev.target)){
-    list.style.display='none';
+  if(!list.contains(ev.target) && !disp.contains(ev.target) && list.style.display!=='none' && list.style.opacity!=='0'){
+    list.style.transition = 'opacity .2s ease, transform .2s ease';
+    list.style.opacity = '0';
+    list.style.transform = 'translateY(-6px)';
+    if(arrow) arrow.classList.remove('open');
+    setTimeout(()=>{ list.style.display = 'none'; }, 200);
   }
 });
 
@@ -935,7 +978,7 @@ function setBank(b, updateApproved=false){
   simpleCalc();
 }
 let currency = 'AED';
-let dewaEdited = false, downManual = false;
+let dewaEdited = false, downManual = false, approvedManual = false;
 const vals = {price:1500000,cash:420000,approved:1500000,bval:1500000,down:20,years:25,eibor:3.45,sqft:800,fixrate:4.19,fixperiod:5,dld:4,agency:2};
 let fixPeriodManual = false;
 
@@ -1110,11 +1153,11 @@ function finishOnboarding(){
   if(tp) tp.value=disp(vals.price);
   if(tc) tc.value=disp(vals.cash);
   if(tsq) tsq.value=vals.sqft.toLocaleString('en-US');
-  // Sliders
-  ['s-price-range','price'].forEach(id=>{const e=document.getElementById(id);if(e)e.value=vals.price;});
-  ['s-cash-range','cash'].forEach(id=>{const e=document.getElementById(id);if(e)e.value=vals.cash;});
-  ['s-sqft-range','sqft'].forEach(id=>{const e=document.getElementById(id);if(e)e.value=vals.sqft;});
-  const bv=document.getElementById('bval'); if(bv) bv.value=vals.bval;
+  // Sliders (log-scale for money)
+  ['s-price-range','price'].forEach(id=>{const e=document.getElementById(id);if(e)e.value=valToSlider(id,vals.price);});
+  ['s-cash-range','cash'].forEach(id=>{const e=document.getElementById(id);if(e)e.value=valToSlider(id,vals.cash);});
+  ['s-sqft-range','sqft'].forEach(id=>{const e=document.getElementById(id);if(e)e.value=valToSlider(id,vals.sqft);});
+  const bv=document.getElementById('bval'); if(bv) bv.value=valToSlider('bval',vals.bval);
   const tbv=document.getElementById('t-bval'); if(tbv) tbv.value=disp(vals.bval);
   autoDown();
   autoUpdateDewa(vals.sqft);
@@ -1837,7 +1880,7 @@ function closeModal(){
 const TIPS = {
   en: {
     bval: {title:'Bank Valuation', text:'The bank sends an independent surveyor to value the property. They lend a % of the valuation — not the price. If valuation < price, you pay the gap in cash on top of your down payment.'},
-    eibor: {title:'EIBOR (Emirates Interbank Rate)', text:'After your fixed period ends, your rate switches to EIBOR + 1.5%. EIBOR fluctuates with UAE monetary policy. In 2024 it peaked at ~5.4%. Use the stress test slider to see worst-case payments.'},
+    eibor: {title:'EIBOR (Emirates Interbank Rate)', text:'After your fixed period ends, your rate becomes variable: EIBOR + your bank margin (1.5% with salary transfer, 1.89% without), with a 1.99% floor. EIBOR fluctuates with UAE monetary policy — in 2024 it peaked at ~5.4%. Use the stress test slider to see worst-case payments.'},
     sc: {title:'Service Charge', text:'Annual building maintenance fee paid by owners only — not tenants. Covers security, cleaning, elevators, pool. Dubai average: 12–30 AED/sqft/yr. Downtown, Marina premium buildings: up to 60 AED/sqft/yr.'},
     cooling: {title:'District Cooling (Chiller)', text:'In many Dubai buildings (especially newer ones), air conditioning is provided by Empower or Tabreed. This is separate from DEWA. Set to 0 if your DEWA bill includes cooling already.'},
     dld: {title:'Ownership Fee (DLD)', text:'One-time government fee paid when buying property. Dubai: 4% (Dubai Land Department). Abu Dhabi: 2% (ADM). Non-refundable. Paid at time of registration, not from the mortgage.'},
@@ -1849,7 +1892,7 @@ const TIPS = {
   },
   ar: {
     bval: {title:'تقييم البنك', text:'يرسل البنك مثمنًا مستقلًا لتقييم العقار. يُقرضون نسبة من التقييم — وليس السعر. إذا كان التقييم أقل من السعر، تدفع الفرق نقدًا بالإضافة إلى دفعتك المقدمة.'},
-    eibor: {title:'إيبور (سعر الإنتربنك الإماراتي)', text:'بعد انتهاء الفترة الثابتة، يتحول سعرك إلى إيبور + 1.5%. يتقلب إيبور مع السياسة النقدية الإماراتية. استخدم شريط اختبار الضغط لرؤية أسوأ سيناريو.'},
+    eibor: {title:'إيبور (سعر الإنتربنك الإماراتي)', text:'بعد انتهاء الفترة الثابتة يصبح سعرك متغيراً: إيبور + هامش البنك (1.5% مع تحويل الراتب، 1.89% بدونه) مع حد أدنى 1.99%. يتقلب إيبور مع السياسة النقدية. استخدم اختبار الضغط لرؤية أسوأ سيناريو.'},
     sc: {title:'رسوم الخدمة', text:'رسوم صيانة المبنى السنوية يدفعها المالكون فقط. تغطي الأمن والتنظيف والمصاعد والمسبح. متوسط دبي: 12–30 درهم/قدم²/سنة. المباني الفاخرة: حتى 60.'},
     cooling: {title:'تبريد المنطقة', text:'في كثير من مباني دبي يتم التكييف عبر إمباور أو تبريد — منفصل عن ديوا. اضبط على 0 إذا كانت فاتورة ديوا تشمل التبريد.'},
     dld: {title:'رسوم التملك', text:'رسوم حكومية لمرة واحدة عند شراء العقار. دبي: 4% (مؤسسة دبي للأراضي). أبوظبي: 2%. غير قابلة للاسترداد.'},
@@ -1861,7 +1904,7 @@ const TIPS = {
   },
   ru: {
     bval: {title:'Оценка банком', text:'Банк отправляет независимого оценщика. Кредит выдаётся % от оценки — не от цены. Если оценка < цены, вы платите разницу наличными дополнительно к первому взносу.'},
-    eibor: {title:'EIBOR (межбанковская ставка ОАЭ)', text:'После окончания фиксированного периода ставка становится плавающей: EIBOR + 1.5%. EIBOR меняется. В 2024 году достигал ~5.4%. Используйте стресс-тест для расчёта худшего сценария.'},
+    eibor: {title:'EIBOR (межбанковская ставка ОАЭ)', text:'После фиксированного периода ставка плавающая: EIBOR + маржа банка (1.5% с переводом зарплаты, 1.89% без), минимум 1.99%. EIBOR меняется — в 2024 достигал ~5.4%. Используйте стресс-тест для худшего сценария.'},
     sc: {title:'Service Charge (обслуживание)', text:'Ежегодный сбор за обслуживание здания — платят только собственники. Охрана, уборка, лифты, бассейн. Дубай в среднем: 12–30 AED/sqft/год. Премиум здания: до 60.'},
     cooling: {title:'Кондиционирование (Chiller)', text:'В новых зданиях Дубая кондиционирование от Empower или Tabreed — отдельно от DEWA. Ставьте 0 если ваш счёт DEWA уже включает охлаждение.'},
     dld: {title:'Сбор за регистрацию (DLD)', text:'Единоразовый государственный сбор при покупке. Дубай: 4% (Dubai Land Department). Абу-Даби: 2%. Не возвращается. Платится при регистрации права собственности.'},
@@ -1937,7 +1980,7 @@ function setMode(mode){
     if(cash>0){  vals.cash=cash;   document.getElementById('cash').value=valToSlider('cash',cash);   document.getElementById('t-cash').value=fmtDisplay('cash',cash); autoDown(); }
     if(rate>0){  vals.fixrate=rate; document.getElementById('t-fixrate').value=rate.toFixed(2); }
     const sqft2 = simpleParseNum(document.getElementById('s-sqft').value)||800;
-    if(sqft2>=300&&sqft2<=8000){ vals.sqft=sqft2; document.getElementById('sqft').value=sqft2; document.getElementById('t-sqft').value=fmtN(sqft2); autoUpdateDewa(sqft2); }
+    if(sqft2>=300&&sqft2<=10000){ vals.sqft=sqft2; document.getElementById('sqft').value=valToSlider('sqft',sqft2); document.getElementById('t-sqft').value=fmtN(sqft2); autoUpdateDewa(sqft2); }
     calc();
   }
 
@@ -1949,7 +1992,7 @@ function setMode(mode){
     document.getElementById('s-cash-range').value  = vals.cash;
     document.getElementById('s-rate').value  = vals.fixrate.toFixed(2);
     document.getElementById('s-sqft').value  = fmtN(vals.sqft);
-    document.getElementById('s-sqft-range').value  = vals.sqft;
+    document.getElementById('s-sqft-range').value  = valToSlider('s-sqft-range', vals.sqft);
     simpleCalc();
   }
 
@@ -2031,15 +2074,15 @@ function simpleCalc(){
   const sr = document.getElementById('s-sqft-range');
   if(price>=500000&&price<=20000000) pr.value=valToSlider('s-price-range',price);
   if(cash>=100000&&cash<=8000000) cr.value=valToSlider('s-cash-range',cash);
-  if(sqft>=300&&sqft<=8000) sr.value=sqft;
+  if(sqft>=300&&sqft<=10000) sr.value=valToSlider('s-sqft-range',sqft);
 
   // Always keep vals in sync so Advanced is always up to date
   if(price>0){ vals.price=price; document.getElementById('price').value=valToSlider('price',price); document.getElementById('t-price').value=fmtN(price); }
   if(cash>0){  vals.cash=cash;   document.getElementById('cash').value=valToSlider('cash',cash);   document.getElementById('t-cash').value=fmtN(cash);   }
   if(rate>0){  vals.fixrate=rate; document.getElementById('t-fixrate').value=rate.toFixed(2); }
-  vals.sqft=sqft; document.getElementById('sqft').value=sqft; document.getElementById('t-sqft').value=fmtN(sqft);
+  vals.sqft=sqft; document.getElementById('sqft').value=valToSlider('sqft',sqft); document.getElementById('t-sqft').value=fmtN(sqft);
   // Always keep bval = price unless manually overridden
-  if(!bvalManual){ vals.bval=vals.price; document.getElementById('bval').value=valToSlider('bval',vals.price); document.getElementById('t-bval').value=fmtN(vals.price); }
+  if(!bvalManual){ vals.bval=vals.price; document.getElementById('bval').value=valToSlider('bval',vals.price); document.getElementById('t-bval').value=fmtDisplay('bval',vals.price); }
   autoDown();
   autoUpdateDewa(sqft);
   if(!price||!cash){document.getElementById('s-result').innerHTML='';return;}
@@ -2177,7 +2220,7 @@ const I18N = {
     'field.sqft':'Property size (sqft)', 'field.sqft.hint':'Used to estimate DEWA and service charge',
     'field.rate':'Fixed interest rate',
     'field.cash.hint':'Down payment + ownership fee + agency 2% + valuation — all come from here',
-    'rate.note':'Fixed rate · after fixed period switches to EIBOR + 1.5%',
+    'rate.note':'Fixed rate · then EIBOR + {margin}% (floor 1.99%)',
     'sec.property':'Property & cash', 'sec.mortgage':'Mortgage', 'sec.results':'Results',
     'sec.closing':'What you pay at closing', 'sec.allin':'Monthly all-in',
     'sec.total':'Total cost over loan term', 'sec.living':'Living costs / month',
@@ -2210,7 +2253,7 @@ const I18N = {
     'verdict.need':'Need','verdict.toclose':'to close','verdict.youhave':'you have','verdict.vsapproved':'vs approved',
     'gv.title':'Eligible for Golden Visa','gv.desc':'Property ≥ AED 2M qualifies for a 10-year UAE residence visa',
     'ob.welcome':'Welcome to Hayyak','ob.intro':"Let's set up your estimate — takes 5 seconds.",'ob.q1':'What are you looking at?','ob.q2':'Which emirate?','ob.apt1':'1-bed apartment','ob.apt2':'2-bed apartment','ob.villa':'Villa / townhouse','ob.custom':'I\'ll set it myself','ob.other':'Other','ob.skip':'Skip','share.btn':'Share this calculation','share.text':'My UAE property calculation from Hayyak',
-    'donut.property':'Property','donut.interest':'Interest','donut.fees':'Fees','donut.living':'Living','card.monthly':'Monthly','card.closing':'At closing','card.loan':'Loan','aff.canafford':'You can afford up to','aff.atincome':'at income','aff.title':'Bank affordability check','aff.dbr':'Debt burden ratio (DBR)','aff.maxloan':'Max loan by income (7×)','aff.verdict':'Verdict','aff.pass':'Likely approved ✓','aff.fail':'May be declined','aff.note':'UAE banks cap mortgage payments at 50% of income (DBR) and lend up to ~7× your annual income. This is an estimate — actual approval depends on credit history, employer, and existing debts.',
+    'donut.property':'Property','donut.interest':'Interest','donut.fees':'Fees','donut.living':'Living','card.monthly':'Monthly','card.closing':'At closing','card.loan':'Loan','approved.fromincome':'from your income','approved.tap':'· tap to use','income.hint':'Used to estimate your bank approval & affordability','rate.salary':'Salary transfer','rate.nonsalary':'Self-employed','aff.canafford':'You can afford up to','aff.atincome':'at income','aff.title':'Bank affordability check','aff.dbr':'Debt burden ratio (DBR)','aff.maxloan':'Max loan by income (7×)','aff.verdict':'Verdict','aff.pass':'Likely approved ✓','aff.fail':'May be declined','aff.note':'UAE banks cap mortgage payments at 50% of income (DBR) and lend up to ~7× your annual income. This is an estimate — actual approval depends on credit history, employer, and existing debts.',
     'row.interest.insight':'💡 Over {years} years you pay {pct}% of the loan amount in interest. Making early repayments could save a significant portion of this.',
     'card.short':'Not enough cash',
     'card.loanhigh':'Loan exceeds approved amount',
@@ -2346,7 +2389,7 @@ const I18N = {
     'field.sqft':'مساحة العقار (قدم²)', 'field.sqft.hint':'يُستخدم لتقدير ديوا ورسوم الخدمة',
     'field.rate':'سعر الفائدة الثابت',
     'field.cash.hint':'الدفعة المقدمة + رسوم التملك + العمولة 2% + التقييم — كلها من هنا',
-    'rate.note':'سعر ثابت · بعد الفترة الثابتة يتحول إلى إيبور + 1.5%',
+    'rate.note':'سعر ثابت · ثم إيبور + {margin}% (الحد الأدنى 1.99%)',
     'sec.property':'العقار والنقد', 'sec.mortgage':'الرهن العقاري', 'sec.results':'النتائج',
     'sec.closing':'ما ستدفعه عند الإغلاق', 'sec.allin':'إجمالي شهري',
     'sec.total':'التكلفة الإجمالية على مدى القرض', 'sec.living':'تكاليف المعيشة / شهرياً',
@@ -2438,7 +2481,7 @@ const I18N = {
     'verdict.need':'مطلوب','verdict.toclose':'للإغلاق','verdict.youhave':'لديك','verdict.vsapproved':'مقابل المعتمد',
     'gv.title':'مؤهل للإقامة الذهبية','gv.desc':'العقار بقيمة 2 مليون درهم فأكثر يؤهل لتأشيرة إقامة 10 سنوات',
     'ob.welcome':'مرحباً بك في حياتك','ob.intro':'لنُعدّ تقديرك — يستغرق 5 ثوانٍ.','ob.q1':'ماذا تبحث عنه؟','ob.q2':'أي إمارة؟','ob.apt1':'شقة غرفة واحدة','ob.apt2':'شقة غرفتين','ob.villa':'فيلا / تاون هاوس','ob.custom':'سأحددها بنفسي','ob.other':'أخرى','ob.skip':'تخطي','share.btn':'مشاركة الحساب','share.text':'حساب العقار الخاص بي من Hayyak',
-    'donut.property':'العقار','donut.interest':'الفوائد','donut.fees':'الرسوم','donut.living':'المعيشة','card.monthly':'شهرياً','card.closing':'عند الإغلاق','card.loan':'القرض','aff.canafford':'يمكنك تحمل حتى','aff.atincome':'بدخل','aff.title':'فحص القدرة على التحمل','aff.dbr':'نسبة عبء الدين (DBR)','aff.maxloan':'أقصى قرض حسب الدخل (7×)','aff.verdict':'الحكم','aff.pass':'مرجح الموافقة ✓','aff.fail':'قد يُرفض','aff.note':'تحدد البنوك الإماراتية أقساط الرهن بـ 50% من الدخل وتقرض حتى ~7 أضعاف دخلك السنوي. هذا تقدير — الموافقة الفعلية تعتمد على السجل الائتماني وصاحب العمل والديون القائمة.',
+    'donut.property':'العقار','donut.interest':'الفوائد','donut.fees':'الرسوم','donut.living':'المعيشة','card.monthly':'شهرياً','card.closing':'عند الإغلاق','card.loan':'القرض','approved.fromincome':'من دخلك','approved.tap':'· اضغط للاستخدام','income.hint':'يُستخدم لتقدير موافقة البنك والقدرة على التحمل','rate.salary':'تحويل الراتب','rate.nonsalary':'عمل حر','aff.canafford':'يمكنك تحمل حتى','aff.atincome':'بدخل','aff.title':'فحص القدرة على التحمل','aff.dbr':'نسبة عبء الدين (DBR)','aff.maxloan':'أقصى قرض حسب الدخل (7×)','aff.verdict':'الحكم','aff.pass':'مرجح الموافقة ✓','aff.fail':'قد يُرفض','aff.note':'تحدد البنوك الإماراتية أقساط الرهن بـ 50% من الدخل وتقرض حتى ~7 أضعاف دخلك السنوي. هذا تقدير — الموافقة الفعلية تعتمد على السجل الائتماني وصاحب العمل والديون القائمة.',
     'row.interest.insight':'💡 على مدى {years} سنة تدفع {pct}% من مبلغ القرض كفوائد. السداد المبكر قد يوفر جزءاً كبيراً من هذا.',
     'card.loanhigh':'القرض يتجاوز المبلغ المعتمد',
     'field.down.hint':'حسابي تلقائياً لاستخدام أقصى نقد · اضغط للتعديل',
@@ -2540,7 +2583,7 @@ const I18N = {
     'field.sqft':'Площадь (sqft)', 'field.sqft.hint':'Используется для оценки DEWA и SC',
     'field.rate':'Фиксированная ставка',
     'field.cash.hint':'Первый взнос + регистрация + агентство 2% + оценка — всё отсюда',
-    'rate.note':'Фикс. ставка · после фикс. периода переходит на EIBOR + 1.5%',
+    'rate.note':'Фикс. ставка · затем EIBOR + {margin}% (минимум 1.99%)',
     'sec.property':'Недвижимость и наличные', 'sec.mortgage':'Ипотека', 'sec.results':'Результаты',
     'sec.closing':'Что вы платите при закрытии', 'sec.allin':'Месячный all-in',
     'sec.total':'Полная стоимость за весь срок', 'sec.living':'Расходы на жильё / мес',
@@ -2574,7 +2617,7 @@ const I18N = {
     'verdict.need':'Нужно','verdict.toclose':'для закрытия','verdict.youhave':'у вас','verdict.vsapproved':'vs одобрено',
     'gv.title':'Подходит для Golden Visa','gv.desc':'Недвижимость от 2M AED даёт право на 10-летнюю резидентскую визу ОАЭ',
     'ob.welcome':'Добро пожаловать в Hayyak','ob.intro':'Настроим расчёт — это займёт 5 секунд.','ob.q1':'Что рассматриваете?','ob.q2':'Какой эмират?','ob.apt1':'1-комн. квартира','ob.apt2':'2-комн. квартира','ob.villa':'Вилла / таунхаус','ob.custom':'Задам сам','ob.other':'Другой','ob.skip':'Пропустить','share.btn':'Поделиться расчётом','share.text':'Мой расчёт недвижимости в ОАЭ из Hayyak',
-    'donut.property':'Недвижимость','donut.interest':'Проценты','donut.fees':'Сборы','donut.living':'Жизнь','card.monthly':'В месяц','card.closing':'При закрытии','card.loan':'Кредит','aff.canafford':'Вы можете позволить до','aff.atincome':'при доходе','aff.title':'Проверка по критериям банка','aff.dbr':'Долговая нагрузка (DBR)','aff.maxloan':'Макс. кредит по доходу (7×)','aff.verdict':'Вердикт','aff.pass':'Скорее всего одобрят ✓','aff.fail':'Могут отказать','aff.note':'Банки ОАЭ ограничивают платёж по ипотеке 50% дохода (DBR) и дают кредит до ~7× годового дохода. Это оценка — реальное одобрение зависит от кредитной истории, работодателя и текущих долгов.',
+    'donut.property':'Недвижимость','donut.interest':'Проценты','donut.fees':'Сборы','donut.living':'Жизнь','card.monthly':'В месяц','card.closing':'При закрытии','card.loan':'Кредит','approved.fromincome':'из вашего дохода','approved.tap':'· нажмите','income.hint':'Используется для оценки одобрения банка и доступности','rate.salary':'Перевод зарплаты','rate.nonsalary':'Самозанятый','aff.canafford':'Вы можете позволить до','aff.atincome':'при доходе','aff.title':'Проверка по критериям банка','aff.dbr':'Долговая нагрузка (DBR)','aff.maxloan':'Макс. кредит по доходу (7×)','aff.verdict':'Вердикт','aff.pass':'Скорее всего одобрят ✓','aff.fail':'Могут отказать','aff.note':'Банки ОАЭ ограничивают платёж по ипотеке 50% дохода (DBR) и дают кредит до ~7× годового дохода. Это оценка — реальное одобрение зависит от кредитной истории, работодателя и текущих долгов.',
     'row.interest.insight':'💡 За {years} лет ты заплатишь {pct}% от суммы кредита процентами. Досрочное погашение может сэкономить значительную часть.',
     'card.short':'Не хватает наличных',
     'card.loanhigh':'Кредит больше одобренной суммы',
@@ -2718,6 +2761,7 @@ function applyTranslations(){
     const key = el.getAttribute('data-i18n');
     el.textContent = t(key);
   });
+  if(typeof updateRateLabels==='function') updateRateLabels();
 }
 function refreshAll(){
   if(typeof setEmirate==='function' && typeof currentEmirate==='string') setEmirate(currentEmirate);
@@ -2897,13 +2941,20 @@ const SLIDER_RANGE = {
   's-cash-range':  {min:100000,  max:8000000},
   'cash':          {min:100000,  max:8000000},
   'approved':      {min:200000,  max:18000000},
+  's-sqft-range':  {min:300,     max:10000},
+  'sqft':          {min:300,     max:10000},
 };
 function sliderToVal(id, pos){
   const r = SLIDER_RANGE[id]; if(!r) return pos;
   const t = pos/1000;
   const v = r.min * Math.pow(r.max/r.min, t);
   // snap to nice steps
-  const step = v < 2000000 ? 25000 : v < 5000000 ? 50000 : 100000;
+  let step;
+  if(id==='s-sqft-range'||id==='sqft'){
+    step = v < 1000 ? 25 : v < 2500 ? 50 : v < 5000 ? 100 : 250;
+  } else {
+    step = v < 1000000 ? 10000 : v < 3000000 ? 25000 : v < 6000000 ? 50000 : 100000;
+  }
   return Math.round(v/step)*step;
 }
 function valToSlider(id, val){
@@ -2928,7 +2979,7 @@ function mpay(loan,rate,months){
   return loan*r*Math.pow(1+r,n)/(Math.pow(1+r,n)-1);
 }
 function fmtDisplay(key,v){
-  if(['price','cash','approved'].includes(key)){
+  if(['price','cash','approved','bval'].includes(key)){
     if(currency==='USD') return (Math.round(v/USD_RATE)).toLocaleString('en-US');
     return Math.round(v).toLocaleString('en-US');
   }
@@ -2938,7 +2989,60 @@ function fmtDisplay(key,v){
   return String(v);
 }
 
-function setFixRate(r,yrs,btnId){
+// FAB-style rate table: salary transfer vs non-salary/self-employed
+const RATE_TABLE = {
+  salary:    { '3': 3.99, '5': 4.19 },
+  nonsalary: { '3': 4.24, '5': 4.44 },
+};
+let salaryTransfer = true;
+let currentFixPeriodKey = '5';
+
+// Variable rate after fixed period: EIBOR + margin, with a floor.
+// FAB: salary transfer margin 1.5%, non-salary/self-employed 1.89%; floor 1.99%.
+const VAR_MARGIN = { salary: 1.5, nonsalary: 1.89 };
+const VAR_FLOOR = 1.99;
+function variableRate(eibor){
+  const margin = salaryTransfer ? VAR_MARGIN.salary : VAR_MARGIN.nonsalary;
+  return Math.max(VAR_FLOOR, eibor + margin);
+}
+
+function updateRateLabels(){
+  const tb = salaryTransfer ? RATE_TABLE.salary : RATE_TABLE.nonsalary;
+  const yr = t('units.yr');
+  const set = (id, period) => {
+    const el = document.getElementById(id);
+    if(el) el.innerHTML = `<span>${tb[period].toFixed(2)}% · ${period}</span> <span>${yr}</span>`;
+  };
+  set('btn-rate3','3'); set('btn-rate5','5');
+  set('s-btn-rate3','3'); set('s-btn-rate5','5');
+  // Update the variable-rate note with the correct margin
+  const note = document.getElementById('rate-note');
+  if(note){
+    const margin = salaryTransfer ? VAR_MARGIN.salary : VAR_MARGIN.nonsalary;
+    note.textContent = t('rate.note').replace('{margin}', margin);
+  }
+}
+function setSimpleRate(periodKey){
+  currentFixPeriodKey = periodKey;
+  const r = (salaryTransfer ? RATE_TABLE.salary : RATE_TABLE.nonsalary)[periodKey];
+  document.getElementById('s-rate').value = r.toFixed(2);
+  document.getElementById('s-btn-rate3').classList.toggle('on', periodKey==='3');
+  document.getElementById('s-btn-rate5').classList.toggle('on', periodKey==='5');
+  simpleCalc();
+}
+function setSalaryTransfer(on){
+  salaryTransfer = on;
+  document.getElementById('btn-salary').classList.toggle('on', on);
+  document.getElementById('btn-nonsalary').classList.toggle('on', !on);
+  updateRateLabels();
+  // Re-apply current period with new rate
+  setFixRate(currentFixPeriodKey, currentFixPeriodKey==='3'?'btn-rate3':'btn-rate5');
+  scheduleSave();
+}
+function setFixRate(periodKey, btnId){
+  currentFixPeriodKey = periodKey;
+  const yrs = parseInt(periodKey);
+  const r = (salaryTransfer ? RATE_TABLE.salary : RATE_TABLE.nonsalary)[periodKey];
   vals.fixrate=r;
   document.getElementById('t-fixrate').value=r.toFixed(2);
   ['btn-rate3','btn-rate5'].forEach(id=>{document.getElementById(id).classList.remove('on');});
@@ -2974,9 +3078,9 @@ function setTag(id,manual,text){
   if(!el)return;
   if(text){
     // Map text-based tags through translations
-    const tMap = {'low':t('field.bval.low'),'high':t('field.bval.high'),'= price':t('field.bval.equal')};
+    const tMap = {'low':t('tag.manual'),'high':t('tag.manual'),'= price':'auto','auto':'auto'};
     el.textContent = tMap[text] || text;
-    el.className='tag '+(text==='low'?'tag-manual':'tag-auto');
+    el.className='tag '+(text==='low'||text==='high'?'tag-manual':'tag-auto');
   } else {
     el.textContent=manual?t('tag.manual'):t('tag.auto');
     el.className='tag '+(manual?'tag-manual':'tag-auto');
@@ -3002,25 +3106,104 @@ function autoDown(){
 function autoUpdateDewa(sqft){
   if(dewaEdited)return;
   const v=Math.round(DEWA_PER_SQFT*sqft);
-  document.getElementById('dewa').value=v;
+  const dewaEl=document.getElementById('dewa');
+  dewaEl.value=v;
   document.getElementById('t-dewa').value=currency==='USD'?
     (Math.round(v/USD_RATE)).toLocaleString('en-US'):fmtN(v);
+  if(typeof paintSlider==='function') paintSlider(dewaEl);
 }
 
 // ─── Slider/text sync ─────────────────────────────────────
+function resetApprovedAuto(){
+  if(!approvedManual) return;
+  approvedManual = false;
+  syncIncome(document.getElementById('t-income2').value);
+  // tag visibility handled inside syncIncome
+}
+function resetDownAuto(){
+  if(!downManual) return;
+  downManual = false;
+  autoDown();
+  calc();
+  scheduleSave();
+}
+function resetBvalAuto(){
+  if(!bvalManual) return;
+  bvalManual = false;
+  vals.bval = vals.price;
+  const bvEl = document.getElementById('bval');
+  const tbvEl = document.getElementById('t-bval');
+  if(bvEl){ bvEl.value = valToSlider('bval', vals.price); paintSlider(bvEl); }
+  if(tbvEl) tbvEl.value = fmtDisplay('bval', vals.price);
+  setTag('bval-tag', false, 'auto');
+  calc();
+  scheduleSave();
+}
+function resetDewaAuto(){
+  dewaEdited = false;
+  autoUpdateDewa(vals.sqft);
+  setTag('dewa-tag', false);
+  calcLiving();
+  scheduleSave();
+}
+function syncIncome(val){
+  const raw = String(val).replace(/[^0-9.]/g,'');
+  const num = parseFloat(raw)||0;
+  const hidden = document.getElementById('t-income');
+  if(hidden) hidden.value = num>0 ? num.toLocaleString('en-US') : '';
+  const apTag = document.getElementById('approved-tag');
+  if(num>0){
+    // Income entered — always set approved from income (overrides manual)
+    approvedManual = false;
+    const incomeAED = num * (currency==='USD'?USD_RATE:1);
+    const estApproved = Math.round(incomeAED*12*7);
+    vals.approved = estApproved;
+    const ar=document.getElementById('approved'), tar=document.getElementById('t-approved');
+    if(ar){ ar.value = valToSlider('approved', estApproved); paintSlider(ar); }
+    if(tar) tar.value = fmtDisplay('approved', estApproved);
+    if(apTag){ apTag.style.display=''; apTag.textContent=t('tag.auto'); apTag.className='tag tag-auto'; }
+  } else {
+    // No income — hide tag
+    if(apTag) apTag.style.display='none';
+  }
+  calc();
+  scheduleSave();
+}
+function useIncomeApproved(amount){
+  vals.approved = amount;
+  approvedManual = false;
+  const ar = document.getElementById('approved');
+  const tar = document.getElementById('t-approved');
+  if(ar){ ar.value = valToSlider('approved', amount); paintSlider(ar); }
+  if(tar) tar.value = fmtDisplay('approved', amount);
+  setTag('approved-tag', false);
+  calc();
+  scheduleSave();
+}
 function fromSlider(key){
   const rawPos = parseFloat(document.getElementById(key).value);
   const v = SLIDER_RANGE[key] ? sliderToVal(key, rawPos) : rawPos;
   vals[key]=v;
   const tin=document.getElementById('t-'+key);
   if(document.activeElement!==tin) tin.value=fmtDisplay(key,v);
-  if(key==='sqft'){autoUpdateDewa(v);dewaEdited=false;setTag('dewa-tag',false);}
+  if(key==='sqft'){
+    autoUpdateDewa(v);dewaEdited=false;setTag('dewa-tag',false);
+    const ss=document.getElementById('s-sqft-range');
+    if(ss){ ss.value=valToSlider('s-sqft-range',v); paintSlider(ss); }
+  }
   if(key==='cash') autoDown();
   else if(key==='price'){
     if(!downManual) autoDown();
-    if(!bvalManual){vals.bval=v;document.getElementById('bval').value=valToSlider('bval',v);document.getElementById('t-bval').value=fmtDisplay('bval',v);setTag('bval-tag',false,'= price');}
+    if(!bvalManual){vals.bval=v;document.getElementById('bval').value=valToSlider('bval',v);document.getElementById('t-bval').value=fmtDisplay('bval',v);setTag('bval-tag',false,'auto');}
   }
-  if(key==='bval'){bvalManual=true;setTag('bval-tag',true,vals.bval<vals.price?'low':vals.bval>vals.price?'high':'= price');}
+  if(key==='bval'){bvalManual=true;setTag('bval-tag',true,'low');}
+  if(key==='approved'){
+    approvedManual=true;
+    const inc2=document.getElementById('t-income2');
+    const hasIncome = inc2 && parseFloat(String(inc2.value).replace(/[^0-9.]/g,''))>0;
+    const apTag=document.getElementById('approved-tag');
+    if(hasIncome && apTag){ apTag.style.display=''; apTag.textContent=t('tag.manual'); apTag.className='tag tag-manual'; }
+  }
     calc();
 }
 function fromText(key){
@@ -3037,13 +3220,29 @@ function fromText(key){
     s.value=aedVal;
   }
   vals[key]=aedVal;
-  if(key==='sqft'){autoUpdateDewa(aedVal);dewaEdited=false;setTag('dewa-tag',false);}
+  if(key==='sqft'){
+    autoUpdateDewa(aedVal);dewaEdited=false;setTag('dewa-tag',false);
+    const ss=document.getElementById('s-sqft-range');
+    if(ss){ ss.value=valToSlider('s-sqft-range',aedVal); paintSlider(ss); }
+  }
   if(key==='cash') autoDown();
   else if(key==='price'){
     if(!downManual) autoDown();
-    if(!bvalManual){vals.bval=aedVal;document.getElementById('bval').value=valToSlider('bval',aedVal);}
+    if(!bvalManual){
+      vals.bval=aedVal;
+      document.getElementById('bval').value=valToSlider('bval',aedVal);
+      document.getElementById('t-bval').value=fmtDisplay('bval',aedVal);
+      setTag('bval-tag',false,'auto');
+    }
   }
-  if(key==='bval'){bvalManual=true;setTag('bval-tag',true,vals.bval<vals.price?'low':vals.bval>vals.price?'high':'= price');}
+  if(key==='bval'){bvalManual=true;setTag('bval-tag',true,'low');}
+  if(key==='approved'){
+    approvedManual=true;
+    const inc2=document.getElementById('t-income2');
+    const hasIncome = inc2 && parseFloat(String(inc2.value).replace(/[^0-9.]/g,''))>0;
+    const apTag=document.getElementById('approved-tag');
+    if(hasIncome && apTag){ apTag.style.display=''; apTag.textContent=t('tag.manual'); apTag.className='tag tag-manual'; }
+  }
   calc();
 }
 function blurText(key){document.getElementById('t-'+key).value=fmtDisplay(key,vals[key]);}
@@ -3162,7 +3361,7 @@ function calcLiving(){
   const n=vals.years*12;
   const ins=loan*0.000112+vals.price*0.0005/12;
   const tf=mpay(loan,vals.fixrate,n)+ins+living;
-  const tv=mpay(loan,vals.eibor+1.5,n)+ins+living;
+  const tv=mpay(loan,variableRate(vals.eibor),n)+ins+living;
   advGrand3 = tf;
   advGrandVar = tv;
   updateAdvAllIn();
@@ -3174,7 +3373,7 @@ function calcLiving(){
 // ─── calc ─────────────────────────────────────────────────
 function calc(){
   const{price,cash,approved,bval,down:dp,years,eibor,fixrate}=vals;
-  const vr=eibor+1.5,n=years*12;
+  const vr=variableRate(eibor),n=years*12;
   // Bank lends based on VALUATION, not price
   // Loan = min(approved, valuation × (100-down)/100)
   // If bval < price: buyer pays full down on bval + valuation gap (price - bval) in cash
@@ -3200,14 +3399,16 @@ function calc(){
   const scEl = document.getElementById('summary-cards');
   if(scEl){
     const card = (label,val,color)=>`
-      <div style="background:var(--bg);border-radius:14px;padding:12px 8px;text-align:center">
-        <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px;line-height:1.2">${label}</div>
-        <div style="font-size:15px;font-weight:700;color:${color};letter-spacing:-0.3px;line-height:1.1">${val}</div>
+      <div style="background:var(--bg);border-radius:14px;padding:10px 6px;text-align:center;min-width:0;overflow:hidden">
+        <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:5px;white-space:nowrap">${label}</div>
+        <div style="font-size:13px;font-weight:700;color:${color};letter-spacing:-0.3px;line-height:1.2;word-break:break-all;direction:ltr">${val}</div>
       </div>`;
+    const curPfx = currency==='USD'?'$':'AED';
+    const fmtCard = v => fmt(v).replace(/^AED\s?/,'').replace(/^\$\s?/,'');
     scEl.innerHTML =
-      card(t('card.monthly'), fmt(Math.round(pf+ins)), 'var(--green)') +
-      card(t('card.closing'), fmt(up), enough?'var(--text)':'var(--red)') +
-      card(t('card.loan'), fmt(loan), ok?'var(--text)':'var(--red)');
+      card(t('card.monthly')+' ('+curPfx+')', fmtCard(Math.round(pf+ins)), 'var(--green)') +
+      card(t('card.closing')+' ('+curPfx+')', fmtCard(up), enough?'var(--text)':'var(--red)') +
+      card(t('card.loan')+' ('+curPfx+')', fmtCard(loan), ok?'var(--text)':'var(--red)');
   }
 
   document.getElementById('metrics').innerHTML=`
@@ -3295,6 +3496,18 @@ function calc(){
     affEl.innerHTML='';
   }
 
+  // Bank approved tag: show auto/manual only when income is driving the estimate
+  const apTag = document.getElementById('approved-tag');
+  if(apTag){
+    if(incomeAED > 0){
+      apTag.style.display='';
+      apTag.textContent = approvedManual ? t('tag.manual') : t('tag.auto');
+      apTag.className = 'tag '+(approvedManual?'tag-manual':'tag-auto');
+    } else {
+      apTag.style.display='none';
+    }
+  }
+
   // Total cost of ownership
   const totalMortgagePayments = mpay(loan,fixrate,n)*n;
   const totalInterest = totalMortgagePayments - loan;
@@ -3311,61 +3524,139 @@ function calc(){
   const totalLivingOver=livingMo*12*vals.years;
   const totalWithLiving = totalNoLiving + totalLivingOver;
 
-  // Donut chart segments: principal, interest, fees, living
-  const principal = loan;
-  const fees = up - (vals.price - loan); // closing costs minus down portion... use up as upfront
-  const segPrincipal = vals.price; // what you pay for the property itself (down + loan principal)
+  // Donut chart — proper filled arc paths (like D3), not stroke hacks
+  const segPrincipal = vals.price;
   const segInterest = totalInterest;
-  const segUpfrontFees = up - (vals.price - loan); // dld+agency+val
+  const segUpfrontFees = up - (vals.price - loan);
   const segLiving = totalLivingOver;
   const donutTotal = segPrincipal + segInterest + segUpfrontFees + segLiving;
   const segs = [
-    {val:segPrincipal,   color:'#1a9d5c', label:t('donut.property')},
-    {val:segInterest,    color:'#e0533d', label:t('donut.interest')},
-    {val:segUpfrontFees, color:'#e0a33d', label:t('donut.fees')},
-    {val:segLiving,      color:'#5b8def', label:t('donut.living')},
+    {val:segPrincipal,   c1:'#1ec97a', c2:'#0d8a4f', label:t('donut.property'), key:'property'},
+    {val:segInterest,    c1:'#ff7057', c2:'#c93020', label:t('donut.interest'), key:'interest'},
+    {val:segUpfrontFees, c1:'#ffc230', c2:'#d47a00', label:t('donut.fees'),     key:'fees'},
+    {val:segLiving,      c1:'#6baeff', c2:'#2563eb', label:t('donut.living'),   key:'living'},
   ].filter(s=>s.val>0);
 
-  // Build SVG donut
-  const R=52, C=2*Math.PI*R, cx=70, cy=70;
-  let offset=0;
-  const arcs = segs.map(s=>{
+  // Geometry — adaptive width, centered ring
+  const W = 300, H = 210;
+  const cx = W/2, cy = H/2;
+  const R_OUT = 90, R_IN = 58; // ring thickness 32px
+  const PAD = 0.022;           // pad angle between segments
+
+  // Helper: clean donut arc path (sharp corners, perfect SVG)
+  function arcPath(sa, ea, ri, ro){
+    const cos=Math.cos, sin=Math.sin;
+    const ox = cx + ro*cos(sa), oy = cy + ro*sin(sa);
+    const ex = cx + ro*cos(ea), ey = cy + ro*sin(ea);
+    const ix = cx + ri*cos(ea), iy = cy + ri*sin(ea);
+    const sx = cx + ri*cos(sa), sy = cy + ri*sin(sa);
+    const span = ea - sa;
+    const large = span > Math.PI ? 1 : 0;
+    return `M ${ox.toFixed(3)} ${oy.toFixed(3)}
+      A ${ro} ${ro} 0 ${large} 1 ${ex.toFixed(3)} ${ey.toFixed(3)}
+      L ${ix.toFixed(3)} ${iy.toFixed(3)}
+      A ${ri} ${ri} 0 ${large} 0 ${sx.toFixed(3)} ${sy.toFixed(3)} Z`;
+  }
+
+  // Build gradient defs + segments
+  let cumAngle = -Math.PI/2;
+  const defs = [], paths = [];
+  segs.forEach((s,i)=>{
     const frac = s.val/donutTotal;
-    const dash = frac*C;
-    const arc = `<circle cx="${cx}" cy="${cy}" r="${R}" fill="none" stroke="${s.color}" stroke-width="16" 
-      stroke-dasharray="${dash} ${C-dash}" stroke-dashoffset="${-offset}" transform="rotate(-90 ${cx} ${cy})"/>`;
-    offset += dash;
-    return arc;
-  }).join('');
-  const legend = segs.map(s=>`
-    <div style="display:flex;align-items:center;gap:7px;font-size:12px">
-      <span style="width:10px;height:10px;border-radius:3px;background:${s.color};flex-shrink:0"></span>
-      <span style="flex:1;color:var(--muted)">${s.label}</span>
-      <span style="font-weight:600;direction:ltr">${Math.round(s.val/donutTotal*100)}%</span>
+    const span = frac * 2*Math.PI - PAD;
+    const sa = cumAngle + PAD/2;
+    const ea = sa + Math.max(span, 0.05);
+
+    // Gradient along arc midpoint direction
+    const mid = sa + span/2;
+    const gr = (R_IN+R_OUT)/2;
+    defs.push(`<radialGradient id="rg${i}" cx="50%" cy="50%" r="50%" gradientUnits="userSpaceOnUse"
+      fx="${(cx + gr*0.5*Math.cos(mid)).toFixed(1)}" fy="${(cy + gr*0.5*Math.sin(mid)).toFixed(1)}">
+      <stop offset="0%" stop-color="${s.c1}"/>
+      <stop offset="100%" stop-color="${s.c2}"/>
+    </radialGradient>`);
+
+    const d = arcPath(sa, ea, R_IN, R_OUT);
+    paths.push(`<path d="${d}" fill="url(#rg${i})"
+      style="cursor:pointer;transition:opacity .25s,filter .25s"
+      onclick="donutTap(${i})" id="darc${i}"/>`);
+
+    cumAngle += frac * 2*Math.PI;
+  });
+
+  // Legend rows
+  const legendRows = segs.map((s,i)=>`
+    <div style="display:flex;align-items:center;gap:10px;padding:11px 0;border-bottom:1px solid var(--border);cursor:pointer;-webkit-tap-highlight-color:transparent" onclick="donutTap(${i})" id="dleg${i}">
+      <span style="width:12px;height:12px;border-radius:3px;flex-shrink:0;background:linear-gradient(135deg,${s.c1},${s.c2})"></span>
+      <span style="flex:1;font-size:13px;color:var(--muted)">${s.label}</span>
+      <span style="font-size:13px;font-weight:700;color:var(--text);direction:ltr">${fmt(s.val)}</span>
+      <span style="font-size:12px;color:var(--muted);min-width:32px;text-align:right;direction:ltr">${Math.round(s.val/donutTotal*100)}%</span>
     </div>`).join('');
 
   document.getElementById('total-cost').innerHTML=`
-    <div style="text-align:center;padding:6px 0 4px">
-      <div style="font-size:11px;color:var(--muted);margin-bottom:4px">${t('row.totalover')} ${vals.years} ${t('row.yrs')}</div>
+    <div style="text-align:center;padding:4px 0 12px">
       <div style="font-size:26px;font-weight:700;color:var(--green);letter-spacing:-0.5px">${fmt(totalWithLiving)}</div>
     </div>
-    <div style="display:flex;align-items:center;gap:16px;padding:14px 4px 18px;border-bottom:1px solid var(--border);margin-bottom:14px">
-      <svg width="140" height="140" viewBox="0 0 140 140" style="flex-shrink:0">${arcs}</svg>
-      <div style="flex:1;display:flex;flex-direction:column;gap:9px">${legend}</div>
+    <div style="position:relative;margin:0 auto;width:100%;max-width:${W}px;height:${H}px;overflow:visible">
+      <svg width="100%" height="${H}" viewBox="0 0 ${W} ${H}" style="overflow:visible;display:block">
+        <defs>
+          ${defs.join('\n')}
+          <filter id="seg-shadow" x="-20%" y="-20%" width="140%" height="140%">
+            <feDropShadow dx="0" dy="2" stdDeviation="3" flood-opacity="0.18"/>
+          </filter>
+        </defs>
+        <!-- Background ring -->
+        <circle cx="${cx}" cy="${cy}" r="${(R_IN+R_OUT)/2}" fill="none" stroke="var(--border)" stroke-width="${R_OUT-R_IN}" opacity="0.35"/>
+        <g filter="url(#seg-shadow)">${paths.join('\n')}</g>
+      </svg>
+      <!-- Center label -->
+      <div id="donut-center" style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none">
+        <div id="dc-pct" style="font-size:18px;font-weight:700;letter-spacing:-0.5px;color:var(--text);transition:all .25s">${fmt(totalWithLiving).replace('AED ','')}</div>
+        <div id="dc-lbl" style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-top:2px;transition:all .25s">Total</div>
+      </div>
     </div>
-    <div class="totals">
-      <div class="brow"><span class="brow-lbl">${t('row.upfront')}</span><span class="brow-val">${fmt(up)}</span></div>
-      <div class="brow"><span class="brow-lbl">${t('row.mortgage')} (${vals.years} ${t('bvr.years')})</span><span class="brow-val">${fmt(totalMortgagePayments)}</span></div>
-      <div class="brow"><span class="brow-lbl">${t('row.living')} (${vals.years} ${t('bvr.years')})</span><span class="brow-val">${fmt(totalLivingOver)}</span></div>
-      <div class="brow" style="border-bottom:none;padding-top:12px"><span class="brow-lbl" style="color:var(--red)">${t('row.interest')}</span><span class="brow-val cr">${fmt(totalInterest)}</span></div>
-    </div>
-    ${loan>0?`<div style="font-size:11px;color:var(--muted);margin-top:10px;padding:10px 12px;background:var(--red-bg);border-radius:10px;line-height:1.5">${t('row.interest.insight').replace('{pct}', Math.round(totalInterest/loan*100)).replace('{years}', vals.years)}</div>`:''}
+    <div style="margin:14px 0 12px">${legendRows}</div>
+    ${loan>0?`<div style="font-size:12px;color:var(--muted);line-height:1.6;text-align:center;padding:0 4px">${t('row.interest.insight').replace('{pct}', Math.round(totalInterest/loan*100)).replace('{years}', vals.years)}</div>`:''}
   `;
+
+  // Store segs for tap handler
+  window._donutSegs = segs;
+  window._donutTotal = donutTotal;
 
   calcLiving();
 }
 
 let bvrLiving = false;
+
+// Donut tap — highlight segment, show details in center
+let _donutActive = -1;
+function donutTap(i){
+  const segs = window._donutSegs || [];
+  const total = window._donutTotal || 1;
+  const s = segs[i];
+  if(!s) return;
+  if(_donutActive === i){
+    _donutActive = -1;
+    segs.forEach((_,j)=>{
+      const a=document.getElementById('darc'+j); if(a){ a.style.opacity='1'; a.style.filter=''; }
+      const l=document.getElementById('dleg'+j); if(l) l.style.opacity='1';
+    });
+    const dc=document.getElementById('dc-pct'), dl=document.getElementById('dc-lbl');
+    if(dc) dc.textContent = fmt(total).replace('AED ','');
+    if(dl) dl.textContent = 'Total';
+  } else {
+    _donutActive = i;
+    segs.forEach((_,j)=>{
+      const active = j===i;
+      const a=document.getElementById('darc'+j);
+      if(a){ a.style.opacity=active?'1':'0.2'; a.style.filter=active?'brightness(1.1)':''; }
+      const l=document.getElementById('dleg'+j); if(l) l.style.opacity=active?'1':'0.4';
+    });
+    const dc=document.getElementById('dc-pct'), dl=document.getElementById('dc-lbl');
+    if(dc) dc.textContent = Math.round(s.val/total*100)+'%';
+    if(dl) dl.textContent = s.label;
+  }
+}
 function toggleBvrLiving(){
   bvrLiving = !bvrLiving;
   const btn = document.getElementById('bvr-living-btn');
@@ -3831,8 +4122,8 @@ bvalManual = false;
 setEmirate('dubai');
 setBank('fab');
 vals.bval = vals.price;
-document.getElementById('bval').value = vals.price;
-document.getElementById('t-bval').value = fmtN(vals.price);
+document.getElementById('bval').value = valToSlider('bval', vals.price);
+document.getElementById('t-bval').value = fmtDisplay('bval',vals.price);
 autoDown();
 calc();
 simpleCalc();
@@ -3863,7 +4154,9 @@ function saveState(){
       emirate: currentEmirate,
       bank: currentBank,
       mode: mode,
-      income: (document.getElementById('t-income')||{}).value || '',
+      income: (document.getElementById('t-income2')||{}).value || '',
+      approvedManual: approvedManual,
+      salaryTransfer: salaryTransfer,
       living: {
         dewa: document.getElementById('dewa').value,
         cooling: document.getElementById('cooling').value,
@@ -3906,8 +4199,12 @@ function loadState(){
     }
     if(s.income){
       const inc = document.getElementById('t-income');
+      const inc2 = document.getElementById('t-income2');
       if(inc) inc.value = s.income;
+      if(inc2) inc2.value = s.income;
     }
+    if(s.approvedManual) approvedManual = true;
+    if(s.salaryTransfer===false) salaryTransfer = false;
     // Restore currency button states
     if(currency==='USD'){
       document.getElementById('btn-aed').classList.remove('on');
@@ -3943,6 +4240,10 @@ if(restored){
   // Re-sync UI with restored vals
   refreshInputs();
   setEmirate(currentEmirate);
+  // Sync hidden income field from restored visible value (drives affordability)
+  const inc2 = document.getElementById('t-income2');
+  const incH = document.getElementById('t-income');
+  if(inc2 && incH) incH.value = inc2.value;
   calc();
   simpleCalc();
   calcLiving();
@@ -3951,7 +4252,13 @@ if(restored){
 }
 paintAllSliders();
 setTimeout(paintAllSliders, 150);
-window.addEventListener('load', ()=>{ paintAllSliders(); setTimeout(paintAllSliders, 300); });</script>
+window.addEventListener('load', ()=>{ paintAllSliders(); setTimeout(paintAllSliders, 300); });
+// Apply salary-transfer state to rate buttons & labels
+(function(){
+  document.getElementById('btn-salary').classList.toggle('on', salaryTransfer);
+  document.getElementById('btn-nonsalary').classList.toggle('on', !salaryTransfer);
+  updateRateLabels();
+})();</script>
 
 <!-- Tooltip sheet -->
 <div id="tooltip-sheet" onclick="hideTooltip()"></div>
