@@ -152,7 +152,7 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,s
 /* Cards */
 .card{background:var(--card);border-radius:20px;border:1px solid var(--border);padding:20px;margin-bottom:10px;box-shadow:var(--shadow);transition:background .3s,border .3s}
 .card-head{display:flex;justify-content:space-between;align-items:center;cursor:pointer;user-select:none}
-.ctitle{font-size:var(--fs-xs);font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--muted)}
+.ctitle{font-size:var(--fs-xs);font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);opacity:.7}
 .chevron{font-size:12px;color:var(--muted);transition:transform .35s cubic-bezier(.4,0,.2,1)}
 .chevron.open{transform:rotate(180deg)}
 .card-body-wrap{display:grid;grid-template-rows:0fr;transition:grid-template-rows .4s cubic-bezier(.4,0,.2,1)}
@@ -173,7 +173,8 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,s
 .finput{font-size:16px;font-weight:500;color:var(--text);border:1px solid var(--border);border-radius:10px;padding:7px 11px;width:112px;flex-shrink:0;text-align:right;background:var(--bg);transition:border .15s,background .15s,color .15s;-webkit-text-size-adjust:none;margin-top:1px}
 .finput:focus{outline:none;border-color:var(--green);background:var(--card)}
 input[type=range]{width:100%;height:4px;-webkit-appearance:none;appearance:none;background:var(--track);border-radius:3px;outline:none;cursor:pointer;margin-bottom:6px;display:block}
-input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:var(--text);cursor:pointer;border:3px solid var(--card);box-shadow:0 1px 5px rgba(0,0,0,0.22);transition:transform .1s}
+input[type=range]::-webkit-slider-runnable-track{height:4px;border-radius:3px;background:inherit}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:var(--text);cursor:pointer;border:3px solid var(--card);box-shadow:0 1px 5px rgba(0,0,0,0.22);transition:transform .1s;margin-top:-9px}
 input[type=range]:active::-webkit-slider-thumb{transform:scale(1.15)}
 input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;background:var(--text);cursor:pointer;border:3px solid var(--card)}
 input[type=range]::-moz-range-track{background:transparent;height:4px;border-radius:3px}
@@ -203,7 +204,7 @@ input[type=range]::-moz-range-track{background:transparent;height:4px;border-rad
 .brow:last-child{border-bottom:none}
 .brow-lbl{font-size:var(--fs-sm);color:var(--muted);line-height:1.4;flex:1;min-width:0}
 .brow-val{font-size:var(--fs-base);font-weight:600;white-space:nowrap;text-align:right;flex-shrink:0;font-variant-numeric:tabular-nums;direction:ltr;unicode-bidi:embed}
-.sec-lbl{font-size:var(--fs-xs);font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);margin-bottom:10px}
+.sec-lbl{font-size:var(--fs-xs);font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:12px;opacity:.7}
 
 /* Progress bar */
 .pbar-track{background:var(--track);border-radius:4px;height:6px;overflow:hidden;margin-bottom:5px}
@@ -444,6 +445,14 @@ input[type=range]::-moz-range-track{background:transparent;height:4px;border-rad
   </div>
 
   <div id="s-result"></div>
+  <!-- Own / Rent out toggle + panel -->
+  <div style="margin-top:12px">
+    <div class="seg seg-full" style="margin-bottom:0">
+      <button id="s-own-btn" class="seg-btn on" onclick="setRentOut(false)" data-i18n="btn.owner">🏠 Own</button>
+      <button id="s-rent-btn" class="seg-btn" onclick="setRentOut(true)" data-i18n="btn.renting">📈 Rent out</button>
+    </div>
+    <div id="s-rent-panel"></div>
+  </div>
 </div>
 <!-- ADVANCED MODE -->
 <div id="view-advanced" style="display:none">
@@ -550,7 +559,14 @@ input[type=range]::-moz-range-track{background:transparent;height:4px;border-rad
   <div class="card-body-wrap open" id="body-results"><div class="card-body-inner">
 
     <!-- Summary cards -->
-    <div id="summary-cards" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:20px"></div>
+    <div id="summary-cards" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:16px"></div>
+
+    <!-- Own / Rent out toggle -->
+    <div class="seg seg-full" style="margin-bottom:4px">
+      <button id="own-btn" class="seg-btn on" onclick="setRentOut(false)" data-i18n="btn.owner">🏠 Own</button>
+      <button id="rent-btn" class="seg-btn" onclick="setRentOut(true)" data-i18n="btn.renting">📈 Rent out</button>
+    </div>
+    <div id="rent-panel"></div>
 
     <!-- Income affordability -->
     <div style="margin-bottom:20px">
@@ -853,6 +869,9 @@ const USD_RATE = 3.6725;
 const DEWA_PER_SQFT = 0.85;
 let calcLivingTotal = 0;
 let rentOut = false;
+let rentYield = 7.0; // % gross yield — auto from market, user can adjust
+let rentYieldManual = false;
+let rentPeriod = 'month'; // 'month' | 'year'
 let budgetVals = {};
 
 // Emirates: transfer fees, agency fees, valuation
@@ -1733,51 +1752,101 @@ function removeScenario(i){
   renderScenarios();
   scheduleSave();
 }
+let scenPriority = 'monthly'; // 'monthly' | 'interest' | 'upfront'
+
 function renderScenarios(){
   const body=document.getElementById('modal-scenarios-body');
   if(!body) return;
-  let html = `<div style="font-size:12px;color:var(--muted);margin-bottom:16px;line-height:1.5">${t('scen.intro')}</div>`;
-  html += `<button onclick="addScenario()" style="width:100%;padding:13px;background:var(--text);color:var(--bg);border:none;border-radius:14px;font-size:14px;font-weight:700;cursor:pointer;margin-bottom:18px">+ ${t('scen.add')}</button>`;
+  const colors=['#1a9d5c','#3b82f6','#e0533d'];
+
+  let html=`<button onclick="addScenario()" style="width:100%;padding:14px;background:var(--text);color:var(--bg);border:none;border-radius:14px;font-size:14px;font-weight:700;cursor:pointer;margin-bottom:20px">+ ${t('scen.add')}</button>`;
 
   if(scenarios.length===0){
-    html += `<div style="text-align:center;color:var(--muted);font-size:13px;padding:30px 0">${t('scen.empty')}</div>`;
+    html+=`<div style="text-align:center;padding:32px 16px">
+      <div style="font-size:40px;margin-bottom:12px">⚖️</div>
+      <div style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:8px">${t('scen.empty.title')||'No scenarios yet'}</div>
+      <div style="font-size:13px;color:var(--muted);line-height:1.5">${t('scen.intro')}</div>
+    </div>`;
   } else {
-    // Comparison table
-    const rows = [
-      {k:'price', label:t('field.price'), fmt:v=>fmt(v)},
-      {k:'monthly', label:t('row.allinstr'), fmt:v=>fmt(v), hl:true},
-      {k:'upfront', label:t('row.upfront'), fmt:v=>fmt(v)},
-      {k:'totalInterest', label:t('row.interest'), fmt:v=>fmt(v)},
-      {k:'down', label:t('field.down'), fmt:v=>v+'%'},
-      {k:'rate', label:t('field.rate'), fmt:v=>v+'%'},
-    ];
-    html += `<div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:13px">`;
-    // Header with scenario names + delete
-    html += `<tr><td style="padding:8px 4px"></td>`;
+    const multi=scenarios.length>1;
+
+    // Priority selector
+    if(multi){
+      const opts=[
+        {k:'monthly',  label:'💰 '+( t('scen.p.monthly')||'Low payment')},
+        {k:'interest', label:'📉 '+(t('scen.p.interest')||'Less interest')},
+        {k:'upfront',  label:'🏦 '+(t('scen.p.upfront')||'Low upfront')},
+      ];
+      html+=`<div style="margin-bottom:16px">
+        <div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px">${t('scen.priority')||'What matters most to you?'}</div>
+        <div style="display:flex;gap:6px">
+          ${opts.map(o=>`<button onclick="scenPriority='${o.k}';renderScenarios()" style="flex:1;padding:8px 4px;border-radius:10px;border:1.5px solid ${scenPriority===o.k?'var(--green)':'var(--border)'};background:${scenPriority===o.k?'var(--green)':'var(--card)'};color:${scenPriority===o.k?'#fff':'var(--muted)'};font-size:11px;font-weight:600;cursor:pointer;line-height:1.3;-webkit-tap-highlight-color:transparent">${o.label}</button>`).join('')}
+        </div>
+      </div>`;
+    }
+
+    // Find bests
+    const bestMonthly=Math.min(...scenarios.map(s=>s.monthly));
+    const bestUpfront=Math.min(...scenarios.map(s=>s.upfront));
+    const bestInterest=Math.min(...scenarios.map(s=>s.totalInterest));
+
+    // Winner = best on the chosen priority
+    const winnerVal = scenPriority==='monthly' ? bestMonthly : scenPriority==='interest' ? bestInterest : bestUpfront;
+    const winnerKey = scenPriority==='monthly' ? 'monthly' : scenPriority==='interest' ? 'totalInterest' : 'upfront';
+
+    html+=`<div style="display:flex;flex-direction:column;gap:12px">`;
     scenarios.forEach((s,i)=>{
-      html += `<td style="padding:8px 6px;text-align:center;vertical-align:top">
-        <div style="font-weight:700;font-size:12px;margin-bottom:2px">${i+1}</div>
-        <button onclick="removeScenario(${i})" style="font-size:10px;color:var(--red);background:none;border:none;cursor:pointer;padding:2px">✕</button>
-      </td>`;
+      const isBestM=multi&&s.monthly===bestMonthly;
+      const isBestU=multi&&s.upfront===bestUpfront;
+      const isBestI=multi&&s.totalInterest===bestInterest;
+      const isWinner=multi&&s[winnerKey]===winnerVal;
+      const color=colors[i];
+      const name=s.label||s.name;
+
+      html+=`<div style="border:2px solid ${isWinner?'var(--green)':color+'33'};border-radius:18px;overflow:hidden;background:var(--card)">
+        <div style="background:${isWinner?'var(--green)':color};padding:12px 14px;display:flex;align-items:center;justify-content:space-between">
+          <div style="flex:1;min-width:0">
+            <div style="font-size:10px;color:rgba(255,255,255,0.7);text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px">${t('scen.scenario')||'Scenario'} ${i+1}</div>
+            <div style="font-size:14px;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${name}</div>
+          </div>
+          ${isWinner?`<span style="background:rgba(255,255,255,0.25);color:#fff;font-size:10px;font-weight:700;padding:3px 8px;border-radius:20px;margin-right:8px;white-space:nowrap">★ ${t('scen.best')||'BEST'}</span>`:''}
+          <button onclick="removeScenario(${i})" style="background:rgba(0,0,0,0.15);border:none;color:#fff;width:28px;height:28px;border-radius:50%;cursor:pointer;font-size:16px;line-height:1;flex-shrink:0">×</button>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0">
+          <div style="padding:12px 14px;border-bottom:1px solid var(--border);border-right:1px solid var(--border);background:${scenPriority==='monthly'&&isBestM?'rgba(26,157,92,0.06)':''}">
+            <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin-bottom:3px">${t('card.monthly')}</div>
+            <div style="font-size:16px;font-weight:700;color:${isBestM?'var(--green)':'var(--text)'};direction:ltr">${fmt(s.monthly)}${isBestM&&multi?' ↓':''}</div>
+          </div>
+          <div style="padding:12px 14px;border-bottom:1px solid var(--border);background:${scenPriority==='upfront'&&isBestU?'rgba(26,157,92,0.06)':''}">
+            <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin-bottom:3px">${t('card.closing')}</div>
+            <div style="font-size:16px;font-weight:700;color:${isBestU?'var(--green)':'var(--text)'};direction:ltr">${fmt(s.upfront)}${isBestU&&multi?' ↓':''}</div>
+          </div>
+          <div style="padding:12px 14px;border-right:1px solid var(--border);background:${scenPriority==='interest'&&isBestI?'rgba(26,157,92,0.06)':''}">
+            <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin-bottom:3px">${t('donut.interest')}</div>
+            <div style="font-size:16px;font-weight:700;color:${isBestI?'var(--green)':'var(--red)'};direction:ltr">${fmt(s.totalInterest)}${isBestI&&multi?' ↓':''}</div>
+          </div>
+          <div style="padding:12px 14px">
+            <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em;margin-bottom:3px">${t('field.rate')} · ${t('bvr.years')||'yrs'}</div>
+            <div style="font-size:16px;font-weight:700;color:var(--text)">${s.rate}% · ${s.years}y</div>
+          </div>
+        </div>
+      </div>`;
     });
-    html += `</tr>`;
-    // Rows
-    rows.forEach(row=>{
-      // Find best (lowest) for highlight
-      const vals_ = scenarios.map(s=>s[row.k]);
-      const best = Math.min(...vals_);
-      html += `<tr style="border-top:1px solid var(--border)">
-        <td style="padding:10px 4px;color:var(--muted);font-size:12px">${row.label}</td>`;
-      scenarios.forEach(s=>{
-        const isBest = (row.k==='monthly'||row.k==='upfront'||row.k==='totalInterest') && s[row.k]===best && scenarios.length>1;
-        html += `<td style="padding:10px 6px;text-align:center;font-weight:${row.hl?'700':'500'};color:${isBest?'var(--green)':'var(--text)'};white-space:nowrap;direction:ltr">${row.fmt(s[row.k])}${isBest?' ★':''}</td>`;
-      });
-      html += `</tr>`;
-    });
-    html += `</table></div>`;
+    html+=`</div>`;
+
+    if(multi){
+      const savedMonthly=Math.max(...scenarios.map(s=>s.monthly))-bestMonthly;
+      const savedInterest=Math.max(...scenarios.map(s=>s.totalInterest))-bestInterest;
+      html+=`<div style="margin-top:14px;padding:14px;background:var(--bg);border-radius:14px;text-align:center">
+        <div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px">${t('scen.savings')||'Best option saves'}</div>
+        <div style="font-size:22px;font-weight:700;color:var(--green);direction:ltr">${fmt(savedInterest)}</div>
+        <div style="font-size:12px;color:var(--muted);margin-top:2px">${t('scen.ininterest')||'in interest'} · ${fmt(savedMonthly)}/mo ${t('scen.cheaper')||'less monthly'}</div>
+      </div>`;
+    }
   }
-  body.innerHTML = html;
+  body.innerHTML=html;
 }
+
 
 function renderChecklist(){
   const body = document.getElementById('modal-checklist-body');
@@ -2045,19 +2114,9 @@ function fmtSimple(v){
 }
 
 function buildAllInSub(){
-  // Build subtitle from active (non-zero) cost items
-  const parts = [t('row.mortgage.label')];
-  const gv = id => parseFloat((document.getElementById(id)||{}).value)||0;
-  if(rentOut){
-    parts.push(t('living.sc'));
-  } else {
-    if(gv('dewa')>0)     parts.push('DEWA');
-    if(gv('cooling')>0)  parts.push(t('living.cooling'));
-    parts.push(t('living.sc'));
-    if(gv('internet')>0) parts.push(t('living.internet'));
-    if(gv('gas')>0)      parts.push(t('living.gas'));
-  }
-  return parts.join(' + ');
+  // Short, readable subtitle instead of long "A + B + C + D" chain
+  return rentOut ? (t('row.allin.short.rent')||'incl. service charge')
+                 : (t('row.allin.short')||'incl. living costs');
 }
 
 function simpleCalc(){
@@ -2179,6 +2238,12 @@ function simpleCalc(){
       </div>
     </div>`;
   setSPeriod(sPeriod);
+  // Rent-out panel (Simple)
+  if(typeof renderRentPanel==='function'){
+    const sp = document.getElementById('s-rent-panel');
+    if(sp) renderRentPanel(price, sMortgage, sqft, 's-rent-panel');
+  }
+  requestAnimationFrame(paintAllSliders);
 }
 
 // ─── Theme ───────────────────────────────────────────────
@@ -2229,7 +2294,7 @@ const I18N = {
     'tool.living':'Living costs', 'tool.living.desc':'DEWA, SC, rent out',
     'tool.bvr':'Buy vs Rent', 'tool.bvr.desc':'25-year net worth',
     'tool.prepay':'Early repayment', 'tool.prepay.desc':'Save on interest',
-    'tool.checklist':'Bank checklist','tool.checklist.desc':'Documents & steps','tool.scenarios':'Compare scenarios','tool.scenarios.desc':'Save & compare options','scen.intro':'Save your current calculation, change the inputs, then save another to compare side by side.','scen.add':'Save current as scenario','scen.empty':'No scenarios saved yet','tool.offplan':'Off-plan',
+    'tool.checklist':'Bank checklist','tool.checklist.desc':'Documents & steps','tool.scenarios':'Compare scenarios','tool.scenarios.desc':'Save & compare options','scen.intro':'Save your current calculation, change the inputs, then save another to compare side by side.','scen.scenario':'Scenario','scen.priority':'What matters most?','scen.p.monthly':'Low payment','rent.panel.title':'If you rent it out','rent.yield':'Yield','rent.grossyield':'Gross yield','rent.income':'Monthly rent','rent.cashflow':'Net cashflow/mo','rent.nety':'Net yield','rent.mortgage':'Mortgage/mo','rent.note':'Net cashflow = rent − mortgage − service charge − insurance. Excludes vacancy & management fees.','scen.p.interest':'Less interest','scen.p.upfront':'Low upfront','scen.best':'BEST','scen.savings':'Best option saves','scen.ininterest':'in interest','scen.cheaper':'less monthly','scen.empty.title':'No scenarios yet','scen.add':'Save current as scenario','scen.empty':'No scenarios saved yet','tool.offplan':'Off-plan',
     'tool.offplan.desc':'Coming soon',
     'tool.soon':'Coming soon',
     'btn.fixed':'Fixed', 'btn.variable':'Variable',
@@ -2258,7 +2323,7 @@ const I18N = {
     'card.short':'Not enough cash',
     'card.loanhigh':'Loan exceeds approved amount',
     'row.mortgage.label':'Mortgage',
-    'row.allin.label':'All-in',
+    'row.allin.label':'All-in','row.allin.short':'incl. living costs','row.allin.short.rent':'incl. service charge',
     'sub.permonth':'per month',
     'sub.peryear':'per year',
     'sub.allin.full':'mortgage + DEWA + SC + internet + gas',
@@ -2398,7 +2463,7 @@ const I18N = {
     'tool.living':'تكاليف المعيشة', 'tool.living.desc':'ديوا، رسوم خدمة، تأجير',
     'tool.bvr':'شراء أم إيجار', 'tool.bvr.desc':'صافي الثروة على 25 سنة',
     'tool.prepay':'السداد المبكر', 'tool.prepay.desc':'وفر على الفوائد',
-    'tool.checklist':'قائمة البنك','tool.checklist.desc':'المستندات والخطوات','tool.scenarios':'مقارنة السيناريوهات','tool.scenarios.desc':'احفظ وقارن الخيارات','scen.intro':'احفظ حسابك الحالي، غيّر المدخلات، ثم احفظ آخر للمقارنة جنباً إلى جنب.','scen.add':'حفظ الحالي كسيناريو','scen.empty':'لا توجد سيناريوهات محفوظة بعد','tool.offplan':'على المخطط',
+    'tool.checklist':'قائمة البنك','tool.checklist.desc':'المستندات والخطوات','tool.scenarios':'مقارنة السيناريوهات','tool.scenarios.desc':'احفظ وقارن الخيارات','scen.intro':'احفظ حسابك الحالي، غيّر المدخلات، ثم احفظ آخر للمقارنة جنباً إلى جنب.','scen.scenario':'سيناريو','scen.priority':'ما الأهم؟','scen.p.monthly':'دفعة منخفضة','rent.panel.title':'إذا أجّرت','rent.yield':'العائد','rent.grossyield':'العائد الإجمالي','rent.income':'الإيجار الشهري','rent.cashflow':'صافي التدفق','rent.nety':'صافي العائد','rent.mortgage':'القسط','rent.note':'صافي التدفق = الإيجار − القسط − رسوم الخدمة − التأمين.','rent.yield.sub':'% من قيمة العقار كإيجار سنوي · متوسط دبي 6-8%','rent.income.sub':'من المستأجر كل شهر','rent.cf.pos':'ربح بعد كل التكاليف','rent.cf.neg':'ستدفع هذا المبلغ من جيبك','rent.breakdown':'كيف يُحسب','rent.sc':'رسوم الخدمة','rent.ins':'التأمين','rent.nety.sub':'بعد التكاليف الثابتة','scen.p.interest':'فائدة أقل','scen.p.upfront':'تكلفة أولية أقل','scen.best':'الأفضل','scen.savings':'الخيار الأفضل يوفر','scen.ininterest':'في الفوائد','scen.cheaper':'أقل شهرياً','scen.empty.title':'لا توجد سيناريوهات بعد','scen.add':'حفظ الحالي كسيناريو','scen.empty':'لا توجد سيناريوهات محفوظة بعد','tool.offplan':'على المخطط',
     'tool.soon':'قريباً',
     'btn.fixed':'ثابت', 'btn.variable':'متغير',
     'btn.monthly':'شهري', 'btn.annual':'سنوي',
@@ -2422,7 +2487,7 @@ const I18N = {
     'card.short':'النقد غير كافٍ',
     'card.loanhigh':'القرض يتجاوز المبلغ المعتمد',
     'row.mortgage.label':'الرهن',
-    'row.allin.label':'الإجمالي',
+    'row.allin.label':'الإجمالي','row.allin.short':'شامل تكاليف المعيشة','row.allin.short.rent':'شامل رسوم الخدمة',
     'sub.permonth':'شهرياً',
     'sub.peryear':'سنوياً',
     'sub.allin.full':'الرهن + ديوا + رسوم خدمة + إنترنت + غاز',
@@ -2471,7 +2536,7 @@ const I18N = {
     'row.shortfall':'النقص في النقد',
     'row.totalneeded':'الإجمالي المطلوب', 'row.left':'المتبقي بعد كل التكاليف',
     'row.totalover':'الإجمالي على', 'row.yrs':'سنة (شامل كل التكاليف)',
-    'row.mortgage.label':'الرهن', 'row.allin.label':'الإجمالي',
+    'row.mortgage.label':'الرهن', 'row.allin.label':'الإجمالي','row.allin.short':'شامل تكاليف المعيشة','row.allin.short.rent':'شامل رسوم الخدمة',
     'sub.permonth':'شهرياً', 'sub.peryear':'سنوياً',
     'sub.allin.full':'الرهن + ديوا + رسوم خدمة + إنترنت + غاز',
     'sub.allin.rentout':'الرهن + رسوم الخدمة فقط',
@@ -2592,7 +2657,7 @@ const I18N = {
     'tool.living':'Расходы на жильё', 'tool.living.desc':'DEWA, SC, сдача',
     'tool.bvr':'Купить или снимать', 'tool.bvr.desc':'25-летнее сравнение',
     'tool.prepay':'Досрочное погашение', 'tool.prepay.desc':'Экономия на процентах',
-    'tool.checklist':'Чеклист банка','tool.checklist.desc':'Документы и шаги','tool.scenarios':'Сравнить сценарии','tool.scenarios.desc':'Сохранить и сравнить','scen.intro':'Сохрани текущий расчёт, измени параметры, сохрани второй — сравни рядом.','scen.add':'Сохранить как сценарий','scen.empty':'Пока нет сохранённых сценариев','tool.offplan':'Строящееся',
+    'tool.checklist':'Чеклист банка','tool.checklist.desc':'Документы и шаги','tool.scenarios':'Сравнить сценарии','tool.scenarios.desc':'Сохранить и сравнить','scen.intro':'Сохрани текущий расчёт, измени параметры, сохрани второй — сравни рядом.','scen.scenario':'Сценарий','scen.priority':'Что важнее всего?','scen.p.monthly':'Низкий платёж','rent.panel.title':'Если сдаёшь в аренду','rent.yield':'Доходность','rent.grossyield':'Валовая доходность','rent.income':'Аренда/месяц','rent.cashflow':'Денежный поток','rent.nety':'Чистая доходность','rent.mortgage':'Ипотека/мес','rent.note':'Денежный поток = аренда − ипотека − обслуживание − страховка. Без учёта простоя и управляющего.','rent.yield.sub':'% от стоимости в год — средний по Дубаю 6-8%','rent.income.sub':'получаешь от арендатора каждый месяц','rent.cf.pos':'остаётся после всех расходов','rent.cf.neg':'доплачиваешь из своего кармана','rent.breakdown':'Из чего складывается','rent.sc':'Обслуживание здания','rent.ins':'Страховка','rent.nety.sub':'после постоянных расходов — без учёта простоя и управляющего','scen.p.interest':'Меньше процентов','scen.p.upfront':'Меньше при въезде','scen.best':'ЛУЧШИЙ','scen.savings':'Лучший вариант экономит','scen.ininterest':'на процентах','scen.cheaper':'меньше в месяц','scen.empty.title':'Сценариев пока нет','scen.add':'Сохранить как сценарий','scen.empty':'Пока нет сохранённых сценариев','tool.offplan':'Строящееся',
     'tool.offplan.desc':'Coming soon',
     'tool.soon':'Скоро',
     'btn.fixed':'Фикс.', 'btn.variable':'Плав.',
@@ -3097,9 +3162,11 @@ function autoDown(){
   const minDown = vals.price > 5000000 ? 30 : 20;
   const pct = clamp(Math.floor(availForDown/vals.bval*100), minDown, 80);
   vals.down = pct;
-  document.getElementById('down').value = pct;
+  const downEl = document.getElementById('down');
+  downEl.value = pct;
   document.getElementById('t-down').value = String(pct);
   downManual=false; setTag('down-tag',false);
+  if(typeof paintSlider==='function') paintSlider(downEl);
 }
 
 // ─── Auto DEWA ────────────────────────────────────────────
@@ -3326,16 +3393,164 @@ document.getElementById('t-sc').addEventListener('blur',()=>{document.getElement
 
 function setRentOut(val){
   rentOut = val;
-  document.getElementById('rentout-btn-owner').classList.toggle('on', !val);
-  document.getElementById('rentout-btn-rent').classList.toggle('on', val);
+  // Sync living modal buttons if open
+  const ob=document.getElementById('rentout-btn-owner');
+  const rb=document.getElementById('rentout-btn-rent');
+  if(ob) ob.classList.toggle('on', !val);
+  if(rb) rb.classList.toggle('on', val);
   ['dewa','cooling','internet','gas'].forEach(id=>{
     const field = document.getElementById(id)?.closest('.field');
     if(field) field.style.opacity = val ? '0.35' : '1';
   });
+  // Sync inline toggle buttons
+  ['own-btn','rent-btn','s-own-btn','s-rent-btn'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(!el) return;
+    const isOwn = id.includes('own');
+    el.classList.toggle('on', isOwn ? !val : val);
+  });
   calcLiving();
   simpleCalc();
+  calc();
 }
 function toggleRentOut(){ setRentOut(!rentOut); }
+
+// Render inline rent-out panel
+function renderRentPanel(price, monthly, sqft, panelId){
+  panelId = panelId || 'rent-panel';
+  const el = document.getElementById(panelId);
+  if(!el) return;
+  if(!rentOut){ el.style.display='none'; return; }
+  el.style.display='block';
+  if(!rentYieldManual) rentYield = 6.0;
+  el._price=price; el._monthly=monthly; el._sqft=sqft;
+  // Only rebuild skeleton once; then just update numbers
+  if(!el.querySelector('#rent-yield-slider')){
+    el.innerHTML=`<div style="margin-top:16px;background:var(--bg);border-radius:16px;padding:16px;border:1.5px solid var(--border)">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+        <div style="font-size:13px;font-weight:700;color:var(--text)">📈 If you rent it out</div>
+        <span id="rent-yield-tag" class="tag tag-auto" style="cursor:pointer" onclick="resetRentYield()">auto</span>
+      </div>
+      <div style="margin-bottom:16px;background:var(--card);border-radius:12px;padding:12px 13px">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:2px">
+          <div>
+            <div style="font-size:12px;font-weight:600;color:var(--text)">Rental yield</div>
+            <div style="font-size:10px;color:var(--muted)">% of value earned as rent per year · Dubai avg 5–7%</div>
+          </div>
+          <span id="rent-yield-val" style="font-size:18px;font-weight:700;color:var(--text)">6.0%</span>
+        </div>
+        <input type="range" id="rent-yield-slider" min="30" max="150" step="1" value="${Math.round(rentYield*10)}"
+          oninput="rentYield=+this.value/10;rentYieldManual=true;const e=this.closest('.rent-wrap');_updateRentNumbers(e,e._price,e._monthly,e._sqft);paintSlider(this);"
+          style="width:100%;margin:8px 0 2px">
+        <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--muted)"><span>3%</span><span>15%</span></div>
+      </div>
+      <!-- Period toggle -->
+      <div class="seg seg-full" style="margin:-2px 0 12px">
+        <button id="rent-btn-mo" class="seg-btn on" onclick="rentPeriod='month';_syncRentPeriod(this.closest('[id]'))">Monthly</button>
+        <button id="rent-btn-yr" class="seg-btn" onclick="rentPeriod='year';_syncRentPeriod(this.closest('[id]'))">Annual</button>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
+        <div style="background:var(--card);border-radius:12px;padding:12px 10px">
+          <div style="font-size:10px;color:var(--muted);margin-bottom:4px">🏠 Rent income (AED)</div>
+          <div id="rent-n-income" style="font-size:16px;font-weight:700;color:var(--green);direction:ltr;white-space:nowrap"></div>
+          <div style="font-size:10px;color:var(--muted)" id="rent-income-sub">tenant pays you /mo</div>
+        </div>
+        <div style="background:var(--card);border-radius:12px;padding:12px 10px">
+          <div style="font-size:10px;color:var(--muted);margin-bottom:4px">💰 Cashflow (AED)</div>
+          <div id="rent-n-cf" style="font-size:16px;font-weight:700;direction:ltr;white-space:nowrap"></div>
+          <div id="rent-n-cfsub" style="font-size:10px;color:var(--muted)"></div>
+        </div>
+      </div>
+      <div style="background:var(--card);border-radius:12px;padding:12px 13px;margin-bottom:8px">
+        <div style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px">Monthly breakdown</div>
+        <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border)"><span style="font-size:12px;color:var(--muted)">Rent income</span><span id="rent-n-r1" style="font-size:13px;font-weight:600;color:var(--green);direction:ltr"></span></div>
+        <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border)"><span style="font-size:12px;color:var(--muted)">Mortgage payment</span><span id="rent-n-r2" style="font-size:13px;font-weight:600;color:var(--red);direction:ltr"></span></div>
+        <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border)"><span style="font-size:12px;color:var(--muted)">Service charge</span><span id="rent-n-r3" style="font-size:13px;font-weight:600;color:var(--muted);direction:ltr"></span></div>
+        <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border)"><span style="font-size:12px;color:var(--muted)">Property insurance (0.1%/yr)</span><span id="rent-n-r4" style="font-size:13px;font-weight:600;color:var(--muted);direction:ltr"></span></div>
+        <div style="display:flex;justify-content:space-between;padding:5px 0"><span style="font-size:12px;color:var(--muted)">Life insurance (bank req.)</span><span id="rent-n-r5" style="font-size:13px;font-weight:600;color:var(--muted);direction:ltr"></span></div>
+        <div style="display:flex;justify-content:space-between;padding:8px 0 2px;border-top:2px solid var(--border);margin-top:4px">
+          <span id="rent-total-lbl" style="font-size:12px;font-weight:700;color:var(--text)">= Net cashflow/mo</span>
+          <span id="rent-n-total" style="font-size:15px;font-weight:700;direction:ltr"></span>
+        </div>
+      </div>
+      <div style="background:var(--card);border-radius:12px;padding:12px 13px">
+        <div style="font-size:10px;color:var(--muted);margin-bottom:4px">📊 Annual net yield</div>
+        <div id="rent-n-yield" style="font-size:17px;font-weight:700;color:var(--text)"></div>
+        <div style="font-size:10px;color:var(--muted)">return per year after fixed costs · excludes vacancy &amp; mgmt</div>
+      </div>
+    </div>`;
+    // Mark wrapper so oninput can find it
+    el.firstElementChild.classList.add('rent-wrap');
+    el.firstElementChild._price=price; el.firstElementChild._monthly=monthly; el.firstElementChild._sqft=sqft;
+    setTimeout(()=>paintSlider(el.querySelector('#rent-yield-slider')),30);
+  }
+  // Always update wrapper refs
+  const wrap = el.querySelector('.rent-wrap');
+  if(wrap){ wrap._price=price; wrap._monthly=monthly; wrap._sqft=sqft; }
+  _updateRentNumbers(el, price, monthly, sqft);
+}
+function _updateRentNumbers(el, price, monthly, sqft){
+  if(!price) return;
+  const monthlyRent = Math.round(price * rentYield/100 / 12);
+  const sc      = Math.round(sqft * 23 / 12);
+  const propIns = Math.round(price * 0.001 / 12);
+  const lifeIns = Math.round(monthly * 0.006);
+  const ins = propIns + lifeIns;
+  const cashflow = monthlyRent - monthly - sc - ins;
+  const netYield = ((monthlyRent*12 - sc*12 - ins*12) / price * 100).toFixed(1);
+  const positive = cashflow >= 0;
+  const m = rentPeriod==='year' ? 12 : 1;
+  const sfx = rentPeriod==='year' ? '/yr' : '/mo';
+  const q = (id) => el.querySelector ? el.querySelector('#'+id) : document.getElementById(id);
+  const set=(id,v)=>{const e=q(id);if(e)e.textContent=v;};
+  const setC=(id,v)=>{const e=q(id);if(e)e.style.color=v;};
+  set('rent-yield-val', rentYield.toFixed(1)+'%');
+  const fmtC = v => fmt(v).replace(/^AED\s?/,''); // compact for cards
+  set('rent-n-income', fmtC(monthlyRent*m));
+  set('rent-n-cf', (positive?'+':'')+fmtC(cashflow*m));
+  set('rent-n-cfsub', rentPeriod==='year'
+    ? (positive?'profit per year after costs':'you top up this per year')
+    : (positive?'profit every month after costs':'you top up this /mo from savings'));
+  setC('rent-n-cf', positive?'var(--green)':'var(--red)');
+  set('rent-n-r1', '+ '+fmt(monthlyRent*m));
+  set('rent-n-r2', '− '+fmt(monthly*m));
+  set('rent-n-r3', '− '+fmt(sc*m));
+  set('rent-n-r4', '− '+fmt(propIns*m));
+  set('rent-n-r5', '− '+fmt(lifeIns*m));
+  set('rent-n-total', (positive?'+':'')+fmt(cashflow*m)+sfx);
+  setC('rent-n-total', positive?'var(--green)':'var(--red)');
+  set('rent-n-yield', netYield+'%');
+  // Period toggle buttons
+  const bm=q('rent-btn-mo'), by=q('rent-btn-yr');
+  if(bm) bm.classList.toggle('on', rentPeriod==='month');
+  if(by) by.classList.toggle('on', rentPeriod==='year');
+  // Income card sub-label
+  const incSub = q('rent-income-sub');
+  if(incSub) incSub.textContent = rentPeriod==='year' ? 'tenant pays you per year' : 'tenant pays you /mo';
+  // Breakdown total label
+  const totLbl = q('rent-total-lbl');
+  if(totLbl) totLbl.textContent = '= Net cashflow'+sfx;
+  const tag=q('rent-yield-tag');
+  if(tag){tag.textContent=rentYieldManual?t('tag.manual'):t('tag.auto');tag.className='tag '+(rentYieldManual?'tag-manual':'tag-auto');}
+  const sl=q('rent-yield-slider');
+  if(sl && Math.round(+sl.value/10*10)!==Math.round(rentYield*10)) sl.value=Math.round(rentYield*10);
+}
+function _syncRentPeriod(el){
+  if(el && el._price) _updateRentNumbers(el.closest('[id]')||el, el._price, el._monthly, el._sqft);
+  // Also sync the other panel
+  const panels=['rent-panel','s-rent-panel'];
+  panels.forEach(id=>{
+    const p=document.getElementById(id);
+    if(p && p._price) _updateRentNumbers(p, p._price, p._monthly, p._sqft);
+  });
+}
+
+function resetRentYield(){
+  rentYieldManual=false; rentYield=7.0;
+  const tag=document.getElementById('rent-yield-tag');
+  if(tag){tag.textContent='auto';tag.className='tag tag-auto';}
+  simpleCalc(); calc();
+}
 
 // ─── calcLiving ───────────────────────────────────────────
 function calcLiving(){
@@ -3595,7 +3810,7 @@ function calc(){
 
   document.getElementById('total-cost').innerHTML=`
     <div style="text-align:center;padding:4px 0 12px">
-      <div style="font-size:26px;font-weight:700;color:var(--green);letter-spacing:-0.5px">${fmt(totalWithLiving)}</div>
+      <div style="font-size:28px;font-weight:700;color:var(--green);letter-spacing:-0.5px">${fmt(totalWithLiving)}</div>
     </div>
     <div style="position:relative;margin:0 auto;width:100%;max-width:${W}px;height:${H}px;overflow:visible">
       <svg width="100%" height="${H}" viewBox="0 0 ${W} ${H}" style="overflow:visible;display:block">
@@ -3611,8 +3826,8 @@ function calc(){
       </svg>
       <!-- Center label -->
       <div id="donut-center" style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none">
-        <div id="dc-pct" style="font-size:18px;font-weight:700;letter-spacing:-0.5px;color:var(--text);transition:all .25s">${fmt(totalWithLiving).replace('AED ','')}</div>
-        <div id="dc-lbl" style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-top:2px;transition:all .25s">Total</div>
+        <div id="dc-pct" style="font-size:22px;font-weight:700;letter-spacing:-0.5px;color:var(--text);transition:all .25s">${Math.round(segPrincipal/donutTotal*100)}%</div>
+        <div id="dc-lbl" style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-top:2px;transition:all .25s">${t('donut.property')}</div>
       </div>
     </div>
     <div style="margin:14px 0 12px">${legendRows}</div>
@@ -3624,6 +3839,14 @@ function calc(){
   window._donutTotal = donutTotal;
 
   calcLiving();
+  // Rent-out panel (Advanced)
+  if(typeof renderRentPanel==='function'){
+    const _ins=loan*0.000112+vals.price*0.0005/12;
+    const _pf=mpay(loan,vals.fixrate/100/12,vals.years*12);
+    renderRentPanel(vals.price, Math.round(_pf+_ins), vals.sqft, 'rent-panel');
+  }
+  // Repaint all slider fills after any value change
+  requestAnimationFrame(paintAllSliders);
 }
 
 let bvrLiving = false;
@@ -3642,8 +3865,8 @@ function donutTap(i){
       const l=document.getElementById('dleg'+j); if(l) l.style.opacity='1';
     });
     const dc=document.getElementById('dc-pct'), dl=document.getElementById('dc-lbl');
-    if(dc) dc.textContent = fmt(total).replace('AED ','');
-    if(dl) dl.textContent = 'Total';
+    if(dc) dc.textContent = Math.round(segs[0].val/total*100)+'%';
+    if(dl) dl.textContent = segs[0].label;
   } else {
     _donutActive = i;
     segs.forEach((_,j)=>{
