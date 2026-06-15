@@ -102,7 +102,7 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,s
 .ftop{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;gap:8px}
 .lbl-group{display:inline-flex;align-items:baseline;gap:6px;flex:1;min-width:0}
 .lbl-group .flabel{flex:0 1 auto}
-.flabel-opt{font-size:11px;color:var(--muted);font-weight:400;flex-shrink:0}
+.flabel-opt{font-size:11px;color:var(--muted);font-weight:400;flex-shrink:0}.unit-badge{font-size:11px;color:var(--muted);font-weight:600;flex-shrink:0;white-space:nowrap}
 .flabel{font-size:var(--fs-base);color:var(--text);flex:1;min-width:0;display:flex;align-items:center;gap:6px;flex-wrap:nowrap}
 .finput{font-size:16px;font-weight:500;color:var(--text);border:1px solid var(--border);border-radius:10px;padding:7px 11px;width:112px;flex-shrink:0;text-align:right;background:var(--bg);transition:border .15s,background .15s,color .15s;-webkit-text-size-adjust:none;margin-top:1px}
 .finput:focus{outline:none;border-color:var(--green);background:var(--card)}
@@ -288,21 +288,21 @@ input[type=range]::-moz-range-track{background:transparent;height:4px;border-rad
 <div id="view-simple">
   <div class="card" id="card-simple">
     <div class="field">
-      <div class="ftop"><span class="flabel" data-i18n="field.price">Property price</span><input class="finput" id="s-price" type="text" inputmode="numeric" value="1,500,000" oninput="simpleCalc()"></div>
+      <div class="ftop"><span class="flabel" data-i18n="field.price">Property price</span><input class="finput" id="s-price" type="text" inputmode="numeric" value="1,500,000" oninput="simpleCalc()"><span class="unit-badge">AED</span></div>
       <input type="range" id="s-price-range" min="0" max="1000" step="1" value="298" oninput="document.getElementById('s-price').value=fmtN(sliderToVal('s-price-range',+this.value));simpleCalc()">
       <div class="rlabels"><span id="rl-s-price-min">AED 500K</span><span id="rl-s-price-max">AED 20M</span></div>
     </div>
     <div class="field">
-      <div class="ftop"><span class="flabel" data-i18n="field.cash">Your cash available</span><input class="finput" id="s-cash" type="text" inputmode="numeric" value="420,000" oninput="simpleCalc()"></div>
+      <div class="ftop"><span class="flabel" data-i18n="field.cash">Your cash available</span><input class="finput" id="s-cash" type="text" inputmode="numeric" value="420,000" oninput="simpleCalc()"><span class="unit-badge">AED</span></div>
       <input type="range" id="s-cash-range" min="0" max="1000" step="1" value="327" oninput="document.getElementById('s-cash').value=fmtN(sliderToVal('s-cash-range',+this.value));simpleCalc()">
       <div class="rlabels"><span id="rl-s-cash-min">AED 100K</span><span id="rl-s-cash-max">AED 8M</span></div>
-      <div class="fnote" id="s-cash-hint">Down payment + transfer fee + agency 2% + valuation &mdash; all come from here</div>
+      <div class="fnote" id="s-cash-hint">Down payment + ownership fee + agency 2% + valuation &mdash; all from your cash</div>
     </div>
     <div class="field">
-      <div class="ftop"><span class="flabel" data-i18n="field.sqft">Property size (sqft)</span><input class="finput" id="s-sqft" type="text" inputmode="numeric" value="800" oninput="simpleCalc()"></div>
+      <div class="ftop"><span class="flabel" data-i18n="field.sqft">Property size</span><input class="finput" id="s-sqft" type="text" inputmode="numeric" value="800" oninput="simpleCalc()"></div>
       <input type="range" id="s-sqft-range" min="0" max="1000" step="1" value="427" oninput="document.getElementById('s-sqft').value=fmtN(sliderToVal('s-sqft-range',+this.value));simpleCalc()">
       <div class="rlabels"><span>300 <span data-i18n="units.sqft">sqft</span></span><span>10,000 <span data-i18n="units.sqft">sqft</span></span></div>
-      <div class="fnote" data-i18n="field.sqft.hint">Used to estimate DEWA and service charge</div>
+      <div class="fnote" data-i18n="field.sqft.hint">Used to estimate DEWA, cooling and service charge</div>
     </div>
     <div class="field" id="s-rate-field" style="margin-bottom:0">
       <div onclick="toggleSimpleRate()" style="display:flex;align-items:center;justify-content:space-between;cursor:pointer;padding:4px 0;-webkit-tap-highlight-color:transparent">
@@ -313,12 +313,12 @@ input[type=range]::-moz-range-track{background:transparent;height:4px;border-rad
         </span>
       </div>
       <div id="s-rate-detail" style="display:none;padding-top:12px">
-        <div class="ftop"><span class="flabel" data-i18n="field.rate">Fixed interest rate</span><input class="finput" id="s-rate" type="text" inputmode="decimal" value="4.19" oninput="simpleCalc()"></div>
+        <div class="ftop"><span class="flabel" data-i18n="field.rate">Fixed interest rate</span><input class="finput" id="s-rate" type="text" inputmode="decimal" value="4.19" oninput="simpleCalc()"><span class="unit-badge">%</span></div>
         <div class="seg seg-full" style="margin-top:10px">
           <button id="s-btn-rate3" onclick="setSimpleRate('3')" class="seg-btn"><span id="s-lbl-rate3">3.99% &middot; 3</span><span data-i18n="units.yr">yr</span></button>
           <button id="s-btn-rate5" onclick="setSimpleRate('5')" class="seg-btn on"><span id="s-lbl-rate5">4.19% &middot; 5</span><span data-i18n="units.yr">yr</span></button>
         </div>
-        <div class="fnote" id="rate-note" data-i18n="rate.note">Fixed rate &middot; then EIBOR + 1.5% (floor 1.99%)</div>
+        <div class="fnote" id="rate-note" data-i18n="rate.note">Fixed for selected period &middot; then EIBOR + 1.5% (min 1.99%)</div>
       </div>
     </div>
   </div>
@@ -341,24 +341,24 @@ input[type=range]::-moz-range-track{background:transparent;height:4px;border-rad
   </div>
   <div class="card-body-wrap open" id="body-property"><div class="card-body-inner">
     <div class="field">
-      <div class="ftop"><span class="flabel" data-i18n="field.price">Property price</span><input class="finput" id="t-price" value="1,500,000"></div>
+      <div class="ftop"><span class="flabel" data-i18n="field.price">Property price</span><input class="finput" id="t-price" value="1,500,000"><span class="unit-badge">AED</span></div>
       <input type="range" id="price" min="0" max="1000" step="1" value="298">
       <div class="rlabels"><span id="rl-price-min">AED 500K</span><span id="rl-price-max">AED 20M</span></div>
     </div>
     <div class="field">
-      <div class="ftop"><span class="flabel" data-i18n="field.cash">Your cash available</span><input class="finput" id="t-cash" value="420,000"></div>
+      <div class="ftop"><span class="flabel" data-i18n="field.cash">Your cash available</span><input class="finput" id="t-cash" value="420,000"><span class="unit-badge">AED</span></div>
       <input type="range" id="cash" min="0" max="1000" step="1" value="327">
       <div class="rlabels"><span id="rl-cash-min">AED 100K</span><span id="rl-cash-max">AED 8M</span></div>
-      <div class="fnote" id="adv-cash-hint">Down payment + transfer fee + agency 2% + valuation &mdash; all come from here</div>
+      <div class="fnote" id="adv-cash-hint">Down payment + ownership fee + agency 2% + valuation &mdash; all from your cash</div>
     </div>
     <div class="field">
-      <div class="ftop"><span class="flabel" data-i18n="field.sqft">Property size (sqft)</span><input class="finput" id="t-sqft" value="800"></div>
+      <div class="ftop"><span class="flabel" data-i18n="field.sqft">Property size</span><input class="finput" id="t-sqft" value="800"></div>
       <input type="range" id="sqft" min="0" max="1000" step="1" value="427">
       <div class="rlabels"><span>300 <span data-i18n="units.sqft">sqft</span></span><span>10,000 <span data-i18n="units.sqft">sqft</span></span></div>
-      <div class="fnote" data-i18n="field.sqft.hint">Used to estimate DEWA and service charge</div>
+      <div class="fnote" data-i18n="field.sqft.hint">Used to estimate DEWA, cooling and service charge</div>
     </div>
     <div class="field">
-      <div class="ftop"><span class="lbl-group"><span class="flabel" data-i18n="income.label">Monthly income</span><span class="flabel-opt" data-i18n="income.optional">(optional)</span></span><input class="finput" id="t-income2" value="" placeholder="&mdash;" oninput="syncIncome(this.value)"></div>
+      <div class="ftop"><span class="lbl-group"><span class="flabel" data-i18n="income.label">Monthly income</span><span class="flabel-opt" data-i18n="income.optional">(optional)</span></span><input class="finput" id="t-income2" value="" placeholder="&mdash;" oninput="syncIncome(this.value)"><span class="unit-badge">AED</span></div>
       <div class="fnote" data-i18n="income.hint">Used to estimate your bank approval &amp; affordability</div>
     </div>
     <span id="sv-val" style="display:none"></span>
@@ -373,7 +373,7 @@ input[type=range]::-moz-range-track{background:transparent;height:4px;border-rad
   </div>
   <div class="card-body-wrap open" id="body-mortgage"><div class="card-body-inner">
     <div class="field">
-      <div class="ftop"><span class="flabel" data-i18n="field.approved">Bank approved amount</span><button class="tip-btn" onclick="showTooltip('approved')" aria-label="info">i</button><span id="approved-tag" class="tag tag-auto" style="display:none;margin:0 4px 0 0" onclick="resetApprovedAuto()"></span><input class="finput" id="t-approved" value="1,500,000"></div>
+      <div class="ftop"><span class="flabel" data-i18n="field.approved">Bank approved amount</span><button class="tip-btn" onclick="showTooltip('approved')" aria-label="info">i</button><span id="approved-tag" class="tag tag-auto" style="display:none;margin:0 4px 0 0" onclick="resetApprovedAuto()"></span><input class="finput" id="t-approved" value="1,500,000"><span class="unit-badge">AED</span></div>
       <input type="range" id="approved" min="0" max="1000" step="1" value="448">
       <div class="rlabels"><span id="rl-appr-min">AED 500K</span><span id="rl-appr-max">AED 15M</span></div>
     </div>
@@ -381,7 +381,7 @@ input[type=range]::-moz-range-track{background:transparent;height:4px;border-rad
       <div class="ftop">
         <span class="flabel"><span data-i18n="field.bval">Bank valuation</span><button class="tip-btn" onclick="showTooltip('bval')" aria-label="info" style="flex-shrink:0">i</button></span>
         <span id="bval-tag" class="tag tag-auto" onclick="resetBvalAuto()" style="flex-shrink:0">auto</span>
-        <input class="finput" id="t-bval" value="1,500,000">
+        <input class="finput" id="t-bval" value="1,500,000"><span class="unit-badge">AED</span>
       </div>
       <input type="range" id="bval" min="0" max="1000" step="1" value="298">
       <div class="rlabels"><span id="rl-bval-min">AED 500K</span><span id="rl-bval-max">AED 20M</span></div>
@@ -391,19 +391,19 @@ input[type=range]::-moz-range-track{background:transparent;height:4px;border-rad
       <div class="ftop">
         <span class="flabel"><span data-i18n="field.down">Down payment</span><button class="tip-btn" onclick="showTooltip('down')" aria-label="info" style="flex-shrink:0">i</button></span>
         <span id="down-tag" class="tag tag-auto" onclick="resetDownAuto()" style="flex-shrink:0">auto</span>
-        <input class="finput" id="t-down" value="20">
+        <input class="finput" id="t-down" value="20"><span class="unit-badge">%</span>
       </div>
       <input type="range" id="down" min="20" max="80" step="1" value="20">
       <div class="rlabels"><span data-i18n="min.20">20% min</span><span>80%</span></div>
-      <div class="fnote" data-i18n="field.down.hint">Auto-calculated to use max of your cash &middot; tap to override</div>
+      <div class="fnote" data-i18n="field.down.hint">Auto-set to maximise loan within your cash &middot; tap to override</div>
     </div>
     <div class="field">
-      <div class="ftop"><span class="flabel" data-i18n="field.loanterm">Loan term</span><input class="finput" id="t-years" value="25"></div>
+      <div class="ftop"><span class="flabel" data-i18n="field.loanterm">Loan term</span><input class="finput" id="t-years" value="25"><span class="unit-badge">yr</span></div>
       <input type="range" id="years" min="1" max="25" step="1" value="25">
       <div class="rlabels"><span data-i18n="field.years.1">1 year</span><span data-i18n="field.years.25">25 years</span></div>
     </div>
     <div class="field">
-      <div class="ftop"><span class="lbl-group"><span class="flabel" data-i18n="field.rate">Fixed interest rate</span><button class="tip-btn" onclick="showTooltip('fixperiod')" aria-label="info">i</button></span><input class="finput" id="t-fixrate" value="4.19"></div>
+      <div class="ftop"><span class="lbl-group"><span class="flabel" data-i18n="field.rate">Fixed interest rate</span><button class="tip-btn" onclick="showTooltip('fixperiod')" aria-label="info">i</button></span><input class="finput" id="t-fixrate" value="4.19"><span class="unit-badge">%</span></div>
       <div class="seg seg-full" style="margin-top:10px">
         <button class="seg-btn on" id="btn-salary" onclick="setSalaryTransfer(true)" data-i18n="rate.salary">Salary transfer</button>
         <button class="seg-btn" id="btn-nonsalary" onclick="setSalaryTransfer(false)" data-i18n="rate.nonsalary">Non-salary / self-employed</button>
@@ -414,7 +414,7 @@ input[type=range]::-moz-range-track{background:transparent;height:4px;border-rad
       </div>
     </div>
     <div class="field">
-      <div class="ftop"><span class="flabel"><span data-i18n="field.eibor">Expected EIBOR</span><button class="tip-btn" onclick="showTooltip('eibor')" aria-label="info">i</button></span><input class="finput" id="t-eibor" value="3.45"></div>
+      <div class="ftop"><span class="flabel"><span data-i18n="field.eibor">Expected EIBOR</span><button class="tip-btn" onclick="showTooltip('eibor')" aria-label="info">i</button></span><input class="finput" id="t-eibor" value="3.45"><span class="unit-badge">%</span></div>
       <input type="range" id="eibor" min="1" max="8" step="0.05" value="3.45">
       <div class="rlabels"><span data-i18n="field.eibor.opt">1% optimistic</span><span data-i18n="field.eibor.stress">8% stress test</span></div>
       <div class="fnote" data-i18n="field.eibor.hint">(variable rate after fixed)</div>
@@ -430,44 +430,78 @@ input[type=range]::-moz-range-track{background:transparent;height:4px;border-rad
     <span class="chevron open" id="chev-results">&#x25BC;</span>
   </div>
   <div class="card-body-wrap open" id="body-results"><div class="card-body-inner">
-    <div id="summary-cards" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:16px"></div>
+    <input type="hidden" id="income" value="0">
+    <input type="hidden" id="t-income" value="">
+    <div id="summary-cards" style="display:none"></div>
+
+    <!-- Verdict first — the headline answer -->
+    <div id="verdict"></div>
     <div id="gv-badge-adv" style="display:none"></div>
-    <div class="seg seg-full" style="margin-bottom:4px">
+
+    <!-- Own / Rent out toggle -->
+    <div class="seg seg-full" style="margin-bottom:14px">
       <button id="own-btn" class="seg-btn on" onclick="setRentOut(false)" data-i18n="btn.owner">&#x1F3E0; Own</button>
       <button id="rent-btn" class="seg-btn" onclick="setRentOut(true)" data-i18n="btn.renting">&#x1F4C8; Rent out</button>
     </div>
     <div id="rent-panel"></div>
-    <div style="margin-bottom:20px"><div id="affordability"></div></div>
-    <input type="hidden" id="income" value="0">
-    <input type="hidden" id="t-income" value="">
-    <div id="verdict"></div>
-    <div class="sec-lbl" data-i18n="sec.closing">What you pay at closing</div>
-    <div id="breakdown" style="margin-bottom:16px"></div>
+
+    <!-- hidden helpers for legacy JS -->
     <span id="cashbar" style="display:none"></span><span id="pb-zero" style="display:none"></span><span id="barlabel" style="display:none"></span>
-    <span id="pay-3" style="display:none">&mdash;</span>
     <span id="pay-var" style="display:none">&mdash;</span>
     <span id="rc-fixrate-lbl" style="display:none"></span>
-    <span id="var-sub" style="display:none"></span>
-    <div class="sec-lbl" id="adv-period-lbl" style="margin-bottom:10px;display:flex;align-items:center;gap:4px" data-i18n="sec.allin">Monthly all-in<button class="tip-btn" onclick="showTooltip('allin')" aria-label="info">i</button></div>
-    <div style="display:flex;gap:6px;margin-bottom:10px">
-      <div class="seg" style="flex:1">
-        <button onclick="setAdvRateView('fixed')" id="adv-btn-fixed" class="seg-btn on" data-i18n="btn.fixed">Fixed</button>
-        <button onclick="setAdvRateView('var')" id="adv-btn-var" class="seg-btn" data-i18n="btn.variable">Variable</button>
-      </div>
-      <div class="seg" style="flex:1">
-        <button onclick="setAdvPeriod('month')" id="adv-btn-month" class="seg-btn on" data-i18n="btn.monthly">Monthly</button>
-        <button onclick="setAdvPeriod('year')" id="adv-btn-year" class="seg-btn" data-i18n="btn.annual">Annual</button>
+    <span id="grand-3-yr" style="display:none">&mdash;</span><span id="grand-var-yr" style="display:none">&mdash;</span>
+    <div style="display:none" id="allin-row"><span id="allin-label"></span></div>
+    <div style="display:none"><button id="adv-btn-fixed"></button><button id="adv-btn-var"></button></div>
+
+    <!-- Monthly all-in: two cards side by side -->
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+      <div style="font-size:13px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;display:flex;align-items:center;gap:4px">Monthly all-in<button class="tip-btn" onclick="showTooltip('allin')" aria-label="info">i</button></div>
+      <div class="seg">
+        <button onclick="setAdvPeriod('month')" id="adv-btn-month" class="seg-btn on">Monthly</button>
+        <button onclick="setAdvPeriod('year')" id="adv-btn-year" class="seg-btn">Annual</button>
       </div>
     </div>
-    <div class="totals">
-      <div class="trow" id="allin-row"><span class="t-name" id="allin-label" data-i18n="row.allinstr">Fixed &middot; monthly</span><span class="t-val cg" id="grand-3">&mdash;</span></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
+      <div style="background:var(--green-bg);border:1px solid var(--green-bd);border-radius:14px;padding:14px 12px">
+        <div style="font-size:11px;color:var(--green);font-weight:700;text-transform:uppercase;letter-spacing:.05em;margin-bottom:2px" id="rc-fixrate-lbl2">Fixed &middot; 4.19%</div>
+        <div style="font-size:10px;color:var(--green);opacity:.7;margin-bottom:6px" id="rc-fixperiod-note">for 5yr, then variable</div>
+        <div style="font-size:21px;font-weight:700;color:var(--green);letter-spacing:-0.5px" id="grand-3">&mdash;</div>
+      </div>
+      <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px 12px">
+        <div style="font-size:11px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.05em;margin-bottom:2px">Variable</div>
+        <div style="font-size:10px;color:var(--muted);margin-bottom:6px"><span id="var-sub">EIBOR+1.5%</span></div>
+        <div style="font-size:21px;font-weight:700;color:var(--text);letter-spacing:-0.5px" id="grand-var">&mdash;</div>
+      </div>
     </div>
-    <span id="grand-var" style="display:none">&mdash;</span>
-    <span id="grand-3-yr" style="display:none">&mdash;</span>
-    <span id="grand-var-yr" style="display:none">&mdash;</span>
-    <div style="height:1px;background:var(--border);margin:16px 0"></div>
-    <div class="sec-lbl" data-i18n="sec.total">Total cost over loan term</div>
-    <div id="total-cost"></div>
+    <!-- mortgage-only line -->
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 4px 14px">
+      <span style="font-size:13px;color:var(--muted)">of which mortgage to bank</span>
+      <span style="font-size:15px;font-weight:700;color:var(--text)" id="pay-3">&mdash;</span>
+    </div>
+
+    <!-- Affordability (shows only if income entered) -->
+    <div id="affordability"></div>
+
+    <!-- Closing — collapsible -->
+    <div onclick="toggleClosing()" style="display:flex;align-items:center;justify-content:space-between;padding:13px 4px;cursor:pointer;-webkit-tap-highlight-color:transparent;border-top:1px solid var(--border)">
+      <div>
+        <div style="font-size:14px;font-weight:700;color:var(--text)">What you need at closing</div>
+        <div style="font-size:12px;color:var(--muted);margin-top:2px" id="closing-summary">Tap to see breakdown</div>
+      </div>
+      <span id="closing-chev" style="font-size:20px;color:var(--muted);transition:transform .25s">&#x203A;</span>
+    </div>
+    <div id="closing-body" style="display:none"><div id="breakdown" style="margin-bottom:8px"></div></div>
+
+    <!-- Total cost — collapsible -->
+    <div onclick="toggleTotalCost()" style="display:flex;align-items:center;justify-content:space-between;padding:13px 4px;cursor:pointer;-webkit-tap-highlight-color:transparent;border-top:1px solid var(--border)">
+      <div>
+        <div style="font-size:14px;font-weight:700;color:var(--text)">Total cost over loan term</div>
+        <div style="font-size:12px;color:var(--muted);margin-top:2px" id="totalcost-summary">Property + interest + fees + living</div>
+      </div>
+      <span id="totalcost-chev" style="font-size:20px;color:var(--muted);transition:transform .25s">&#x203A;</span>
+    </div>
+    <div id="totalcost-body" style="display:none"><div id="total-cost"></div></div>
+
     <button onclick="shareCalc()" style="width:100%;margin-top:16px;padding:13px;background:var(--card);border:1.5px solid var(--border);border-radius:14px;font-size:14px;font-weight:600;color:var(--text);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px">
       <span>&#x1F4E4;</span><span data-i18n="share.btn">Share this calculation</span>
     </button>
@@ -477,11 +511,11 @@ input[type=range]::-moz-range-track{background:transparent;height:4px;border-rad
 <div class="modules-strip">
   <div class="module-card" onclick="openModal('budget')"><span class="module-icon">&#x1F4CA;</span><div class="module-name" data-i18n="tool.budget">Monthly budget</div><div class="module-desc" data-i18n="tool.budget.desc">Full cost of living in UAE</div></div>
   <div class="module-card" onclick="openModal('compare')"><span class="module-icon">&#x1F3E6;</span><div class="module-name" data-i18n="tool.compare">Compare banks</div><div class="module-desc" data-i18n="tool.compare.desc">8 UAE banks side by side</div></div>
-  <div class="module-card" onclick="openModal('living')"><span class="module-icon">&#x1F4A1;</span><div class="module-name" data-i18n="tool.living">Living costs</div><div class="module-desc" data-i18n="tool.living.desc">DEWA, SC, rent out</div></div>
-  <div class="module-card" onclick="openModal('bvr')"><span class="module-icon">&#x2696;&#xFE0F;</span><div class="module-name" data-i18n="tool.bvr">Buy vs Rent</div><div class="module-desc" data-i18n="tool.bvr.desc">25-year net worth</div></div>
-  <div class="module-card" onclick="openModal('prepay')"><span class="module-icon">&#x23E9;</span><div class="module-name" data-i18n="tool.prepay">Early repayment</div><div class="module-desc" data-i18n="tool.prepay.desc">Save on interest</div></div>
+  <div class="module-card" onclick="openModal('living')"><span class="module-icon">&#x1F4A1;</span><div class="module-name" data-i18n="tool.living">Living costs</div><div class="module-desc" data-i18n="tool.living.desc">Utilities, service charge, rental yield</div></div>
+  <div class="module-card" onclick="openModal('bvr')"><span class="module-icon">&#x2696;&#xFE0F;</span><div class="module-name" data-i18n="tool.bvr">Buy vs Rent</div><div class="module-desc" data-i18n="tool.bvr.desc">Compare wealth over 25 years</div></div>
+  <div class="module-card" onclick="openModal('prepay')"><span class="module-icon">&#x23E9;</span><div class="module-name" data-i18n="tool.prepay">Early repayment</div><div class="module-desc" data-i18n="tool.prepay.desc">How much you save by paying early</div></div>
   <div class="module-card" onclick="openModal('checklist')"><span class="module-icon">&#x1F4CB;</span><div class="module-name" data-i18n="tool.checklist">Bank checklist</div><div class="module-desc" data-i18n="tool.checklist.desc">Documents &amp; steps</div></div>
-  <div class="module-card" onclick="openModal('scenarios')"><span class="module-icon">&#x2696;&#xFE0F;</span><div class="module-name" data-i18n="tool.scenarios">Compare scenarios</div><div class="module-desc" data-i18n="tool.scenarios.desc">Save &amp; compare options</div></div>
+  <div class="module-card" onclick="openModal('scenarios')"><span class="module-icon">&#x2696;&#xFE0F;</span><div class="module-name" data-i18n="tool.scenarios">Compare scenarios</div><div class="module-desc" data-i18n="tool.scenarios.desc">Side-by-side scenario comparison</div></div>
   <div class="module-card" onclick="openModal('offplan')" style="opacity:0.55"><span class="module-icon">&#x1F3D7;&#xFE0F;</span><div class="module-name" data-i18n="tool.offplan">Off-plan</div><div class="module-desc" data-i18n="tool.soon">Coming soon</div></div>
 </div>
 
@@ -540,20 +574,20 @@ input[type=range]::-moz-range-track{background:transparent;height:4px;border-rad
     <div class="field">
       <div class="ftop">
         <span class="flabel"><span data-i18n="living.dewa">DEWA</span><span id="dewa-tag" class="tag tag-auto" onclick="resetDewaAuto()">auto</span></span>
-        <input class="finput" id="t-dewa" value="680">
+        <input class="finput" id="t-dewa" value="680"><span class="unit-badge">AED</span>
       </div>
       <input type="range" id="dewa" min="0" max="8000" step="50" value="680">
       <div class="rlabels"><span id="rl-dewa-min">AED 0</span><span id="rl-dewa-max">AED 8,000</span></div>
-      <div class="fnote" id="dewa-note" data-i18n="fnote.dewa">Electricity + water + housing fee &middot; district cooling separate</div>
+      <div class="fnote" id="dewa-note" data-i18n="fnote.dewa">Electricity + water + 5% housing fee &middot; cooling billed separately</div>
     </div>
     <div class="field">
-      <div class="ftop"><span class="lbl-group"><span class="flabel" data-i18n="living.cooling">District cooling</span><button class="tip-btn" onclick="showTooltip('cooling')" aria-label="info">i</button></span><span id="cooling-tag" class="tag tag-auto" onclick="resetCoolingAuto()" style="flex-shrink:0">auto</span><input class="finput" id="t-cooling" value="0"></div>
+      <div class="ftop"><span class="lbl-group"><span class="flabel" data-i18n="living.cooling">District cooling</span><button class="tip-btn" onclick="showTooltip('cooling')" aria-label="info">i</button></span><span id="cooling-tag" class="tag tag-auto" onclick="resetCoolingAuto()" style="flex-shrink:0">auto</span><input class="finput" id="t-cooling" value="0"><span class="unit-badge">AED</span></div>
       <input type="range" id="cooling" min="0" max="3000" step="50" value="0">
       <div class="rlabels"><span id="rl-cool-min">AED 0</span><span id="rl-cool-max">AED 3,000</span></div>
-      <div class="fnote" data-i18n="fnote.cooling">Empower / Tabreed / Tasleem chiller fee &middot; 0 if included in DEWA</div>
+      <div class="fnote" data-i18n="fnote.cooling">Empower / Tabreed / Tasleem &middot; auto-estimated from size, adjust if needed</div>
     </div>
     <div class="field">
-      <div class="ftop"><span class="lbl-group"><span class="flabel" data-i18n="living.sc">Service charge</span><button class="tip-btn" onclick="showTooltip('sc')" aria-label="info">i</button></span><input class="finput" id="t-sc" value="23.00"></div>
+      <div class="ftop"><span class="lbl-group"><span class="flabel" data-i18n="living.sc">Service charge</span><button class="tip-btn" onclick="showTooltip('sc')" aria-label="info">i</button></span><input class="finput" id="t-sc" value="23.00"><span class="unit-badge">AED/sqft/yr</span></div>
       <input type="range" id="sc" min="0" max="60" step="0.5" value="23">
       <div class="rlabels"><span id="sc-note">AED/sqft/yr</span><span></span></div>
       <div id="sc-presets" style="display:flex;gap:6px;flex-wrap:wrap;margin:4px 0 6px">
@@ -562,15 +596,15 @@ input[type=range]::-moz-range-track{background:transparent;height:4px;border-rad
         <button class="sc-chip" onclick="setScRate(23)">Downtown &middot; 23</button>
         <button class="sc-chip" onclick="setScRate(30)">Palm &middot; 30</button>
       </div>
-      <div class="fnote" data-i18n="fnote.sc">Building maintenance fee &mdash; paid by owners only, not renters</div>
+      <div class="fnote" data-i18n="fnote.sc">Paid by owner only &mdash; Dubai avg 12&ndash;30 AED/sqft/yr, up to 60 in premium towers</div>
     </div>
     <div class="field">
-      <div class="ftop"><span class="flabel" data-i18n="living.internet">Internet</span><input class="finput" id="t-internet" value="360"></div>
+      <div class="ftop"><span class="flabel" data-i18n="living.internet">Internet</span><input class="finput" id="t-internet" value="360"><span class="unit-badge">AED</span></div>
       <input type="range" id="internet" min="0" max="1000" step="10" value="360">
       <div class="rlabels"><span id="rl-inet-min">AED 0</span><span id="rl-inet-max">AED 1,000</span></div>
     </div>
     <div class="field">
-      <div class="ftop"><span class="flabel" data-i18n="living.gas">Gas</span><input class="finput" id="t-gas" value="55"></div>
+      <div class="ftop"><span class="flabel" data-i18n="living.gas">Gas</span><input class="finput" id="t-gas" value="55"><span class="unit-badge">AED</span></div>
       <input type="range" id="gas" min="0" max="500" step="5" value="55">
       <div class="rlabels"><span id="rl-gas-min">AED 0</span><span id="rl-gas-max">AED 500</span></div>
       <div class="fnote" data-i18n="fnote.gas">Lootah BCGas &middot; billed quarterly &middot; monthly average shown</div>
@@ -586,7 +620,7 @@ input[type=range]::-moz-range-track{background:transparent;height:4px;border-rad
   </div>
   <div class="card-body-wrap" id="body-bvr"><div class="card-body-inner">
     <div class="field">
-      <div class="ftop"><span class="flabel" data-i18n="bvr.rent">Your current annual rent</span><input class="finput" id="t-rent" value="85,000"></div>
+      <div class="ftop"><span class="flabel" data-i18n="bvr.rent">Your current annual rent</span><input class="finput" id="t-rent" value="85,000"><span class="unit-badge">AED/yr</span></div>
       <input type="range" id="rent" min="50000" max="600000" step="5000" value="85000">
       <div class="rlabels"><span id="rl-rent-min">AED 50K</span><span id="rl-rent-max">AED 600K</span></div>
     </div>
@@ -600,7 +634,7 @@ input[type=range]::-moz-range-track{background:transparent;height:4px;border-rad
       <div id="bvr-scenario-note" class="fnote" style="margin-top:8px">Property +5%/yr &middot; Rent +5%/yr</div>
     </div>
     <div class="field">
-      <div class="ftop"><span class="flabel" data-i18n="bvr.invreturn">Renter invests at</span><input class="finput" id="t-bvr-inv-rate" value="5.0"></div>
+      <div class="ftop"><span class="flabel" data-i18n="bvr.invreturn">Renter invests at</span><input class="finput" id="t-bvr-inv-rate" value="5.0"><span class="unit-badge">%</span></div>
       <input type="range" id="bvr-inv-rate" min="1" max="15" step="0.1" value="5" oninput="document.getElementById('t-bvr-inv-rate').value=parseFloat(this.value).toFixed(1);calcBvR()">
       <div class="rlabels"><span data-i18n="slider.1pct">1% deposit</span><span data-i18n="slider.15pct">15% stocks</span></div>
     </div>
@@ -626,7 +660,7 @@ input[type=range]::-moz-range-track{background:transparent;height:4px;border-rad
       <div class="fnote" id="pp-month-note"></div>
     </div>
     <div class="field">
-      <div class="ftop"><span class="flabel" data-i18n="pp.amt">Prepayment amount</span><input class="finput" id="t-pp-amt" value="200,000"></div>
+      <div class="ftop"><span class="flabel" data-i18n="pp.amt">Prepayment amount</span><input class="finput" id="t-pp-amt" value="200,000"><span class="unit-badge">AED</span></div>
       <input type="range" id="pp-amt" min="0" max="5000000" step="25000" value="200000">
       <div class="rlabels"><span id="pp-amt-min">AED 0</span><span id="pp-amt-max">AED 5M</span></div>
     </div>
@@ -635,7 +669,7 @@ input[type=range]::-moz-range-track{background:transparent;height:4px;border-rad
       <button class="seg-btn" id="pp-btn-pay" onclick="setPPMode('payment')" data-i18n="pp.mode.pay">Reduce payment</button>
     </div>
     <div class="field" style="margin-bottom:16px">
-      <div class="ftop"><span class="flabel" data-i18n="pp.invret">Investment return (%)</span><input class="finput" id="t-inv-rate" value="5.00"></div>
+      <div class="ftop"><span class="flabel" data-i18n="pp.invret">Investment return (%)</span><input class="finput" id="t-inv-rate" value="5.00"><span class="unit-badge">%</span></div>
       <input type="range" id="inv-rate" min="1" max="10" step="0.05" value="5">
       <div class="rlabels"><span data-i18n="slider.1pct">1% deposit</span><span data-i18n="slider.10pct">10% stocks</span></div>
     </div>
@@ -815,29 +849,46 @@ function setAdvPeriod(p){
   bm.classList.toggle('on',p==='month');by.classList.toggle('on',p==='year');
   updateAdvAllIn();
 }
+function toggleClosing(){
+  const b=document.getElementById('closing-body'),c=document.getElementById('closing-chev');
+  const open=b.style.display!=='none';b.style.display=open?'none':'block';
+  if(c)c.style.transform=open?'':'rotate(90deg)';
+}
+function toggleTotalCost(){
+  const b=document.getElementById('totalcost-body'),c=document.getElementById('totalcost-chev');
+  const open=b.style.display!=='none';b.style.display=open?'none':'block';
+  if(c)c.style.transform=open?'':'rotate(90deg)';
+}
 function updateAdvAllIn(){
-  const mult=advPeriod==='year'?12:1, isFixed=advRateView==='fixed', val=isFixed?advGrand3:advGrandVar;
-  const el=document.getElementById('grand-3'), lbl=document.getElementById('allin-label');
-  const bf=document.getElementById('adv-btn-fixed'), bv=document.getElementById('adv-btn-var');
-  if(!el)return;
-  el.textContent=fmt(val*mult); el.className='t-val '+(isFixed?'cg':'ca'); el.style.display='inline-block';
-  el.classList.remove('num-pulse'); void el.offsetWidth; el.classList.add('num-pulse');
-  if(lbl){const ft=isFixed?t('btn.fixed'):t('btn.variable');const pt=advPeriod==='month'?t('btn.monthly'):t('btn.annual');lbl.textContent=ft+' \u00b7 '+pt.toLowerCase();}
-  if(bf)bf.classList.toggle('on',isFixed);if(bv)bv.classList.toggle('on',!isFixed);
+  const mult=advPeriod==='year'?12:1, sfx=advPeriod==='year'?' /yr':' /mo';
+  const elF=document.getElementById('grand-3');
+  if(elF&&advGrand3>0){elF.textContent=fmt(advGrand3*mult);elF.classList.remove('num-pulse');void elF.offsetWidth;elF.classList.add('num-pulse');}
+  const elV=document.getElementById('grand-var');
+  if(elV&&advGrandVar>0)elV.textContent=fmt(advGrandVar*mult);
+  const p3=document.getElementById('pay-3');
+  if(p3&&window._advMortgageOnly>0)p3.textContent=fmt(window._advMortgageOnly*mult)+sfx;
+  const bm=document.getElementById('adv-btn-month'),by=document.getElementById('adv-btn-year');
+  if(bm)bm.classList.toggle('on',advPeriod==='month');if(by)by.classList.toggle('on',advPeriod==='year');
 }
 let budgetPeriod='month';
 const BUDGET_DEFAULTS={
-  housing:{icon:'🏠',key:'budget.housing',val:0,hint:'budget.housing.hint',editable:false},
-  rent:{icon:'🔑',key:'budget.rent',val:0,hint:'budget.rent.hint',presets:[5000,8000,12000,20000],rentOnly:true},
-  car:{icon:'🚗',key:'budget.car',val:3500,hint:'budget.car.hint',presets:[1500,3500,5000,8000]},
-  insurance:{icon:'🏥',key:'budget.insurance',val:1000,hint:'budget.insurance.hint',presets:[500,1000,2000,3500]},
-  school:{icon:'📚',key:'budget.school',val:0,hint:'budget.school.hint',presets:[3000,6000,10000,18000],annual:true},
-  groceries:{icon:'🛒',key:'budget.groceries',val:3000,hint:'budget.groceries.hint',presets:[2000,3000,5000,8000]},
-  dining:{icon:'🍽️',key:'budget.dining',val:2000,hint:'budget.dining.hint',presets:[1000,2000,4000,7000]},
-  flights:{icon:'✈️',key:'budget.flights',val:1250,hint:'budget.flights.hint',presets:[833,1250,2083,4167],annual:true},
-  phone:{icon:'📱',key:'budget.phone',val:250,hint:'budget.phone.hint',presets:[150,250,400,600]},
-  gym:{icon:'🏋️',key:'budget.gym',val:300,hint:'budget.gym.hint',presets:[200,300,500,1000]},
-  savings:{icon:'💰',key:'budget.savings',val:0,hint:'budget.savings.hint',presets:[1000,2000,5000,10000]},
+  housing:  {icon:'🏠',key:'budget.housing',  val:0,    hint:'budget.housing.hint',  editable:false},
+  rent:     {icon:'🔑',key:'budget.rent',     val:0,    hint:'budget.rent.hint',     presets:[5000,8000,12000,20000],rentOnly:true},
+  car:      {icon:'🚗',key:'budget.car',      val:3500, hint:'budget.car.hint',      presets:[1500,3500,5000,8000]},
+  groceries:{icon:'🛒',key:'budget.groceries',val:3000, hint:'budget.groceries.hint',presets:[2000,3000,5000,8000]},
+  dining:   {icon:'🍽',key:'budget.dining',   val:2000, hint:'budget.dining.hint',   presets:[1000,2000,4000,7000]},
+  insurance:{icon:'🏥',key:'budget.insurance',val:1000, hint:'budget.insurance.hint',presets:[500,1000,2000,3500]},
+  medical:  {icon:'💊',key:'budget.medical',  val:300,  hint:'budget.medical.hint',  presets:[200,300,600,1000]},
+  school:   {icon:'📖',key:'budget.school',   val:0,    hint:'budget.school.hint',   presets:[3000,6000,10000,18000],annual:true},
+  clothing: {icon:'👕',key:'budget.clothing', val:1000, hint:'budget.clothing.hint', presets:[500,1000,2000,4000]},
+  domestic: {icon:'🧹',key:'budget.domestic', val:0,    hint:'budget.domestic.hint', presets:[1500,2500,4000,6000]},
+  flights:  {icon:'✈',key:'budget.flights',  val:1250, hint:'budget.flights.hint',  presets:[833,1250,2083,4167],annual:true},
+  holidays: {icon:'🏝',key:'budget.holidays', val:0,    hint:'budget.holidays.hint', presets:[833,1250,2500,4167],annual:true},
+  phone:    {icon:'📱',key:'budget.phone',    val:250,  hint:'budget.phone.hint',    presets:[150,250,400,600]},
+  subs:     {icon:'📺',key:'budget.subs',     val:200,  hint:'budget.subs.hint',     presets:[100,200,400,700]},
+  personal: {icon:'💆',key:'budget.personal', val:400,  hint:'budget.personal.hint', presets:[200,400,700,1200]},
+  gym:      {icon:'🏃',key:'budget.gym',      val:300,  hint:'budget.gym.hint',      presets:[200,400,700,1200]},
+  savings:  {icon:'💰',key:'budget.savings',  val:0,    hint:'budget.savings.hint',  presets:[1000,2000,5000,10000]},
 };
 Object.keys(BUDGET_DEFAULTS).forEach(k=>{budgetVals[k]=BUDGET_DEFAULTS[k].val;});
 function updateBudgetSummary(){
@@ -874,7 +925,7 @@ function renderBudget(){
   budgetVals.housing=Math.round(rentOut?mortgagePay:(mortgagePay+clt));
   const incomeEl=document.getElementById('t-income'),incomeVal=incomeEl?incomeEl.value:'';
   const total=Object.keys(budgetVals).reduce((a,k)=>{if(BUDGET_DEFAULTS[k]&&BUDGET_DEFAULTS[k].rentOnly&&!rentOut)return a;return a+(budgetVals[k]||0);},0);
-  const BSLIDERS={housing:[0,30000,500],rent:[0,30000,500],car:[0,15000,250],insurance:[0,5000,100],school:[0,25000,500],groceries:[0,15000,250],dining:[0,10000,250],flights:[0,8000,250],phone:[0,1500,50],gym:[0,3000,100],savings:[0,20000,500]};
+  const BSLIDERS={housing:[0,30000,500],rent:[0,30000,500],car:[0,15000,250],groceries:[0,15000,250],dining:[0,10000,250],insurance:[0,5000,100],medical:[0,3000,100],school:[0,25000,500],clothing:[0,8000,250],domestic:[0,10000,500],flights:[0,8000,250],holidays:[0,8000,250],phone:[0,1500,50],subs:[0,2000,50],personal:[0,5000,250],gym:[0,3000,100],savings:[0,20000,500]};
   const rows=Object.keys(BUDGET_DEFAULTS).filter(k=>{if(BUDGET_DEFAULTS[k].rentOnly)return rentOut;return true;}).map(k=>{
     const d=BUDGET_DEFAULTS[k],v=budgetVals[k],isHousing=k==='housing';
     const [smin,smax,sstep]=BSLIDERS[k]||[0,10000,250];
@@ -1011,6 +1062,16 @@ const TIPS={
     insurance:{title:'Mortgage Insurance',text:'Banks require two types of insurance: Life insurance (~0.014%/mo of loan) and Property insurance (~0.005%/yr of property value). Both included in the all-in monthly figure.'},
     allin:{title:'Monthly All-In',text:'Total monthly cost of owning: mortgage payment + DEWA + district cooling + service charge + internet + gas. Adjustable in Living costs module.'},
     approved:{title:'Bank Approved Amount',text:'The maximum loan your bank pre-approved. If your loan calculation exceeds this, you need more cash or a lower-priced property.'},
+    price:{title:'Property Price',text:'The agreed purchase price with the seller. Note: the bank will value the property independently — if valuation comes in lower, you pay the difference in cash.'},
+    cash:{title:'Your Cash Available',text:'Total savings you can use for this purchase. Needs to cover: down payment + ownership fee (4% DLD) + agency 2% + valuation + mortgage registration fees.'},
+    sqft:{title:'Property Size',text:'Used to auto-estimate DEWA consumption and service charge. You can adjust both manually in Living costs.'},
+    years:{title:'Loan Term',text:'Maximum 25 years in UAE for expats. Longer term = lower monthly payment but more total interest paid. Most common: 20–25 years.'},
+    dewa:{title:'DEWA',text:'Dubai Electricity and Water Authority bill — includes 5% housing fee. Excludes district cooling (billed separately by Empower/Tabreed). Auto-estimated from property size.'},
+    internet:{title:'Internet',text:'Etisalat or du home broadband. Typically AED 250–400/mo for 1Gbps fibre. Some buildings include it in service charge.'},
+    gas:{title:'Gas (LPG)',text:'Lootah BCGas — billed quarterly. Estimated monthly average shown. Many buildings use electric cooking so gas cost may be zero.'},
+    income:{title:'Monthly Income',text:'Your gross monthly salary. UAE banks limit mortgage payments to 50% of income (DBR) and approve loans up to ~7× annual salary.'},
+    rent:{title:'Annual Rent',text:'What you currently pay per year renting. Used to compare renting vs buying over time.'},
+    gv:{title:'🏅 UAE Golden Visa (10 years)',text:'Properties valued at AED 2M or more qualify for a 10-year UAE residence visa — for you, your spouse, and children. No sponsor needed. Ready property only. Renewable indefinitely. Apply through ICP.'},
   },};
 let tooltipTimer=null;
 function showTooltip(key){
@@ -1077,6 +1138,22 @@ function setCurr(c){
   document.getElementById('rl-gas-max').textContent=isUSD?'$136':'AED 500';
   document.getElementById('rl-rent-min').textContent=isUSD?'$13,615':'AED 50,000';
   document.getElementById('rl-rent-max').textContent=isUSD?'$163,385':'AED 600,000';
+  // Missing slider labels
+  const els={
+    'rl-cool-min': isUSD?'$0':'AED 0', 'rl-cool-max': isUSD?'$817':'AED 3,000',
+    'rl-bval-min': isUSD?'$136K':'AED 500K', 'rl-bval-max': isUSD?'$5.45M':'AED 20M',
+    'pp-amt-min': isUSD?'$0':'AED 0', 'pp-amt-max': isUSD?'$1.36M':'AED 5M',
+    'sc-note': isUSD?'$/sqft/yr':'AED/sqft/yr',
+  };
+  Object.entries(els).forEach(([id,val])=>{const e=document.getElementById(id);if(e)e.textContent=val;});
+  // Unit badges
+  const sym=isUSD?'$':'AED';
+  document.querySelectorAll('.unit-badge').forEach(el=>{
+    const txt=el.textContent.trim();
+    if(txt==='AED'||txt==='$')el.textContent=sym;
+    else if(txt==='AED/yr'||txt==='$/yr')el.textContent=sym+'/yr';
+    else if(txt==='AED/sqft/yr'||txt==='$/sqft/yr')el.textContent=sym+'/sqft/yr';
+  });
   refreshInputs();simpleCalc();calc();calcLiving();calcBvR();calcPP();
 }
 function toDisp(aedVal){return currency==='USD'?aedVal/USD_RATE:aedVal;}
@@ -1484,10 +1561,12 @@ function calc(){
   const da=price-loan,valuationGap=Math.max(0,price-bval);
   const cc=closingCosts(price,loan);
   const ins=loan*0.000112+price*0.0005/12,pf=mpay(loan,fixrate,n),pv=mpay(loan,vr,n);
-  document.getElementById('pay-3').textContent=fmt(Math.round(pf+ins));
-  document.getElementById('pay-var').textContent=fmt(Math.round(pv+ins));
+  window._advMortgageOnly=Math.round(pf);
+  const p3e=document.getElementById('pay-3');if(p3e)p3e.textContent=fmt(Math.round(pf)*(advPeriod==='year'?12:1))+(advPeriod==='year'?' /yr':' /mo');
+  const pve=document.getElementById('pay-var');if(pve)pve.textContent=fmt(Math.round(pv+ins));
   document.getElementById('var-sub').textContent=vr.toFixed(2)+'%';
-  document.getElementById('rc-fixrate-lbl').textContent=fixrate.toFixed(2)+'% \u00b7 '+vals.fixperiod+'yr';
+  const rfl=document.getElementById('rc-fixrate-lbl2');if(rfl)rfl.textContent='Fixed \u00b7 '+fixrate.toFixed(2)+'%';
+  const pn=document.getElementById('rc-fixperiod-note');if(pn)pn.textContent='for '+vals.fixperiod+'yr, then variable';
   const up=da+cc.fees,rem=cash-up,enough=cash>=up,ok=loan<=approved;
   const scEl=document.getElementById('summary-cards');
   if(scEl){
@@ -1496,6 +1575,7 @@ function calc(){
   }
   const gvAdv=document.getElementById('gv-badge-adv');
   if(gvAdv){if(vals.price>=2000000){gvAdv.style.display='block';gvAdv.innerHTML=`<div style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:12px;margin-bottom:16px;background:linear-gradient(135deg,#FFF8E1,#FFE9B8);border:1px solid #F0C75E"><span style="font-size:18px">&#x1FA96;</span><div style="font-size:12px;color:#7A5C00;line-height:1.4"><strong>${t('gv.title')}</strong><br>${t('gv.desc')}</div></div>`;}else gvAdv.style.display='none';}
+  const csum=document.getElementById('closing-summary');if(csum)csum.textContent=fmt(up)+' total \u00b7 tap for breakdown';
   document.getElementById('breakdown').innerHTML=`<div class="brow"><span class="brow-lbl">${t('row.down')} (${dp}%)</span><span class="brow-val">${fmt(bval*dp/100)}</span></div>${valuationGap>0?`<div class="brow"><span class="brow-lbl" style="color:var(--red)">\u26a0 Valuation gap</span><span class="brow-val cr">${fmt(valuationGap)}</span></div>`:''}<div class="brow"><span class="brow-lbl">${EMIRATES[currentEmirate].label} ${vals.dld}% + admin</span><span class="brow-val">${fmt(cc.dld)}</span></div><div class="brow"><span class="brow-lbl">Agency ${vals.agency}%</span><span class="brow-val">${fmt(cc.agency)}</span></div><div class="brow"><span class="brow-lbl">Trustee + NOC</span><span class="brow-val">${fmt(cc.trustee+cc.noc)}</span></div>${cc.mortgageFees>0?`<div class="brow"><span class="brow-lbl">Mortgage fees</span><span class="brow-val">${fmt(cc.mortgageFees)}</span></div>`:''}<div class="brow" style="padding-top:12px"><span class="brow-lbl" style="font-weight:700;color:var(--text);font-size:14px">${t('row.total')}</span><span class="brow-val" style="font-weight:700;color:${enough?'var(--text)':'var(--red)'}">${fmt(up)}</span></div>`;
   let vc,vt,vb;
   if(!ok){vc='bad';vt=t('card.loanhigh');vb=`${fmt(loan)} ${t('verdict.vsapproved')} ${fmt(approved)}.`;}
@@ -1512,7 +1592,46 @@ function calc(){
     const dbrColor=dbr<=40?'var(--green)':dbr<=50?'var(--amber)':'var(--red)';
     const maxPayLoan=(()=>{const maxMo=incomeAED*0.5,rr=vals.fixrate/100/12,nn=vals.years*12;return rr>0?maxMo*(Math.pow(1+rr,nn)-1)/(rr*Math.pow(1+rr,nn)):maxMo*nn;})();
     const affordableLoan=Math.min(maxLoanByIncome,maxPayLoan),maxPrice=Math.round(affordableLoan/(1-20/100)/10000)*10000;
-    affEl.innerHTML=`<div class="sec-lbl" style="margin:18px 0 10px">${t('aff.title')}</div><div style="background:var(--bg);border-radius:14px;padding:16px;margin-bottom:12px;text-align:center"><div style="font-size:12px;color:var(--muted);margin-bottom:4px">${t('aff.canafford')}</div><div style="font-size:26px;font-weight:700;color:var(--green);letter-spacing:-0.5px">${fmt(maxPrice)}</div></div><div class="totals"><div class="brow"><span class="brow-lbl">${t('aff.dbr')}</span><span class="brow-val" style="color:${dbrColor}">${dbr}% ${dbrPass?'\u2713':'\u2715'}</span></div><div style="height:6px;background:var(--border);border-radius:3px;overflow:hidden;margin:2px 0 12px"><div style="height:100%;width:${Math.min(dbr,100)}%;background:${dbrColor};border-radius:3px"></div></div><div class="brow"><span class="brow-lbl">${t('aff.maxloan')}</span><span class="brow-val" style="color:${loanPass?'var(--green)':'var(--red)'}">${fmt(maxLoanByIncome)} ${loanPass?'\u2713':'\u2715'}</span></div><div class="brow" style="border-bottom:none;padding-top:8px"><span class="brow-lbl" style="font-weight:700;color:var(--text)">${t('aff.verdict')}</span><span class="brow-val" style="font-weight:700;color:${bothPass?'var(--green)':'var(--red)'}">${bothPass?t('aff.pass'):t('aff.fail')}</span></div></div>`;
+    const dbrTip=dbr<=40?'Well within bank limits':'Banks allow up to 50%';
+    affEl.innerHTML=`
+    <div class="sec-lbl" style="margin:18px 0 10px">Will the bank approve this?</div>
+    <div style="background:var(--bg);border-radius:16px;padding:16px;margin-bottom:10px">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px">
+        <div>
+          <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:2px">Monthly payment vs income</div>
+          <div style="font-size:11px;color:var(--muted)">UAE banks allow max 50% of salary</div>
+        </div>
+        <div style="text-align:right">
+          <div style="font-size:22px;font-weight:700;color:${dbrColor}">${dbr}%</div>
+          <div style="font-size:11px;color:${dbrColor}">${dbrPass?'✓ within limit':'✗ exceeds limit'}</div>
+        </div>
+      </div>
+      <div style="height:8px;background:var(--border);border-radius:4px;overflow:hidden;margin-bottom:6px">
+        <div style="height:100%;width:${Math.min(dbr,100)}%;background:${dbrColor};border-radius:4px;transition:width .4s"></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--muted)">
+        <span>0%</span><span style="color:var(--amber)">50% limit</span><span>100%</span>
+      </div>
+    </div>
+    <div style="background:var(--bg);border-radius:16px;padding:16px;margin-bottom:10px">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div>
+          <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:2px">Max loan by salary</div>
+          <div style="font-size:11px;color:var(--muted)">Banks lend up to ~7× your annual salary</div>
+        </div>
+        <div style="text-align:right">
+          <div style="font-size:16px;font-weight:700;color:${loanPass?'var(--green)':'var(--red)'}">${fmt(maxLoanByIncome)}</div>
+          <div style="font-size:11px;color:${loanPass?'var(--green)':'var(--red)'}">${loanPass?'✓ your loan fits':'✗ loan too high'}</div>
+        </div>
+      </div>
+    </div>
+    <div style="background:${bothPass?'var(--green-bg)':'var(--red-bg)'};border:1px solid ${bothPass?'var(--green-bd)':'var(--red-bd)'};border-radius:14px;padding:14px 16px;display:flex;align-items:center;gap:12px">
+      <span style="font-size:24px">${bothPass?'✅':'❌'}</span>
+      <div>
+        <div style="font-size:14px;font-weight:700;color:${bothPass?'var(--green)':'var(--red)'}">${bothPass?'Likely to be approved':'May be declined'}</div>
+        <div style="font-size:11px;color:${bothPass?'var(--green)':'var(--red)'};opacity:.8;margin-top:2px">${bothPass?'Both bank criteria are met':'Reduce loan or increase income'}</div>
+      </div>
+    </div>`;
   } else affEl.innerHTML='';
   const apTag=document.getElementById('approved-tag');
   if(apTag){if(incomeAED>0){apTag.style.display='';apTag.textContent=approvedManual?t('tag.manual'):t('tag.auto');apTag.className='tag '+(approvedManual?'tag-manual':'tag-auto');}else apTag.style.display='none';}
@@ -1660,26 +1779,26 @@ const I18N={
     'app.title':'Hayyak','app.subtitle':'Property & living \u00b7 UAE',
     'mode.simple':'\u26a1 Simple','mode.advanced':'\u1f52c Advanced',
     'field.price':'Property price','field.cash':'Your cash available',
-    'field.sqft':'Property size (sqft)','field.sqft.hint':'Used to estimate DEWA and service charge',
+    'field.sqft':'Property size','field.sqft.hint':'Used to estimate DEWA, cooling and service charge',
     'field.rate':'Fixed interest rate','field.rate.adv':'Interest rate & term',
     'field.cash.hint':'Down payment + ownership fee + agency 2% + valuation \u2014 all come from here',
-    'rate.note':'Fixed rate \u00b7 then EIBOR + {margin}% (floor 1.99%)',
+    'rate.note':'Fixed for selected period \u00b7 then EIBOR + {margin}% (min 1.99%)',
     'sec.property':'Property & cash','sec.mortgage':'Mortgage','sec.results':'Results',
     'sec.closing':'What you pay at closing','sec.allin':'Monthly all-in',
     'sec.total':'Total cost over loan term','sec.living':'Living costs / month',
     'sec.moretools':'More tools','sec.payment':'Payment','sec.atclosing':'At closing',
     'tool.compare':'Compare banks','tool.compare.desc':'8 UAE banks side by side',
-    'tool.living':'Living costs','tool.living.desc':'DEWA, SC, rent out',
-    'tool.bvr':'Buy vs Rent','tool.bvr.desc':'25-year net worth',
-    'tool.prepay':'Early repayment','tool.prepay.desc':'Save on interest',
+    'tool.living':'Living costs','tool.living.desc':'Utilities, service charge, rental yield',
+    'tool.bvr':'Buy vs Rent','tool.bvr.desc':'Compare wealth over 25 years',
+    'tool.prepay':'Early repayment','tool.prepay.desc':'How much you save by paying early',
     'tool.checklist':'Bank checklist','tool.checklist.desc':'Documents & steps',
-    'tool.scenarios':'Compare scenarios','tool.scenarios.desc':'Save & compare options',
+    'tool.scenarios':'Compare scenarios','tool.scenarios.desc':'Side-by-side scenario comparison',
     'tool.offplan':'Off-plan','tool.soon':'Coming soon',
     'tool.budget':'Monthly budget','tool.budget.desc':'Full cost of living in UAE',
     'btn.fixed':'Fixed','btn.variable':'Variable','btn.monthly':'Monthly','btn.annual':'Annual',
     'btn.owner':'\u1f3e0 Own','btn.renting':'\u1f4c8 Rent out',
     'income.label':'Monthly income','income.optional':'(optional)',
-    'income.hint':'Used to estimate your bank approval & affordability',
+    'income.hint':'Sets your max approved loan & checks debt burden ratio',
     'row.down':'Down payment','row.total':'Total at closing','row.upfront':'Upfront at closing',
     'row.mortgage':'Mortgage payments','row.living':'Living costs',
     'row.interest':'Of which mortgage interest','row.cashleft':'Cash remaining',
@@ -1687,25 +1806,25 @@ const I18N={
     'row.trusteenoc':'Trustee + NOC','row.mortgagefees':'Mortgage fees','row.allfees':'all fees',
     'row.totalneeded':'Total needed','row.totalover':'Total over','row.yrs':'years',
     'row.allinstr':'Fixed \u00b7 monthly','row.mortgage.label':'Mortgage',
-    'row.allin.label':'All-in','row.allin.short':'incl. living costs','row.allin.short.rent':'incl. service charge',
-    'row.interest.insight':'\ud83d\udca1 Over {years} years you pay {pct}% of the loan amount in interest.',
-    'fnote.dewa':'Electricity + water + housing fee \u00b7 district cooling separate',
-    'fnote.sc':'Building maintenance fee \u00b7 typically 12\u201330 AED/sqft/yr in Dubai',
-    'fnote.cooling':'Empower / Tabreed / Tasleem chiller fee \u00b7 0 if included in DEWA',
-    'fnote.internet':'Etisalat / du \u00b7 monthly cost',
+    'row.allin.label':'All-in','row.allin.short':'mortgage + all running costs','row.allin.short.rent':'mortgage + service charge',
+    'row.interest.insight':'Over {years} years, {pct}% of the loan amount goes to interest. Early repayments can reduce this significantly.',
+    'fnote.dewa':'Electricity + water + 5% housing fee \u00b7 cooling billed separately',
+    'fnote.sc':'Paid by owner only \u00b7 Dubai avg 12\u201330 AED/sqft/yr, up to 60 in premium towers',
+    'fnote.cooling':'Empower / Tabreed / Tasleem \u00b7 auto-estimated from size, adjust if needed',
+    'fnote.internet':'Etisalat / du \u00b7 typically AED 250\u2013400/mo for home broadband',
     'fnote.gas':'Lootah BCGas \u00b7 billed quarterly \u00b7 monthly average shown',
     'card.canbuy':'You can buy this','card.short':'Not enough cash',
     'card.loanhigh':'Loan exceeds approved amount',
     'card.monthly':'Monthly','card.closing':'At closing','card.loan':'Loan',
     'verdict.need':'Need','verdict.toclose':'to close','verdict.youhave':'you have','verdict.vsapproved':'vs approved',
-    'gv.title':'Eligible for Golden Visa','gv.desc':'Property \u2265 AED 2M qualifies for a 10-year UAE residence visa',
+    'gv.title':'Eligible for Golden Visa','gv.desc':'Properties from AED 2M are eligible for a 10-year Golden Visa for you and your family',
     'sub.permonth':'per month','sub.peryear':'per year',
-    'sub.allin.full':'mortgage + DEWA + SC + internet + gas',
+    'sub.allin.full':'mortgage + DEWA + cooling + service charge + internet + gas',
     'field.approved':'Bank approved amount','field.bval':'Bank valuation',
-    'field.bval.hint':'Banks lend % of valuation, not price.',
-    'field.down':'Down payment','field.down.hint':'Auto-calculated to use max of your cash \u00b7 tap to override',
+    'field.bval.hint':'Banks lend against valuation, not purchase price. Gap paid from your cash.',
+    'field.down':'Down payment','field.down.hint':'Auto-set to maximise loan within your cash \u00b7 tap to override',
     'field.loanterm':'Loan term','field.years.1':'1 year','field.years.25':'25 years',
-    'field.eibor':'Expected EIBOR','field.eibor.hint':'(variable rate after fixed)',
+    'field.eibor':'Expected EIBOR','field.eibor.hint':'Rate after fixed period ends: EIBOR + bank margin. Use stress test to see worst case.',
     'field.eibor.opt':'1% optimistic','field.eibor.stress':'8% stress test',
     'tag.auto':'auto','tag.manual':'manual','min.20':'20% min',
     'rate.salary':'Salary transfer','rate.nonsalary':'Self-employed',
@@ -1720,21 +1839,21 @@ const I18N={
     'compare.current':'CURRENT','compare.best':'BEST 5yr','compare.maxloan':'Max loan',
     'compare.exceeds':'loan exceeds max','compare.3yr':'3yr rate','compare.5yr':'5yr rate',
     'compare.mo':'Monthly (5yr)','compare.vsbest':'vs best rate','compare.agency':'agency',
-    'compare.disclaimer':'Rates last updated May 2026 \u2014 actual offers may differ.',
+    'compare.disclaimer':'Indicative rates as of May 2026. Tap a bank to apply its rate. Always verify with the bank before signing.',
     'sec.compare.sub':'Same loan amount and term across all UAE banks. Tap a bank to use its rate.',
     'bvr.scenario':'Scenario','bvr.conservative':'Conservative','bvr.balanced':'Balanced','bvr.optimistic':'Optimistic',
     'bvr.rent':'Your current annual rent','bvr.invreturn':'Renter invests at',
     'bvr.years':'years','bvr.chart.year':'Year',
     'pp.atmonth':'Prepayment at month','pp.month1':'Month 1','pp.month300':'Month 300',
-    'pp.amt':'Prepayment amount','pp.invret':'Investment return (%)','pp.adjust':'Adjust sliders to see calculation',
+    'pp.amt':'Prepayment amount','pp.invret':'Investment return (%)','pp.adjust':'Set prepayment amount and timing to see your savings',
     'pp.mode.term':'Reduce term','pp.mode.pay':'Reduce payment',
     'scen.add':'Save current as scenario','scen.scenario':'Scenario','scen.priority':'What matters most?',
     'scen.p.monthly':'Low payment','scen.p.interest':'Less interest','scen.p.upfront':'Low upfront',
     'scen.best':'BEST','scen.savings':'Best option saves','scen.ininterest':'in interest','scen.cheaper':'less monthly',
-    'scen.empty.title':'No scenarios yet','scen.intro':'Save your current calculation, change the inputs, then save another to compare.',
+    'scen.empty.title':'No scenarios yet','scen.intro':'Save your current numbers, tweak the inputs, save again \u2014 then compare side by side.',
     'donut.property':'Property','donut.interest':'Interest','donut.fees':'Fees','donut.living':'Living',
     'share.btn':'Share this calculation','share.text':'My UAE property calculation from Hayyak',
-    'budget.housing':'Housing','budget.housing.hint':'Mortgage + DEWA + SC from your calculation',
+    'budget.housing':'Housing','budget.housing.hint':'Mortgage + DEWA + cooling + service charge from your calculation',
     'budget.rent':'Rent (your home)','budget.rent.hint':'Rent you pay where you actually live',
     'budget.car':'Car','budget.car.hint':'Loan + insurance + fuel + Salik',
     'budget.insurance':'Health insurance','budget.insurance.hint':'Per person \u00b7 employer may cover',
@@ -1745,6 +1864,13 @@ const I18N={
     'budget.phone':'Phone plan','budget.phone.hint':'Etisalat / du monthly',
     'budget.gym':'Gym & activities','budget.gym.hint':'Gym + sports + entertainment',
     'budget.savings':'Savings target','budget.savings.hint':'Monthly savings goal',
+    'budget.medical':'Medical (out-of-pocket)','budget.medical.hint':'Pharmacy, dentist, specialists — costs not covered by insurance',
+    'budget.clothing':'Clothing & shopping','budget.clothing.hint':'Clothes, shoes, accessories — Dubai Mall temptation is real',
+    'budget.domestic':'Domestic help','budget.domestic.hint':'Cleaner, housekeeper or nanny — very common for expat families in UAE',
+    'budget.holidays':'Holidays','budget.holidays.hint':'Regional getaways and vacations — separate from flights home',
+    'budget.subs':'Subscriptions','budget.subs.hint':'Netflix, Spotify, iCloud, Adobe, gaming — monthly digital costs',
+    'budget.personal':'Personal care','budget.personal.hint':'Haircuts, salon, grooming, beauty — tends to cost more in Dubai',
+    'budget.gym':'Sports & activities','budget.gym.hint':'Tennis, golf, swimming, courts — gym usually included in building',
     'budget.total':'Total monthly','budget.total.yr':'Total annual',
     'budget.vs':'vs income','budget.left':'Remaining',
     'budget.period.mo':'Monthly','budget.period.yr':'Annual',
