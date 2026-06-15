@@ -288,18 +288,18 @@ input[type=range]::-moz-range-track{background:transparent;height:4px;border-rad
 <div id="view-simple">
   <div class="card" id="card-simple">
     <div class="field">
-      <div class="ftop"><span class="flabel" data-i18n="field.price">Property price</span><input class="finput" id="s-price" type="text" inputmode="numeric" value="1,500,000" oninput="simpleCalc()"><span class="unit-badge">AED</span></div>
+      <div class="ftop"><span class="flabel" data-i18n="field.price">Property price</span><button class="tip-btn" onclick="showTooltip('price')" aria-label="info">i</button><input class="finput" id="s-price" type="text" inputmode="numeric" value="1,500,000" oninput="simpleCalc()"><span class="unit-badge">AED</span></div>
       <input type="range" id="s-price-range" min="0" max="1000" step="1" value="298" oninput="document.getElementById('s-price').value=fmtN(sliderToVal('s-price-range',+this.value));simpleCalc()">
       <div class="rlabels"><span id="rl-s-price-min">AED 500K</span><span id="rl-s-price-max">AED 20M</span></div>
     </div>
     <div class="field">
-      <div class="ftop"><span class="flabel" data-i18n="field.cash">Your cash available</span><input class="finput" id="s-cash" type="text" inputmode="numeric" value="420,000" oninput="simpleCalc()"><span class="unit-badge">AED</span></div>
+      <div class="ftop"><span class="flabel" data-i18n="field.cash">Your cash available</span><button class="tip-btn" onclick="showTooltip('cash')" aria-label="info">i</button><input class="finput" id="s-cash" type="text" inputmode="numeric" value="420,000" oninput="simpleCalc()"><span class="unit-badge">AED</span></div>
       <input type="range" id="s-cash-range" min="0" max="1000" step="1" value="327" oninput="document.getElementById('s-cash').value=fmtN(sliderToVal('s-cash-range',+this.value));simpleCalc()">
       <div class="rlabels"><span id="rl-s-cash-min">AED 100K</span><span id="rl-s-cash-max">AED 8M</span></div>
       <div class="fnote" id="s-cash-hint">Down payment + ownership fee + agency 2% + valuation &mdash; all from your cash</div>
     </div>
     <div class="field">
-      <div class="ftop"><span class="flabel" data-i18n="field.sqft">Property size</span><input class="finput" id="s-sqft" type="text" inputmode="numeric" value="800" oninput="simpleCalc()"></div>
+      <div class="ftop"><span class="flabel" data-i18n="field.sqft">Property size</span><button class="tip-btn" onclick="showTooltip('sqft')" aria-label="info">i</button><input class="finput" id="s-sqft" type="text" inputmode="numeric" value="800" oninput="simpleCalc()"><span class="unit-badge">sqft</span></div>
       <input type="range" id="s-sqft-range" min="0" max="1000" step="1" value="427" oninput="document.getElementById('s-sqft').value=fmtN(sliderToVal('s-sqft-range',+this.value));simpleCalc()">
       <div class="rlabels"><span>300 <span data-i18n="units.sqft">sqft</span></span><span>10,000 <span data-i18n="units.sqft">sqft</span></span></div>
       <div class="fnote" data-i18n="field.sqft.hint">Used to estimate DEWA, cooling and service charge</div>
@@ -313,7 +313,7 @@ input[type=range]::-moz-range-track{background:transparent;height:4px;border-rad
         </span>
       </div>
       <div id="s-rate-detail" style="display:none;padding-top:12px">
-        <div class="ftop"><span class="flabel" data-i18n="field.rate">Fixed interest rate</span><input class="finput" id="s-rate" type="text" inputmode="decimal" value="4.19" oninput="simpleCalc()"><span class="unit-badge">%</span></div>
+        <div class="ftop"><span class="flabel" data-i18n="field.rate">Fixed interest rate</span><button class="tip-btn" onclick="showTooltip('rate')" aria-label="info">i</button><input class="finput" id="s-rate" type="text" inputmode="decimal" value="4.19" oninput="simpleCalc()"><span class="unit-badge">%</span></div>
         <div class="seg seg-full" style="margin-top:10px">
           <button id="s-btn-rate3" onclick="setSimpleRate('3')" class="seg-btn"><span id="s-lbl-rate3">3.99% &middot; 3</span><span data-i18n="units.yr">yr</span></button>
           <button id="s-btn-rate5" onclick="setSimpleRate('5')" class="seg-btn on"><span id="s-lbl-rate5">4.19% &middot; 5</span><span data-i18n="units.yr">yr</span></button>
@@ -341,24 +341,24 @@ input[type=range]::-moz-range-track{background:transparent;height:4px;border-rad
   </div>
   <div class="card-body-wrap open" id="body-property"><div class="card-body-inner">
     <div class="field">
-      <div class="ftop"><span class="flabel" data-i18n="field.price">Property price</span><input class="finput" id="t-price" value="1,500,000"><span class="unit-badge">AED</span></div>
+      <div class="ftop"><span class="flabel" data-i18n="field.price">Property price</span><button class="tip-btn" onclick="showTooltip('price')" aria-label="info">i</button><input class="finput" id="t-price" value="1,500,000"><span class="unit-badge">AED</span></div>
       <input type="range" id="price" min="0" max="1000" step="1" value="298">
       <div class="rlabels"><span id="rl-price-min">AED 500K</span><span id="rl-price-max">AED 20M</span></div>
     </div>
     <div class="field">
-      <div class="ftop"><span class="flabel" data-i18n="field.cash">Your cash available</span><input class="finput" id="t-cash" value="420,000"><span class="unit-badge">AED</span></div>
+      <div class="ftop"><span class="flabel" data-i18n="field.cash">Your cash available</span><button class="tip-btn" onclick="showTooltip('cash')" aria-label="info">i</button><input class="finput" id="t-cash" value="420,000"><span class="unit-badge">AED</span></div>
       <input type="range" id="cash" min="0" max="1000" step="1" value="327">
       <div class="rlabels"><span id="rl-cash-min">AED 100K</span><span id="rl-cash-max">AED 8M</span></div>
       <div class="fnote" id="adv-cash-hint">Down payment + ownership fee + agency 2% + valuation &mdash; all from your cash</div>
     </div>
     <div class="field">
-      <div class="ftop"><span class="flabel" data-i18n="field.sqft">Property size</span><input class="finput" id="t-sqft" value="800"></div>
+      <div class="ftop"><span class="flabel" data-i18n="field.sqft">Property size</span><button class="tip-btn" onclick="showTooltip('sqft')" aria-label="info">i</button><input class="finput" id="t-sqft" value="800"><span class="unit-badge">sqft</span></div>
       <input type="range" id="sqft" min="0" max="1000" step="1" value="427">
       <div class="rlabels"><span>300 <span data-i18n="units.sqft">sqft</span></span><span>10,000 <span data-i18n="units.sqft">sqft</span></span></div>
       <div class="fnote" data-i18n="field.sqft.hint">Used to estimate DEWA, cooling and service charge</div>
     </div>
     <div class="field">
-      <div class="ftop"><span class="lbl-group"><span class="flabel" data-i18n="income.label">Monthly income</span><span class="flabel-opt" data-i18n="income.optional">(optional)</span></span><input class="finput" id="t-income2" value="" placeholder="&mdash;" oninput="syncIncome(this.value)"><span class="unit-badge">AED</span></div>
+      <div class="ftop"><span class="lbl-group"><span class="flabel" data-i18n="income.label">Monthly income</span><button class="tip-btn" onclick="showTooltip('income')" aria-label="info">i</button><span class="flabel-opt" data-i18n="income.optional">(optional)</span></span><input class="finput" id="t-income2" value="" placeholder="&mdash;" inputmode="numeric" oninput="this.value=this.value.replace(/[^0-9]/g,'');syncIncome(this.value)" onblur="if(this.value)this.value=parseInt(this.value).toLocaleString('en-US')" onfocus="this.value=this.value.replace(/[^0-9]/g,'')"><span class="unit-badge">AED</span></div>
       <div class="fnote" data-i18n="income.hint">Used to estimate your bank approval &amp; affordability</div>
     </div>
     <span id="sv-val" style="display:none"></span>
@@ -398,7 +398,7 @@ input[type=range]::-moz-range-track{background:transparent;height:4px;border-rad
       <div class="fnote" data-i18n="field.down.hint">Auto-set to maximise loan within your cash &middot; tap to override</div>
     </div>
     <div class="field">
-      <div class="ftop"><span class="flabel" data-i18n="field.loanterm">Loan term</span><input class="finput" id="t-years" value="25"><span class="unit-badge">yr</span></div>
+      <div class="ftop"><span class="flabel" data-i18n="field.loanterm">Loan term</span><button class="tip-btn" onclick="showTooltip('years')" aria-label="info">i</button><input class="finput" id="t-years" value="25"><span class="unit-badge">yr</span></div>
       <input type="range" id="years" min="1" max="25" step="1" value="25">
       <div class="rlabels"><span data-i18n="field.years.1">1 year</span><span data-i18n="field.years.25">25 years</span></div>
     </div>
@@ -475,7 +475,7 @@ input[type=range]::-moz-range-track{background:transparent;height:4px;border-rad
     </div>
     <!-- mortgage-only line -->
     <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 4px 14px">
-      <span style="font-size:13px;color:var(--muted)">of which mortgage to bank</span>
+      <span style="font-size:13px;color:var(--muted)">mortgage to bank <span style="opacity:.7">(fixed period)</span></span>
       <span style="font-size:15px;font-weight:700;color:var(--text)" id="pay-3">&mdash;</span>
     </div>
 
@@ -599,12 +599,12 @@ input[type=range]::-moz-range-track{background:transparent;height:4px;border-rad
       <div class="fnote" data-i18n="fnote.sc">Paid by owner only &mdash; Dubai avg 12&ndash;30 AED/sqft/yr, up to 60 in premium towers</div>
     </div>
     <div class="field">
-      <div class="ftop"><span class="flabel" data-i18n="living.internet">Internet</span><input class="finput" id="t-internet" value="360"><span class="unit-badge">AED</span></div>
+      <div class="ftop"><span class="flabel" data-i18n="living.internet">Internet</span><button class="tip-btn" onclick="showTooltip('internet')" aria-label="info">i</button><input class="finput" id="t-internet" value="360"><span class="unit-badge">AED</span></div>
       <input type="range" id="internet" min="0" max="1000" step="10" value="360">
       <div class="rlabels"><span id="rl-inet-min">AED 0</span><span id="rl-inet-max">AED 1,000</span></div>
     </div>
     <div class="field">
-      <div class="ftop"><span class="flabel" data-i18n="living.gas">Gas</span><input class="finput" id="t-gas" value="55"><span class="unit-badge">AED</span></div>
+      <div class="ftop"><span class="flabel" data-i18n="living.gas">Gas</span><button class="tip-btn" onclick="showTooltip('gas')" aria-label="info">i</button><input class="finput" id="t-gas" value="55"><span class="unit-badge">AED</span></div>
       <input type="range" id="gas" min="0" max="500" step="5" value="55">
       <div class="rlabels"><span id="rl-gas-min">AED 0</span><span id="rl-gas-max">AED 500</span></div>
       <div class="fnote" data-i18n="fnote.gas">Lootah BCGas &middot; billed quarterly &middot; monthly average shown</div>
@@ -620,7 +620,7 @@ input[type=range]::-moz-range-track{background:transparent;height:4px;border-rad
   </div>
   <div class="card-body-wrap" id="body-bvr"><div class="card-body-inner">
     <div class="field">
-      <div class="ftop"><span class="flabel" data-i18n="bvr.rent">Your current annual rent</span><input class="finput" id="t-rent" value="85,000"><span class="unit-badge">AED/yr</span></div>
+      <div class="ftop"><span class="flabel" data-i18n="bvr.rent">Your current annual rent</span><button class="tip-btn" onclick="showTooltip('rent')" aria-label="info">i</button><input class="finput" id="t-rent" value="85,000"><span class="unit-badge">AED/yr</span></div>
       <input type="range" id="rent" min="50000" max="600000" step="5000" value="85000">
       <div class="rlabels"><span id="rl-rent-min">AED 50K</span><span id="rl-rent-max">AED 600K</span></div>
     </div>
@@ -634,7 +634,7 @@ input[type=range]::-moz-range-track{background:transparent;height:4px;border-rad
       <div id="bvr-scenario-note" class="fnote" style="margin-top:8px">Property +5%/yr &middot; Rent +5%/yr</div>
     </div>
     <div class="field">
-      <div class="ftop"><span class="flabel" data-i18n="bvr.invreturn">Renter invests at</span><input class="finput" id="t-bvr-inv-rate" value="5.0"><span class="unit-badge">%</span></div>
+      <div class="ftop"><span class="flabel" data-i18n="bvr.invreturn">Renter invests at</span><button class="tip-btn" onclick="showTooltip('bvrinv')" aria-label="info">i</button><input class="finput" id="t-bvr-inv-rate" value="5.0"><span class="unit-badge">%</span></div>
       <input type="range" id="bvr-inv-rate" min="1" max="15" step="0.1" value="5" oninput="document.getElementById('t-bvr-inv-rate').value=parseFloat(this.value).toFixed(1);calcBvR()">
       <div class="rlabels"><span data-i18n="slider.1pct">1% deposit</span><span data-i18n="slider.15pct">15% stocks</span></div>
     </div>
@@ -654,13 +654,13 @@ input[type=range]::-moz-range-track{background:transparent;height:4px;border-rad
   </div>
   <div class="card-body-wrap" id="body-prepay"><div class="card-body-inner">
     <div class="field">
-      <div class="ftop"><span class="flabel" data-i18n="pp.atmonth">Prepayment at month</span><input class="finput" id="t-pp-month" value="12"></div>
+      <div class="ftop"><span class="flabel" data-i18n="pp.atmonth">Prepayment at month</span><button class="tip-btn" onclick="showTooltip('ppmonth')" aria-label="info">i</button><input class="finput" id="t-pp-month" value="12"><span class="unit-badge">mo</span></div>
       <input type="range" id="pp-month" min="1" max="300" step="1" value="12">
       <div class="rlabels"><span data-i18n="pp.month1">Month 1</span><span data-i18n="pp.month300">Month 300</span></div>
       <div class="fnote" id="pp-month-note"></div>
     </div>
     <div class="field">
-      <div class="ftop"><span class="flabel" data-i18n="pp.amt">Prepayment amount</span><input class="finput" id="t-pp-amt" value="200,000"><span class="unit-badge">AED</span></div>
+      <div class="ftop"><span class="flabel" data-i18n="pp.amt">Prepayment amount</span><button class="tip-btn" onclick="showTooltip('ppamt')" aria-label="info">i</button><input class="finput" id="t-pp-amt" value="200,000"><span class="unit-badge">AED</span></div>
       <input type="range" id="pp-amt" min="0" max="5000000" step="25000" value="200000">
       <div class="rlabels"><span id="pp-amt-min">AED 0</span><span id="pp-amt-max">AED 5M</span></div>
     </div>
@@ -669,7 +669,7 @@ input[type=range]::-moz-range-track{background:transparent;height:4px;border-rad
       <button class="seg-btn" id="pp-btn-pay" onclick="setPPMode('payment')" data-i18n="pp.mode.pay">Reduce payment</button>
     </div>
     <div class="field" style="margin-bottom:16px">
-      <div class="ftop"><span class="flabel" data-i18n="pp.invret">Investment return (%)</span><input class="finput" id="t-inv-rate" value="5.00"><span class="unit-badge">%</span></div>
+      <div class="ftop"><span class="flabel" data-i18n="pp.invret">Investment return (%)</span><button class="tip-btn" onclick="showTooltip('invreturn')" aria-label="info">i</button><input class="finput" id="t-inv-rate" value="5.00"><span class="unit-badge">%</span></div>
       <input type="range" id="inv-rate" min="1" max="10" step="0.05" value="5">
       <div class="rlabels"><span data-i18n="slider.1pct">1% deposit</span><span data-i18n="slider.10pct">10% stocks</span></div>
     </div>
@@ -1072,23 +1072,31 @@ const TIPS={
     income:{title:'Monthly Income',text:'Your gross monthly salary. UAE banks limit mortgage payments to 50% of income (DBR) and approve loans up to ~7× annual salary.'},
     rent:{title:'Annual Rent',text:'What you currently pay per year renting. Used to compare renting vs buying over time.'},
     gv:{title:'🏅 UAE Golden Visa (10 years)',text:'Properties valued at AED 2M or more qualify for a 10-year UAE residence visa — for you, your spouse, and children. No sponsor needed. Ready property only. Renewable indefinitely. Apply through ICP.'},
+    rate:{title:'Fixed Interest Rate',text:'The interest rate locked for the fixed period (3 or 5 years). After it ends, the rate switches to variable (EIBOR + bank margin). Salary transfer to the bank usually gets a lower rate.'},
+    ppmonth:{title:'Prepayment Month',text:'When you make the extra payment, counted from loan start. Month 1 = right after closing. UAE banks usually charge no penalty after 3 years on partial prepayments up to 25% of the balance per year.'},
+    ppamt:{title:'Prepayment Amount',text:'Extra lump sum you pay toward the principal. This reduces either your loan term or your monthly payment, saving you interest over time.'},
+    invreturn:{title:'Investment Return',text:'Expected annual return if you invested the money instead of prepaying. If this beats your mortgage rate, investing may build more wealth than paying off the loan early.'},
+    bvrinv:{title:'Renter Investment Return',text:'Expected annual return a renter earns by investing the cash they would have used for a down payment and the monthly difference. Typical diversified portfolios return 5–7% long-term.'},
   },};
 let tooltipTimer=null;
 function showTooltip(key){
   const tips=TIPS[currentLang]||TIPS.en,tip=tips[key]||TIPS.en[key];if(!tip)return;
-  const sheet=document.getElementById('tooltip-sheet');
+  const sheet=document.getElementById('tooltip-sheet');if(!sheet)return;
   sheet.innerHTML='<strong>'+tip.title+'</strong>'+tip.text;
-  sheet.classList.remove('fading');sheet.classList.add('show');
+  sheet.style.pointerEvents='auto';
+  sheet.style.opacity='1';
+  sheet.classList.remove('fading');
+  sheet.classList.add('show');
   if(navigator.vibrate)navigator.vibrate(3);
   clearTimeout(tooltipTimer);tooltipTimer=setTimeout(fadeTooltip,20000);
 }
-function hideTooltip(){const sheet=document.getElementById('tooltip-sheet');if(!sheet)return;sheet.classList.remove('show');sheet.classList.remove('fading');}
+function hideTooltip(){const sheet=document.getElementById('tooltip-sheet');if(!sheet)return;sheet.classList.remove('show');sheet.classList.remove('fading');sheet.style.opacity='';sheet.style.pointerEvents='';}
 function fadeTooltip(){
   const sheet=document.getElementById('tooltip-sheet');if(!sheet||!sheet.classList.contains('show'))return;
-  sheet.classList.add('fading');sheet.style.pointerEvents='none';
-  clearTimeout(tooltipTimer);tooltipTimer=setTimeout(()=>{sheet.classList.remove('show');sheet.classList.remove('fading');},600);
+  sheet.classList.add('fading');sheet.style.pointerEvents='none';sheet.style.opacity='';
+  clearTimeout(tooltipTimer);tooltipTimer=setTimeout(()=>{sheet.classList.remove('show');sheet.classList.remove('fading');sheet.style.opacity='';},600);
 }
-document.addEventListener('click',e=>{const sheet=document.getElementById('tooltip-sheet');if(sheet&&!e.target.classList.contains('tip-btn')&&sheet.classList.contains('show'))hideTooltip();});
+document.addEventListener('click',e=>{const sheet=document.getElementById('tooltip-sheet');if(!sheet||!sheet.classList.contains('show'))return;if(e.target.closest('.tip-btn'))return;if(e.target.closest('#tooltip-sheet'))return;hideTooltip();});
 ['scroll','touchmove'].forEach(ev=>{document.addEventListener(ev,()=>{fadeTooltip();},{passive:true,capture:true});});
 
 const sysDark=window.matchMedia('(prefers-color-scheme: dark)');
@@ -1154,6 +1162,8 @@ function setCurr(c){
     else if(txt==='AED/yr'||txt==='$/yr')el.textContent=sym+'/yr';
     else if(txt==='AED/sqft/yr'||txt==='$/sqft/yr')el.textContent=sym+'/sqft/yr';
   });
+  const incEl=document.getElementById('t-income2'),hiddenInc=document.getElementById('t-income');
+  if(incEl&&hiddenInc&&hiddenInc.value){const storedAed=parseFloat(hiddenInc.value.replace(/[^0-9.]/g,''))||0;if(storedAed>0)incEl.value=(isUSD?Math.round(storedAed/USD_RATE):Math.round(storedAed)).toLocaleString('en-US');}
   refreshInputs();simpleCalc();calc();calcLiving();calcBvR();calcPP();
 }
 function toDisp(aedVal){return currency==='USD'?aedVal/USD_RATE:aedVal;}
