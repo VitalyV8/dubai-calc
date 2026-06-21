@@ -266,11 +266,7 @@ input[type=range]::-moz-range-track{background:transparent;height:4px;border-rad
     <div onclick="pickEmirate('fujairah')" class="emi-opt"><span>&#x1F4CD; Fujairah</span><span>4% ownership fee</span></div>
     <div onclick="pickEmirate('uaq')"      class="emi-opt"><span>&#x1F4CD; Umm Al Quwain</span><span>3% ownership fee</span></div>
   </div>
-  <select id="sel-bank" onchange="setBank(this.value)" style="display:none">
-    <option value="fab">FAB</option><option value="enbd">ENBD</option><option value="adcb">ADCB</option>
-    <option value="mashreq">Mashreq</option><option value="hsbc">HSBC</option>
-    <option value="adib">ADIB</option><option value="dib">DIB</option><option value="cbd">CBD</option>
-  </select>
+  
   <select id="sel-emirate" style="display:none">
     <option value="dubai">Dubai</option><option value="abudhabi">Abu Dhabi</option>
     <option value="sharjah">Sharjah</option><option value="ajman">Ajman</option>
@@ -510,13 +506,11 @@ input[type=range]::-moz-range-track{background:transparent;height:4px;border-rad
 <div class="sec-lbl" style="padding:6px 4px 0;margin-bottom:10px;margin-top:4px" data-i18n="sec.moretools">More tools</div>
 <div class="modules-strip">
   <div class="module-card" onclick="openModal('budget')"><span class="module-icon">&#x1F4CA;</span><div class="module-name" data-i18n="tool.budget">Monthly budget</div><div class="module-desc" data-i18n="tool.budget.desc">Full cost of living in UAE</div></div>
-  <div class="module-card" onclick="openModal('compare')"><span class="module-icon">&#x1F3E6;</span><div class="module-name" data-i18n="tool.compare">Compare banks</div><div class="module-desc" data-i18n="tool.compare.desc">8 UAE banks side by side</div></div>
   <div class="module-card" onclick="openModal('living')"><span class="module-icon">&#x1F4A1;</span><div class="module-name" data-i18n="tool.living">Living costs</div><div class="module-desc" data-i18n="tool.living.desc">Utilities, service charge, rental yield</div></div>
   <div class="module-card" onclick="openModal('bvr')"><span class="module-icon">&#x2696;&#xFE0F;</span><div class="module-name" data-i18n="tool.bvr">Buy vs Rent</div><div class="module-desc" data-i18n="tool.bvr.desc">Compare wealth over 25 years</div></div>
   <div class="module-card" onclick="openModal('prepay')"><span class="module-icon">&#x23E9;</span><div class="module-name" data-i18n="tool.prepay">Early repayment</div><div class="module-desc" data-i18n="tool.prepay.desc">How much you save by paying early</div></div>
   <div class="module-card" onclick="openModal('checklist')"><span class="module-icon">&#x1F4CB;</span><div class="module-name" data-i18n="tool.checklist">Bank checklist</div><div class="module-desc" data-i18n="tool.checklist.desc">Documents &amp; steps</div></div>
   <div class="module-card" onclick="openModal('scenarios')"><span class="module-icon">&#x2696;&#xFE0F;</span><div class="module-name" data-i18n="tool.scenarios">Compare scenarios</div><div class="module-desc" data-i18n="tool.scenarios.desc">Side-by-side scenario comparison</div></div>
-  <div class="module-card" onclick="openModal('offplan')" style="opacity:0.55"><span class="module-icon">&#x1F3D7;&#xFE0F;</span><div class="module-name" data-i18n="tool.offplan">Off-plan</div><div class="module-desc" data-i18n="tool.soon">Coming soon</div></div>
 </div>
 
 <div class="modal-bg" id="modal-bg" onclick="closeModal()"></div>
@@ -536,17 +530,52 @@ input[type=range]::-moz-range-track{background:transparent;height:4px;border-rad
   <div class="modal-head"><div class="modal-title">&#x1F4CB; <span data-i18n="tool.checklist">Bank checklist</span></div><button class="modal-close" onclick="closeModal()">&#x2715;</button></div>
   <div id="modal-checklist-body"></div>
 </div>
-<div class="modal" id="modal-compare" data-mod="compare">
-  <div class="modal-handle"></div>
-  <div class="modal-head"><div class="modal-title">&#x1F3E6; <span data-i18n="tool.compare">Compare banks</span></div><button class="modal-close" onclick="closeModal()">&#x2715;</button></div>
-  <div style="font-size:11px;color:var(--muted);padding:0 4px 12px;line-height:1.5" data-i18n="sec.compare.sub">Same loan amount and term across all UAE banks. Tap a bank to use its rate.</div>
-  <div id="modal-compare-body"></div>
+</div>
+
+<!-- Living costs card (hidden source for modal) -->
+<div class="card" id="card-living" style="display:none">
+  <div class="card-head"><span class="ctitle">Living costs</span></div>
+  <div class="card-body-wrap open"><div class="card-body-inner">
+    <div class="field">
+      <div class="ftop"><span class="lbl-group"><span class="flabel" data-i18n="living.dewa">DEWA</span><button class="tip-btn" onclick="event.stopPropagation();showTooltip('dewa')" aria-label="info">i</button></span><span id="dewa-tag" class="tag tag-auto" onclick="resetDewaAuto()" style="flex-shrink:0">auto</span><input class="finput" id="t-dewa" value="680"><span class="unit-badge">AED</span></div>
+      <input type="range" id="dewa" min="0" max="8000" step="50" value="680">
+      <div class="rlabels"><span id="rl-dewa-min">AED 0</span><span id="rl-dewa-max">AED 8,000</span></div>
+      <div class="fnote" data-i18n="fnote.dewa">Electricity + water + 5% housing fee &middot; cooling billed separately</div>
+    </div>
+    <div class="field">
+      <div class="ftop"><span class="lbl-group"><span class="flabel" data-i18n="living.cooling">District cooling</span><button class="tip-btn" onclick="event.stopPropagation();showTooltip('cooling')" aria-label="info">i</button></span><span id="cooling-tag" class="tag tag-auto" onclick="resetCoolingAuto()" style="flex-shrink:0">auto</span><input class="finput" id="t-cooling" value="680"><span class="unit-badge">AED</span></div>
+      <input type="range" id="cooling" min="0" max="3000" step="50" value="680">
+      <div class="rlabels"><span id="rl-cool-min">AED 0</span><span id="rl-cool-max">AED 3,000</span></div>
+      <div class="fnote" data-i18n="fnote.cooling">Empower / Tabreed / Tasleem &middot; auto-estimated from size, adjust if needed</div>
+    </div>
+    <div class="field">
+      <div class="ftop"><span class="lbl-group"><span class="flabel" data-i18n="living.sc">Service charge</span><button class="tip-btn" onclick="event.stopPropagation();showTooltip('sc')" aria-label="info">i</button></span><input class="finput" id="t-sc" value="23"><span class="unit-badge">AED/sqft/yr</span></div>
+      <input type="range" id="sc" min="0" max="60" step="1" value="23">
+      <div class="rlabels"><span id="sc-note">AED/sqft/yr</span><span></span></div>
+      <div class="fnote" data-i18n="fnote.sc">Paid by owner only &middot; Dubai avg 12&ndash;30 AED/sqft/yr, up to 60 in premium towers</div>
+    </div>
+    <div class="field">
+      <div class="ftop"><span class="lbl-group"><span class="flabel" data-i18n="living.internet">Internet</span><button class="tip-btn" onclick="event.stopPropagation();showTooltip('internet')" aria-label="info">i</button></span><input class="finput" id="t-internet" value="360"><span class="unit-badge">AED</span></div>
+      <input type="range" id="internet" min="0" max="1000" step="20" value="360">
+      <div class="rlabels"><span id="rl-inet-min">AED 0</span><span id="rl-inet-max">AED 1,000</span></div>
+      <div class="fnote" data-i18n="fnote.internet">Etisalat / du &middot; typically AED 250&ndash;400/mo for home broadband</div>
+    </div>
+    <div class="field">
+      <div class="ftop"><span class="lbl-group"><span class="flabel" data-i18n="living.gas">Gas</span><button class="tip-btn" onclick="event.stopPropagation();showTooltip('gas')" aria-label="info">i</button></span><input class="finput" id="t-gas" value="55"><span class="unit-badge">AED</span></div>
+      <input type="range" id="gas" min="0" max="500" step="5" value="55">
+      <div class="rlabels"><span id="rl-gas-min">AED 0</span><span id="rl-gas-max">AED 500</span></div>
+    </div>
+    <div style="background:var(--bg);border-radius:12px;padding:14px;margin-top:8px">
+      <div style="display:flex;justify-content:space-between;padding:5px 0"><span style="font-size:13px;color:var(--muted)">Fixed rate &middot; annual</span><span style="font-size:14px;font-weight:700;color:var(--green)" id="grand-3-yr">&mdash;</span></div>
+      <div style="display:flex;justify-content:space-between;padding:5px 0"><span style="font-size:13px;color:var(--muted)">Variable rate &middot; annual</span><span style="font-size:14px;font-weight:700;color:var(--text)" id="grand-var-yr">&mdash;</span></div>
+    </div>
+    <span id="dewa-note" style="display:none"></span>
+  </div></div>
 </div>
 <div class="modal" id="modal-living" data-mod="living">
   <div class="modal-handle"></div>
-  <div class="modal-head"><div class="modal-title">&#x1F4A1; <span data-i18n="sec.living">Living costs / month</span></div><button class="modal-close" onclick="closeModal()">&#x2715;</button></div>
+  <div class="modal-head"><div class="modal-title">&#x1F4A1; <span data-i18n="tool.living">Living costs</span></div><button class="modal-close" onclick="closeModal()">&#x2715;</button></div>
   <div id="modal-living-body"></div>
-</div>
 <div class="modal" id="modal-bvr" data-mod="bvr">
   <div class="modal-handle"></div>
   <div class="modal-head"><div class="modal-title">&#x2696;&#xFE0F; <span data-i18n="tool.bvr">Buy vs Rent</span></div><button class="modal-close" onclick="closeModal()">&#x2715;</button></div>
@@ -557,59 +586,6 @@ input[type=range]::-moz-range-track{background:transparent;height:4px;border-rad
   <div class="modal-head"><div class="modal-title">&#x23E9; <span data-i18n="tool.prepay">Early repayment</span></div><button class="modal-close" onclick="closeModal()">&#x2715;</button></div>
   <div id="modal-prepay-body"></div>
 </div>
-
-<!-- LIVING COSTS card (hidden, content moved to modal) -->
-<div class="card" id="card-living" style="display:none">
-  <div class="card-head" onclick="toggleCard('living')">
-    <span class="ctitle" data-i18n="sec.living">Living costs / month</span>
-    <div style="display:flex;align-items:center;gap:8px" onclick="event.stopPropagation()">
-      <div class="seg">
-        <button id="rentout-btn-owner" class="seg-btn on" onclick="setRentOut(false)" data-i18n="btn.owner">Owner</button>
-        <button id="rentout-btn-rent" class="seg-btn" onclick="setRentOut(true)" data-i18n="btn.renting">Renting out</button>
-      </div>
-      <span class="chevron open" id="chev-living">&#x25BC;</span>
-    </div>
-  </div>
-  <div class="card-body-wrap open" id="body-living"><div class="card-body-inner">
-    <div class="field">
-      <div class="ftop">
-        <span class="flabel"><span data-i18n="living.dewa">DEWA</span><span id="dewa-tag" class="tag tag-auto" onclick="resetDewaAuto()">auto</span></span>
-        <input class="finput" id="t-dewa" value="680"><span class="unit-badge">AED</span>
-      </div>
-      <input type="range" id="dewa" min="0" max="8000" step="50" value="680">
-      <div class="rlabels"><span id="rl-dewa-min">AED 0</span><span id="rl-dewa-max">AED 8,000</span></div>
-      <div class="fnote" id="dewa-note" data-i18n="fnote.dewa">Electricity + water + 5% housing fee &middot; cooling billed separately</div>
-    </div>
-    <div class="field">
-      <div class="ftop"><span class="lbl-group"><span class="flabel" data-i18n="living.cooling">District cooling</span><button class="tip-btn" onclick="event.stopPropagation();showTooltip('cooling')" aria-label="info">i</button></span><span id="cooling-tag" class="tag tag-auto" onclick="resetCoolingAuto()" style="flex-shrink:0">auto</span><input class="finput" id="t-cooling" value="0"><span class="unit-badge">AED</span></div>
-      <input type="range" id="cooling" min="0" max="3000" step="50" value="0">
-      <div class="rlabels"><span id="rl-cool-min">AED 0</span><span id="rl-cool-max">AED 3,000</span></div>
-      <div class="fnote" data-i18n="fnote.cooling">Empower / Tabreed / Tasleem &middot; auto-estimated from size, adjust if needed</div>
-    </div>
-    <div class="field">
-      <div class="ftop"><span class="lbl-group"><span class="flabel" data-i18n="living.sc">Service charge</span><button class="tip-btn" onclick="event.stopPropagation();showTooltip('sc')" aria-label="info">i</button></span><input class="finput" id="t-sc" value="23.00"><span class="unit-badge">AED/sqft/yr</span></div>
-      <input type="range" id="sc" min="0" max="60" step="0.5" value="23">
-      <div class="rlabels"><span id="sc-note">AED/sqft/yr</span><span></span></div>
-      <div id="sc-presets" style="display:flex;gap:6px;flex-wrap:wrap;margin:4px 0 6px">
-        <button class="sc-chip" onclick="setScRate(12)">JVC &middot; 12</button>
-        <button class="sc-chip" onclick="setScRate(18)">Marina &middot; 18</button>
-        <button class="sc-chip" onclick="setScRate(23)">Downtown &middot; 23</button>
-        <button class="sc-chip" onclick="setScRate(30)">Palm &middot; 30</button>
-      </div>
-      <div class="fnote" data-i18n="fnote.sc">Paid by owner only &mdash; Dubai avg 12&ndash;30 AED/sqft/yr, up to 60 in premium towers</div>
-    </div>
-    <div class="field">
-      <div class="ftop"><span class="lbl-group"><span class="flabel" data-i18n="living.internet">Internet</span><button class="tip-btn" onclick="event.stopPropagation();showTooltip('internet')" aria-label="info">i</button></span><input class="finput" id="t-internet" value="360"><span class="unit-badge">AED</span></div>
-      <input type="range" id="internet" min="0" max="1000" step="10" value="360">
-      <div class="rlabels"><span id="rl-inet-min">AED 0</span><span id="rl-inet-max">AED 1,000</span></div>
-    </div>
-    <div class="field">
-      <div class="ftop"><span class="lbl-group"><span class="flabel" data-i18n="living.gas">Gas</span><button class="tip-btn" onclick="event.stopPropagation();showTooltip('gas')" aria-label="info">i</button></span><input class="finput" id="t-gas" value="55"><span class="unit-badge">AED</span></div>
-      <input type="range" id="gas" min="0" max="500" step="5" value="55">
-      <div class="rlabels"><span id="rl-gas-min">AED 0</span><span id="rl-gas-max">AED 500</span></div>
-      <div class="fnote" data-i18n="fnote.gas">Lootah BCGas &middot; billed quarterly &middot; monthly average shown</div>
-    </div>
-  </div></div>
 </div>
 
 <!-- BVR card -->
@@ -702,68 +678,9 @@ const EMIRATES = {
   fujairah: {name:'Fujairah',       dld:4, agency:2, valuation:3000, label:'Fujairah Municipality'},
   uaq:      {name:'Umm Al Quwain',  dld:3, agency:2, valuation:3000, label:'UAQ Municipality'},
 };
-const BANKS = {
-  fab:     {name:'FAB',     fixed3:3.99, fixed5:4.19, maxLoan:2600000, type:'conventional'},
-  enbd:    {name:'ENBD',    fixed3:3.99, fixed5:4.25, maxLoan:5000000, type:'conventional'},
-  adcb:    {name:'ADCB',    fixed3:3.79, fixed5:4.09, maxLoan:5000000, type:'conventional'},
-  mashreq: {name:'Mashreq', fixed3:4.09, fixed5:4.29, maxLoan:5000000, type:'conventional'},
-  hsbc:    {name:'HSBC',    fixed3:3.89, fixed5:4.15, maxLoan:5000000, type:'conventional'},
-  adib:    {name:'ADIB',    fixed3:4.19, fixed5:4.39, maxLoan:5000000, type:'islamic'},
-  dib:     {name:'DIB',     fixed3:4.09, fixed5:4.29, maxLoan:5000000, type:'islamic'},
-  cbd:     {name:'CBD',     fixed3:4.09, fixed5:4.29, maxLoan:5000000, type:'conventional'},
-};
-let currentEmirate = 'dubai';
-let currentBank = 'fab';
 
-function setEmirate(e){
-  currentEmirate = e;
-  const cfg = EMIRATES[e];
-  vals.dld = cfg.dld; vals.agency = cfg.agency;
-  const ne=document.getElementById('emi-name'), re=document.getElementById('emi-rate');
-  if(ne) ne.textContent = cfg.name;
-  if(re) re.textContent = cfg.dld+'%';
-  const tpl = (typeof I18N!=='undefined'&&I18N[currentLang]&&I18N[currentLang]['field.cash.hint'])?I18N[currentLang]['field.cash.hint']:'Down payment + ownership fee + agency 2% + valuation — all come from here';
-  const sh=document.getElementById('s-cash-hint'), ah=document.getElementById('adv-cash-hint');
-  if(sh) sh.textContent=tpl; if(ah) ah.textContent=tpl;
-  calc(); simpleCalc();
-}
-function toggleEmiratePicker(){
-  const list=document.getElementById('emirate-list'), arrow=document.getElementById('emi-arrow');
-  const isHidden=list.style.opacity==='0'||list.style.display==='none'||!list.style.display;
-  if(isHidden){
-    list.style.display='block'; list.style.opacity='0'; list.style.transform='translateY(-6px)';
-    if(arrow) arrow.classList.add('open');
-    requestAnimationFrame(()=>{list.style.transition='opacity .25s ease, transform .25s ease';list.style.opacity='1';list.style.transform='translateY(0)';});
-  } else {
-    list.style.transition='opacity .2s ease, transform .2s ease'; list.style.opacity='0'; list.style.transform='translateY(-6px)';
-    if(arrow) arrow.classList.remove('open');
-    setTimeout(()=>{list.style.display='none';},200);
-  }
-}
-function pickEmirate(e){
-  setEmirate(e);
-  const list=document.getElementById('emirate-list'), arrow=document.getElementById('emi-arrow');
-  list.style.transition='opacity .2s ease, transform .2s ease'; list.style.opacity='0'; list.style.transform='translateY(-6px)';
-  if(arrow) arrow.classList.remove('open');
-  setTimeout(()=>{list.style.display='none';},200);
-}
-document.addEventListener('click',(ev)=>{
-  const list=document.getElementById('emirate-list'), disp=document.getElementById('emirate-display'), arrow=document.getElementById('emi-arrow');
-  if(!list||!disp) return;
-  if(!list.contains(ev.target)&&!disp.contains(ev.target)&&list.style.display!=='none'&&list.style.opacity!=='0'){
-    list.style.transition='opacity .2s ease, transform .2s ease'; list.style.opacity='0'; list.style.transform='translateY(-6px)';
-    if(arrow) arrow.classList.remove('open');
-    setTimeout(()=>{list.style.display='none';},200);
-  }
-});
-function setBank(b, updateApproved=false){
-  currentBank=b; const cfg=BANKS[b];
-  if(updateApproved){ vals.approved=cfg.maxLoan; const apEl=document.getElementById('approved'),tApEl=document.getElementById('t-approved'); if(apEl)apEl.value=cfg.maxLoan; if(tApEl)tApEl.value=fmtDisplay('approved',cfg.maxLoan); }
-  const useRate=vals.fixperiod===3?cfg.fixed3:cfg.fixed5;
-  vals.fixrate=useRate; document.getElementById('t-fixrate').value=useRate.toFixed(2);
-  const sRate=document.getElementById('s-rate'); if(sRate) sRate.value=useRate.toFixed(2);
-  calc(); simpleCalc();
-}
+let currentEmirate = 'dubai';
+
 let currency='AED';
 let dewaEdited=false, coolingEdited=false, downManual=false, approvedManual=false;
 const vals={price:1500000,cash:420000,approved:1500000,bval:1500000,down:20,years:25,eibor:3.45,sqft:800,fixrate:4.19,fixperiod:5,dld:4,agency:2};
@@ -841,14 +758,7 @@ function finishOnboarding(){
 }
 
 let advPeriod='month', advRateView='fixed', advGrand3=0, advGrandVar=0;
-function setAdvRateView(v){advRateView=v;document.getElementById('adv-btn-fixed').classList.toggle('on',v==='fixed');document.getElementById('adv-btn-var').classList.toggle('on',v==='var');updateAdvAllIn();}
-function setAdvPeriod(p){
-  advPeriod=p;
-  const bm=document.getElementById('adv-btn-month'),by=document.getElementById('adv-btn-year');
-  if(!bm||!by)return;
-  bm.classList.toggle('on',p==='month');by.classList.toggle('on',p==='year');
-  updateAdvAllIn();
-}
+
 function toggleClosing(){
   const b=document.getElementById('closing-body'),c=document.getElementById('closing-chev');
   const open=b.style.display!=='none';b.style.display=open?'none':'block';
@@ -959,12 +869,11 @@ function closeBudgetEditor(){document.getElementById('budget-editor').classList.
 
 let openedModal=null;
 function openModal(mod){
-  if(mod==='offplan')return;
   if(mod==='budget')renderBudget();
-  if(mod==='compare')renderCompareBanks();
   if(mod==='checklist')renderChecklist();
   if(mod==='scenarios')renderScenarios();
   const modal=document.getElementById('modal-'+mod);
+  // populate first, then calc below after content moved
   const body=document.getElementById('modal-'+mod+'-body');
   const src=document.getElementById('card-'+mod);
   if(!modal)return;
@@ -976,6 +885,9 @@ function openModal(mod){
   }
   document.getElementById('modal-bg').classList.add('on');
   modal.classList.add('on');openedModal=mod;
+  if(mod==='bvr'&&typeof calcBvR==='function')calcBvR();
+  if(mod==='prepay'&&typeof calcPP==='function')calcPP();
+  if(mod==='living'&&typeof calcLiving==='function')calcLiving();
   if(navigator.vibrate)navigator.vibrate(3);
 }
 function closeModal(){
@@ -1043,13 +955,7 @@ function renderScenarios(){
   }
   body.innerHTML=html;
 }
-function renderCompareBanks(){
-  const body=document.getElementById('modal-compare-body');
-  const loan=vals.price*(100-vals.down)/100,n=vals.years*12;
-  const list=Object.entries(BANKS).map(([k,b])=>({key:k,name:b.name,type:b.type,f3:b.fixed3,f5:b.fixed5,max:b.maxLoan,pay3:mpay(loan,b.fixed3,n),pay5:mpay(loan,b.fixed5,n),fits:loan<=b.maxLoan})).sort((a,b)=>a.f5-b.f5);
-  const best5=list[0].pay5;
-  body.innerHTML=`<div style="background:var(--bg);border-radius:12px;padding:12px 14px;margin-bottom:14px;font-size:12px;color:var(--muted);line-height:1.5">${t('compare.loan')}: <strong style="color:var(--text)">${fmt(loan)}</strong> ${t('compare.over')} ${vals.years} ${t('compare.years')}</div>${list.map((bnk,i)=>{const isCurrent=bnk.key===currentBank,savings=bnk.pay5-best5,isBest=i===0;return `<div onclick="setBank('${bnk.key}',true);closeModal()" style="background:var(--card);border:1.5px solid ${isCurrent?'var(--text)':'var(--border)'};border-radius:14px;padding:14px;margin-bottom:8px;cursor:pointer;${bnk.fits?'':'opacity:0.5'}"><div style="font-size:14px;font-weight:700;display:flex;align-items:center;gap:6px">${bnk.type==='islamic'?'☪':'🏦'} ${bnk.name}${isCurrent?`<span style="font-size:11px;background:var(--text);color:var(--bg);padding:2px 6px;border-radius:6px;font-weight:600">${t('compare.current')}</span>`:''}${isBest&&!isCurrent?`<span style="font-size:11px;background:var(--green-bg);color:var(--green);padding:2px 6px;border-radius:6px;font-weight:600">${t('compare.best')}</span>`:''}</div><div style="font-size:11px;color:var(--muted);margin-top:3px">${t('compare.maxloan')} ${fmt(bnk.max)}${bnk.fits?'':' \u00b7 '+t('compare.exceeds')}</div><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;padding-top:10px;border-top:1px solid var(--border);margin-top:8px"><div><div style="font-size:11px;color:var(--muted);margin-bottom:2px">${t('compare.3yr')}</div><div style="font-size:12px;font-weight:600">${bnk.f3.toFixed(2)}%</div></div><div><div style="font-size:11px;color:var(--muted);margin-bottom:2px">${t('compare.5yr')}</div><div style="font-size:12px;font-weight:600">${bnk.f5.toFixed(2)}%</div></div><div><div style="font-size:11px;color:var(--muted);margin-bottom:2px">${t('compare.mo')}</div><div style="font-size:12px;font-weight:700;color:${isBest?'var(--green)':'var(--text)'}">${fmt(bnk.pay5)}</div></div></div>${savings>0?`<div style="font-size:11px;color:var(--amber);margin-top:8px">+${fmt(savings)}/mo ${t('compare.vsbest')}</div>`:''}</div>`;}).join('')}<div style="font-size:11px;color:var(--muted);padding:10px 4px 0;line-height:1.5">${t('compare.disclaimer')}</div>`;
-}
+
 const TIPS={
   en:{
     bval:{title:'Bank Valuation',text:'The bank sends an independent surveyor to value the property. They lend a % of the valuation — not the price. If valuation < price, you pay the gap in cash on top of your down payment.'},
@@ -1424,26 +1330,7 @@ function _updateRentNumbers(el,price,monthly,sqft){
 function _syncRentPeriod(){
   ['rent-panel','s-rent-panel'].forEach(id=>{const p=document.getElementById(id);if(!p)return;const wrap=p.querySelector('.rent-wrap')||p;const price=wrap._price??p._price;const monthly=wrap._monthly??p._monthly;const sqft=wrap._sqft??p._sqft;if(price)_updateRentNumbers(p,price,monthly,sqft);});
 }
-function setScRate(rate){const s=document.getElementById('sc'),t2=document.getElementById('t-sc');if(s){s.value=rate;paintSlider(s);}if(t2)t2.value=rate.toFixed(2);calcLiving();simpleCalc();calc();scheduleSave();}
-function resetRentYield(){rentYieldManual=false;rentYield=7.0;const tag=document.getElementById('rent-yield-tag');if(tag){tag.textContent='auto';tag.className='tag tag-auto';}simpleCalc();calc();}
 
-function calcLiving(){
-  const sqft=vals.sqft||1500,rate=scVal(),scMo=Math.round(sqft*rate/12);
-  document.getElementById('sc-note').textContent=fmt(scMo)+'/mo \u00b7 '+sqft.toLocaleString('en-US')+' sqft \u00d7 '+rate+' \u00f7 12';
-  document.getElementById('dewa-note').textContent=t('fnote.dewa')+(dewaEdited?' \u00b7 '+t('tag.manual'):'');
-  const dewa=parseFloat(document.getElementById('dewa').value)||0;
-  const cooling=parseFloat(document.getElementById('cooling').value)||0;
-  const gas=parseFloat(document.getElementById('gas').value)||0;
-  const internet=parseFloat(document.getElementById('internet').value)||0;
-  const dewaAED=rentOut?0:dewa,coolingAED=rentOut?0:cooling,gasAED=rentOut?0:gas,internetAED=rentOut?0:internet;
-  const living=scMo+dewaAED+coolingAED+gasAED+internetAED;
-  calcLivingTotal=living;
-  const loan=vals.price-vals.price*vals.down/100;const n=vals.years*12;const ins=loan*0.000112+vals.price*0.0005/12;
-  const tf=mpay(loan,vals.fixrate,n)+ins+living,tv=mpay(loan,variableRate(vals.eibor),n)+ins+living;
-  advGrand3=tf;advGrandVar=tv;updateAdvAllIn();
-  document.getElementById('grand-3-yr').textContent=fmt(tf*12);document.getElementById('grand-var-yr').textContent=fmt(tv*12);
-  calcBvR();
-}
 let appMode='simple';
 function setMode(mode){
   appMode=mode;
@@ -1727,6 +1614,41 @@ document.getElementById('t-bvr-inv-rate').addEventListener('blur',()=>{document.
 let ppMode='term';
 function setPPMode(m){ppMode=m;document.getElementById('pp-btn-term').classList.toggle('on',m==='term');document.getElementById('pp-btn-pay').classList.toggle('on',m==='payment');calcPP();}
 function updatePPResults(html){document.getElementById('pp-results').innerHTML=html;}
+function calcLiving(){
+  const sqft=vals.sqft||0;
+  const dewa=parseFloat(document.getElementById('dewa').value)||0;
+  const cooling=parseFloat(document.getElementById('cooling').value)||0;
+  const scRate=parseFloat(document.getElementById('sc').value)||0;
+  const sc=Math.round(sqft*scRate/12);
+  const internet=parseFloat(document.getElementById('internet').value)||0;
+  const gas=parseFloat(document.getElementById('gas').value)||0;
+  // Living = utilities + service charge (service charge always applies, even when renting out)
+  const utilities=rentOut?0:(dewa+cooling+internet+gas);
+  const living=utilities+sc;
+  calcLivingTotal=living;
+  // sc-note label
+  const scNote=document.getElementById('sc-note');
+  if(scNote)scNote.textContent=(currency==='USD'?'$':'AED')+'/sqft/yr';
+  // Mortgage payment (fixed + variable)
+  const loan=Math.min(vals.price*(100-vals.down)/100,vals.approved);
+  const n=vals.years*12,rf=vals.fixrate/100/12;
+  const pf=loan>0?loan*rf*Math.pow(1+rf,n)/(Math.pow(1+rf,n)-1):0;
+  const margin=salaryTransfer?1.5:1.89;
+  const eibor=parseFloat(document.getElementById('eibor').value)||3.45;
+  const vrate=Math.max(1.99,eibor+margin)/100/12;
+  const pv=loan>0?loan*vrate*Math.pow(1+vrate,n)/(Math.pow(1+vrate,n)-1):0;
+  // Insurance — IDENTICAL formula to Simple mode (no mid-calc rounding)
+  const ins=loan*0.000112+vals.price*0.0005/12;
+  // Store mortgage-only for the "of which mortgage to bank" line
+  window._advMortgageOnly=Math.round(pf);
+  // All-in monthly = mortgage + insurance + living (NOT pre-rounded; fmt() rounds once, like Simple)
+  advGrand3=pf+ins+living;
+  advGrandVar=pv+ins+living;
+  updateAdvAllIn();
+  // Annual totals for living modal
+  const g3y=document.getElementById('grand-3-yr');if(g3y)g3y.textContent=fmt(advGrand3*12);
+  const gvy=document.getElementById('grand-var-yr');if(gvy)gvy.textContent=fmt(advGrandVar*12);
+}
 function calcPP(){
   const loanAED=vals.price-vals.price*vals.down/100,totalMonths=vals.years*12,monthRate=vals.fixrate/100/12;
   let ppMonth=parseInt(document.getElementById('pp-month').value)||1;
@@ -1790,14 +1712,14 @@ const I18N={
     'sec.property':'Property & cash','sec.mortgage':'Mortgage','sec.results':'Results',
     'sec.closing':'What you pay at closing','sec.allin':'Monthly all-in',
     'sec.total':'Total cost over loan term','sec.living':'Living costs / month',
-    'sec.moretools':'More tools','sec.payment':'Payment','sec.atclosing':'At closing',
-    'tool.compare':'Compare banks','tool.compare.desc':'8 UAE banks side by side',
+    'sec.moretools':'More tools','sec.payment':'Monthly cost','sec.atclosing':'Cash you need upfront',
+    
     'tool.living':'Living costs','tool.living.desc':'Utilities, service charge, rental yield',
     'tool.bvr':'Buy vs Rent','tool.bvr.desc':'Compare wealth over 25 years',
     'tool.prepay':'Early repayment','tool.prepay.desc':'How much you save by paying early',
     'tool.checklist':'Bank checklist','tool.checklist.desc':'Documents & steps',
     'tool.scenarios':'Compare scenarios','tool.scenarios.desc':'Side-by-side scenario comparison',
-    'tool.offplan':'Off-plan','tool.soon':'Coming soon',
+    
     'tool.budget':'Monthly budget','tool.budget.desc':'Full cost of living in UAE',
     'btn.fixed':'Fixed','btn.variable':'Variable','btn.monthly':'Monthly','btn.annual':'Annual',
     'btn.owner':'\u1f3e0 Own','btn.renting':'\u1f4c8 Rent out',
@@ -1805,12 +1727,12 @@ const I18N={
     'income.hint':'💡 Add your income to check if the bank will approve this loan',
     'row.down':'Down payment','row.total':'Total at closing','row.upfront':'Upfront at closing',
     'row.mortgage':'Mortgage payments','row.living':'Living costs',
-    'row.interest':'Of which mortgage interest','row.cashleft':'Cash remaining',
+    'row.interest':'Of which mortgage interest','row.cashleft':'Left in your pocket',
     'row.shortfall':'Short of cash','row.left':'Left after all costs',
     'row.trusteenoc':'Trustee + NOC','row.mortgagefees':'Mortgage fees','row.allfees':'all fees',
-    'row.totalneeded':'Total needed','row.totalover':'Total over','row.yrs':'years',
-    'row.allinstr':'Fixed \u00b7 monthly','row.mortgage.label':'Mortgage',
-    'row.allin.label':'All-in','row.allin.short':'mortgage + all running costs','row.allin.short.rent':'mortgage + service charge',
+    'row.totalneeded':'Total upfront','row.totalover':'Total over','row.yrs':'years',
+    'row.allinstr':'Fixed \u00b7 monthly','row.mortgage.label':'Loan payment',
+    'row.allin.label':'Total monthly','row.allin.short':'loan + bills + service charge','row.allin.short.rent':'loan + service charge',
     'row.interest.insight':'Over {years} years, {pct}% of the loan amount goes to interest. Early repayments can reduce this significantly.',
     'fnote.dewa':'Electricity + water + 5% housing fee \u00b7 cooling billed separately',
     'fnote.sc':'Paid by owner only \u00b7 Dubai avg 12\u201330 AED/sqft/yr, up to 60 in premium towers',
@@ -1822,7 +1744,7 @@ const I18N={
     'card.monthly':'Monthly','card.closing':'At closing','card.loan':'Loan',
     'verdict.need':'Need','verdict.toclose':'to close','verdict.youhave':'you have','verdict.vsapproved':'vs approved',
     'gv.title':'Eligible for Golden Visa','gv.desc':'Properties from AED 2M are eligible for a 10-year Golden Visa for you and your family',
-    'sub.permonth':'per month','sub.peryear':'per year',
+    'sub.permonth':'principal + interest','sub.peryear':'per year',
     'sub.allin.full':'mortgage + DEWA + cooling + service charge + internet + gas',
     'field.approved':'Bank approved amount','field.bval':'Bank valuation',
     'field.bval.hint':'Banks lend against valuation, not purchase price. Gap paid from your cash.',
@@ -1839,12 +1761,12 @@ const I18N={
     'aff.note':'UAE banks cap mortgage payments at 50% of income (DBR) and lend up to ~7\u00d7 your annual income.',
     'living.cooling':'District cooling',
     'living.internet':'Internet','living.gas':'Gas',
-    'compare.loan':'Loan','compare.over':'over','compare.years':'years',
-    'compare.current':'CURRENT','compare.best':'BEST 5yr','compare.maxloan':'Max loan',
-    'compare.exceeds':'loan exceeds max','compare.3yr':'3yr rate','compare.5yr':'5yr rate',
-    'compare.mo':'Monthly (5yr)','compare.vsbest':'vs best rate','compare.agency':'agency',
-    'compare.disclaimer':'Indicative rates as of May 2026. Tap a bank to apply its rate. Always verify with the bank before signing.',
-    'sec.compare.sub':'Same loan amount and term across all UAE banks. Tap a bank to use its rate.',
+    
+    
+    
+    
+    
+    
     'bvr.scenario':'Scenario','bvr.conservative':'Conservative','bvr.balanced':'Balanced','bvr.optimistic':'Optimistic',
     'bvr.rent':'Your current annual rent','bvr.invreturn':'Renter invests at',
     'bvr.years':'years','bvr.chart.year':'Year',
@@ -1898,7 +1820,7 @@ function refreshAll(){
 // Save / restore state
 function saveState(){
   try{
-    const state={v:2,vals,currency,lang:currentLang,emirate:currentEmirate,bank:currentBank,mode:appMode,
+    const state={v:2,vals,currency,lang:currentLang,emirate:currentEmirate,mode:appMode,
       income:(document.getElementById('t-income2')||{}).value||'',approvedManual,salaryTransfer,
       living:{dewa:document.getElementById('dewa').value,cooling:document.getElementById('cooling').value,sc:document.getElementById('sc').value,internet:document.getElementById('internet').value,gas:document.getElementById('gas').value},coolingEdited,
       budget:budgetVals,rentOut,rentYield,rentYieldManual,rentRealistic,downManual,bvalManual,dewaEdited,
@@ -1915,7 +1837,6 @@ function loadState(){
     if(s.vals)Object.assign(vals,s.vals);
     if(s.currency)currency=s.currency;
     if(s.emirate)currentEmirate=s.emirate;
-    if(s.bank)currentBank=s.bank;
     if(s.rentOut!==undefined)rentOut=s.rentOut;
     if(s.rentYield)rentYield=s.rentYield;
     if(s.rentYieldManual)rentYieldManual=true;
@@ -1951,7 +1872,50 @@ document.getElementById('t-sc').value='23';document.getElementById('sc').value=2
 document.getElementById('t-internet').value=fmtN(360);document.getElementById('internet').value=360;
 document.getElementById('t-gas').value=fmtN(55);document.getElementById('gas').value=55;
 bvalManual=false;
-setEmirate('dubai');setBank('fab');
+function toggleEmiratePicker(){
+  const opts=document.getElementById('emirate-options');
+  if(!opts)return;
+  const open=opts.style.display!=='none';
+  opts.style.display=open?'none':'block';
+  const chev=document.getElementById('emirate-chev');
+  if(chev)chev.style.transform=open?'':'rotate(180deg)';
+}
+function pickEmirate(id){
+  setEmirate(id);
+  const opts=document.getElementById('emirate-options');
+  if(opts)opts.style.display='none';
+  const chev=document.getElementById('emirate-chev');
+  if(chev)chev.style.transform='';
+  const disp=document.getElementById('emirate-name-display');
+  if(disp&&EMIRATES[id])disp.textContent=EMIRATES[id].name;
+}
+function resetRentYield(){
+  rentYieldManual=false;
+  rentYield=7.0;
+  const el=document.getElementById('rent-yield');
+  if(el)el.value=rentYield;
+  const tin=document.getElementById('t-rent-yield');
+  if(tin)tin.value=rentYield.toFixed(1);
+  const tag=document.getElementById('rent-yield-tag');
+  if(tag){tag.textContent='auto';tag.className='tag tag-auto';}
+  if(typeof calcBvR==='function')calcBvR();
+  scheduleSave();
+}
+function setAdvPeriod(p){
+  advPeriod=p;
+  updateAdvAllIn();
+  scheduleSave();
+}
+function setEmirate(id){
+  if(!EMIRATES[id])return;
+  currentEmirate=id;
+  const cfg=EMIRATES[id];vals.dld=cfg.dld;vals.agency=cfg.agency;
+  document.querySelectorAll('.emi-btn').forEach(b=>b.classList.toggle('on',b.dataset.emi===id));
+  const ne=document.getElementById('emi-name'),re=document.getElementById('emi-rate');
+  if(ne)ne.textContent=cfg.name;if(re)re.textContent=cfg.dld+'%';
+  autoDown();calc();simpleCalc();scheduleSave();
+}
+setEmirate('dubai');
 vals.bval=vals.price;document.getElementById('bval').value=valToSlider('bval',vals.price);document.getElementById('t-bval').value=fmtDisplay('bval',vals.price);
 autoDown();autoUpdateCooling(vals.sqft);calc();simpleCalc();setBvrScenario('balanced');
 document.getElementById('t-income').addEventListener('input',()=>{const raw=document.getElementById('t-income').value.replace(/[^0-9.]/g,'');const v=parseFloat(raw)||0;if(v>0)document.getElementById('t-income').value=Math.round(v).toLocaleString('en-US');calc();});
