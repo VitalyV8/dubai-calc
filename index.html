@@ -371,7 +371,8 @@ input[type=range]::-moz-range-track{background:transparent;height:4px;border-rad
     <div class="field">
       <div class="ftop"><span class="lbl-group"><span class="flabel" data-i18n="field.approved">Bank approved amount</span><button class="tip-btn" onclick="event.stopPropagation();showTooltip('approved')" aria-label="info">i</button></span><span id="approved-tag" class="tag tag-auto" style="display:none;margin:0 4px 0 0" onclick="resetApprovedAuto()"></span><input class="finput" id="t-approved" value="1,500,000"><span class="unit-badge">AED</span></div>
       <input type="range" id="approved" min="0" max="1000" step="1" value="448">
-      <div class="rlabels"><span id="rl-appr-min">AED 500K</span><span id="rl-appr-max">AED 15M</span></div>
+      <div class="rlabels"><span id="rl-appr-min">AED 0</span><span id="rl-appr-max">AED 15M</span></div>
+      <div class="fnote" id="approved-warn" style="display:none;color:var(--amber)"></div>
     </div>
     <div class="field">
       <div class="ftop">
@@ -699,7 +700,7 @@ function shareCalc(){
   x.fillStyle='#fff'; x.font='700 64px -apple-system,system-ui,sans-serif'; x.fillText('H',100,138);
   x.fillStyle=text; x.font='700 56px -apple-system,system-ui,sans-serif'; x.fillText('Hayyak',200,120);
   x.fillStyle=muted; x.font='400 28px -apple-system,system-ui,sans-serif'; x.fillText('Property & living \u00b7 UAE',200,160);
-  const loan=Math.min(vals.approved,vals.bval*(100-vals.down)/100);
+  const loan=Math.min(vals.price*(1-vals.down/100),vals.bval*(vals.price>5000000?0.70:0.80),vals.approved);
   const n=vals.years*12,r=vals.fixrate/100/12;
   const pay=r>0?loan*r*Math.pow(1+r,n)/(Math.pow(1+r,n)-1):loan/n;
   const cc=closingCosts(vals.price,loan); const upfront=(vals.price-loan)+cc.fees;
@@ -846,10 +847,11 @@ function setBudgetPeriod(p){
 function renderBudget(){
   const body=document.getElementById('modal-budget-body');if(!body)return;
   const clt=typeof calcLivingTotal==='number'?calcLivingTotal:0;
-  const loan=Math.min(vals.price*(100-vals.down)/100,vals.approved);
+  const loan=Math.min(vals.price*(1-vals.down/100),vals.bval*(vals.price>5000000?0.70:0.80),vals.approved);
   const n=vals.years*12,r=vals.fixrate/100/12;
   const mortgagePay=r>0?loan*r*Math.pow(1+r,n)/(Math.pow(1+r,n)-1):loan/n;
-  budgetVals.housing=Math.round(rentOut?mortgagePay:(mortgagePay+clt));
+  const ins=loan*0.000112+vals.price*0.001/12;
+  budgetVals.housing=Math.round(rentOut?mortgagePay:(mortgagePay+ins+clt));
   const incomeEl=document.getElementById('t-income'),incomeVal=incomeEl?incomeEl.value:'';
   const total=Object.keys(budgetVals).reduce((a,k)=>{if(BUDGET_DEFAULTS[k]&&BUDGET_DEFAULTS[k].rentOnly&&!rentOut)return a;return a+(budgetVals[k]||0);},0);
   const BSLIDERS={housing:[0,30000,500],rent:[0,30000,500],car:[0,15000,250],groceries:[0,15000,250],dining:[0,10000,250],insurance:[0,5000,100],medical:[0,3000,100],school:[0,25000,500],clothing:[0,8000,250],domestic:[0,10000,500],flights:[0,8000,250],holidays:[0,8000,250],phone:[0,1500,50],subs:[0,2000,50],personal:[0,5000,250],gym:[0,3000,100],savings:[0,20000,500]};
@@ -943,11 +945,11 @@ function toggleCheck(id){checklistDone[id]=!checklistDone[id];renderChecklist();
 
 let scenarios=[], scenPriority='monthly';
 function snapshotScenario(){
-  const loan=Math.min(vals.approved,vals.bval*(100-vals.down)/100);
+  const loan=Math.min(vals.price*(1-vals.down/100),vals.bval*(vals.price>5000000?0.70:0.80),vals.approved);
   const n=vals.years*12,r=vals.fixrate/100/12;
   const pay=r>0?loan*r*Math.pow(1+r,n)/(Math.pow(1+r,n)-1):loan/n;
   const upfront=(vals.price-loan)+closingCosts(vals.price,loan).fees;
-  const ins=loan*0.000112+vals.price*0.0005/12;
+  const ins=loan*0.000112+vals.price*0.001/12;
   return {price:vals.price,down:vals.down,years:vals.years,rate:vals.fixrate,emirate:currentEmirate,monthly:Math.round(pay+ins),upfront:Math.round(upfront),totalInterest:Math.round(pay*n-loan),name:EMIRATES[currentEmirate].name+' \u00b7 '+fmt(vals.price)};
 }
 function addScenario(){if(scenarios.length>=3)scenarios.shift();scenarios.push(snapshotScenario());renderScenarios();scheduleSave();}
@@ -1092,6 +1094,7 @@ function fmtN(n){return Math.round(n).toLocaleString('en-US');}
 const SLIDER_RANGE={'s-price-range':{min:500000,max:20000000},'price':{min:500000,max:20000000},'bval':{min:500000,max:20000000},'s-cash-range':{min:100000,max:8000000},'cash':{min:100000,max:8000000},'approved':{min:200000,max:18000000},'s-sqft-range':{min:300,max:10000},'sqft':{min:300,max:10000}};
 function sliderToVal(id,pos){
   const r=SLIDER_RANGE[id];if(!r)return pos;
+  if(id==='approved'&&pos<=0)return 0;
   const t2=pos/1000,v=r.min*Math.pow(r.max/r.min,t2);
   let step;if(id==='s-sqft-range'||id==='sqft'){step=v<1000?25:v<2500?50:v<5000?100:250;}else{step=v<1000000?10000:v<3000000?25000:v<6000000?50000:100000;}
   return Math.round(v/step)*step;
@@ -1291,11 +1294,11 @@ function renderRentPanelSimple(price,monthly,sqft,el){
 }
 function _updateRentSimple(el,price,monthly,sqft){
   if(!price)return;
-  const loan=Math.min(price-price*vals.down/100,vals.approved);
+  const loan=Math.min(price*(1-vals.down/100),vals.bval*(vals.price>5000000?0.70:0.80),vals.approved);
   const monthlyRent=Math.round(price*rentYield/100/12);
   const scRate=parseFloat((document.getElementById('sc')||{}).value)||23;
   const sc=Math.round(sqft*scRate/12);
-  const lifeIns=Math.round(loan*0.000112),propIns=Math.round(price*0.0005/12),ins=lifeIns+propIns;
+  const lifeIns=Math.round(loan*0.000112),propIns=Math.round(price*0.001/12),ins=lifeIns+propIns;
   const cashflow=monthlyRent-monthly-sc-ins,positive=cashflow>=0;
   const q=(id)=>el.querySelector?el.querySelector('#'+id):document.getElementById(id);
   const set=(id,v)=>{const e=q(id);if(e)e.textContent=v;};
@@ -1320,11 +1323,11 @@ function renderRentPanel(price,monthly,sqft,panelId){
 }
 function _updateRentNumbers(el,price,monthly,sqft){
   if(!price)return;
-  const loan=Math.min(price-price*vals.down/100,vals.approved);
+  const loan=Math.min(price*(1-vals.down/100),vals.bval*(vals.price>5000000?0.70:0.80),vals.approved);
   const monthlyRent=Math.round(price*rentYield/100/12);
   const scRate=parseFloat((document.getElementById('sc')||{}).value)||23;
   const sc=Math.round(sqft*scRate/12);
-  const lifeIns=Math.round(loan*0.000112),propIns=Math.round(price*0.0005/12),ins=lifeIns+propIns;
+  const lifeIns=Math.round(loan*0.000112),propIns=Math.round(price*0.001/12),ins=lifeIns+propIns;
   const vacancy=rentRealistic?Math.round(monthlyRent/12):0,mgmt=rentRealistic?Math.round(monthlyRent*0.05):0;
   const cashflow=monthlyRent-monthly-sc-ins-vacancy-mgmt,netYield=((monthlyRent*12-sc*12-ins*12-vacancy*12-mgmt*12)/price*100).toFixed(1);
   const positive=cashflow>=0,m=rentPeriod==='year'?12:1,sfx=rentPeriod==='year'?'/yr':'/mo';
@@ -1419,11 +1422,11 @@ function simpleCalc(){
   } else {if(!price||!cash){document.getElementById('s-result').innerHTML='';return;}}
   // Use vals computed by calc() above — single source of truth
   const downPct=vals.down,downAmt=vals.price*downPct/100;
-  const loan=Math.min(vals.price-downAmt,vals.approved);
+  const loan=Math.min(vals.price*(1-vals.down/100),vals.bval*(vals.price>5000000?0.70:0.80),vals.approved);
   const cc=closingCosts(vals.price,loan),fees=cc.fees,upfront=downAmt+fees,cashLeft=vals.cash-upfront;
   const n=vals.years*12,mr=vals.fixrate/100/12;
   const monthly=loan>0?loan*mr*Math.pow(1+mr,n)/(Math.pow(1+mr,n)-1):0;
-  const ins=loan*0.000112+vals.price*0.0005/12;
+  const ins=loan*0.000112+vals.price*0.001/12;
   // Living: read from same sliders as Advanced
   const dewaVal=rentOut?0:(parseFloat(document.getElementById('dewa').value)||0);
   const scRate=parseFloat(document.getElementById('sc').value)||23,scVal2=Math.round(vals.sqft*scRate/12);
@@ -1469,7 +1472,7 @@ function calc(){
   const maxLoanFromValuation=bval*(100-dp)/100,loan=Math.min(approved,maxLoanFromValuation);
   const da=price-loan,valuationGap=Math.max(0,price-bval);
   const cc=closingCosts(price,loan);
-  const ins=loan*0.000112+price*0.0005/12,pf=mpay(loan,fixrate,n),pv=mpay(loan,vr,n);
+  const ins=loan*0.000112+price*0.001/12,pf=mpay(loan,fixrate,n),pv=mpay(loan,vr,n);
   window._advMortgageOnly=Math.round(pf);
   const p3e=document.getElementById('pay-3');if(p3e)p3e.textContent=fmt(Math.round(pf)*(advPeriod==='year'?12:1))+(advPeriod==='year'?' /yr':' /mo');
   const pve=document.getElementById('pay-var');if(pve)pve.textContent=fmt(Math.round(pv+ins));
@@ -1477,6 +1480,16 @@ function calc(){
   const rfl=document.getElementById('rc-fixrate-lbl2');if(rfl)rfl.textContent='Fixed \u00b7 '+fixrate.toFixed(2)+'%';
   const pn=document.getElementById('rc-fixperiod-note');if(pn)pn.textContent='for '+vals.fixperiod+'yr, then variable';
   const up=da+cc.fees,rem=cash-up,enough=cash>=up,ok=loan<=approved;
+  // Warn if approved limits the loan below the desired down payment
+  const wantedLoan=vals.price*(1-vals.down/100),warnEl=document.getElementById('approved-warn');
+  if(warnEl){
+    if(vals.approved>0&&vals.approved<wantedLoan-1000){
+      const realDownPct=Math.round((vals.price-loan)/vals.price*100);
+      warnEl.style.display='block';warnEl.innerHTML='&#9888; Approved amount caps your loan &mdash; real down payment is '+realDownPct+'%, not '+vals.down+'%';
+    }else if(vals.approved===0){
+      warnEl.style.display='block';warnEl.innerHTML='&#9888; No loan &mdash; paying full price in cash';
+    }else{warnEl.style.display='none';}
+  }
   const scEl=document.getElementById('summary-cards');
   if(scEl){
     const curPfx=currency==='USD'?'$':'AED';const fmtCard=v=>fmt(v).replace(/^AED\s?/,'').replace(/^\$\s?/,'');
@@ -1544,7 +1557,10 @@ function calc(){
   } else affEl.innerHTML='';
   const apTag=document.getElementById('approved-tag');
   if(apTag){if(incomeAED>0){apTag.style.display='';apTag.textContent=approvedManual?t('tag.manual'):t('tag.auto');apTag.className='tag '+(approvedManual?'tag-manual':'tag-auto');}else apTag.style.display='none';}
-  const totalMortgagePayments=mpay(loan,fixrate,n)*n,totalInterest=totalMortgagePayments-loan,totalNoLiving=up+totalMortgagePayments;
+  const fixMo=vals.fixperiod*12,varMo=n-fixMo,pfT=mpay(loan,fixrate,n),vr2=variableRate(parseFloat(document.getElementById('eibor').value)||3.45);
+  // Remaining balance after fixed period
+  const mr2=fixrate/100/12;let balAfterFix=loan;for(let i=0;i<fixMo;i++){const ii=balAfterFix*mr2;balAfterFix=Math.max(0,balAfterFix-(pfT-ii));}
+  const totalMortgagePayments=pfT*fixMo+mpay(balAfterFix,vr2,varMo)*varMo,totalInterest=totalMortgagePayments-loan,totalNoLiving=up+totalMortgagePayments;
   const dewa=parseFloat(document.getElementById('dewa').value)||0,cooling=parseFloat(document.getElementById('cooling').value)||0;
   const gas=parseFloat(document.getElementById('gas').value)||0,internet=parseFloat(document.getElementById('internet').value)||0;
   const scRate=parseFloat(document.getElementById('sc').value)||23,scMo=Math.round(vals.sqft*scRate/12);
@@ -1587,22 +1603,30 @@ function calcBvR(){
   const propGrowth=parseFloat(document.getElementById('prop-growth').value)||5;
   const invReturn=parseFloat(document.getElementById('bvr-inv-rate').value)||5;
   const years=vals.years,price=vals.price,loan=price-price*vals.down/100;
-  const n=years*12,ins=loan*0.000112+price*0.0005/12,mortgageMo=mpay(loan,vals.fixrate,n)+ins;
-  const scRate=parseFloat(document.getElementById('sc').value)||23,scAnn=Math.round(vals.sqft*scRate/12)*12;
+  const n=years*12,ins=loan*0.000112+price*0.001/12,mortgageMo=mpay(loan,vals.fixrate,n)+ins;
+  const scRate=parseFloat(document.getElementById('sc').value)||23,scAnn=vals.sqft*scRate;
   const upfront=price*vals.down/100+closingCosts(price,Math.min(price*(100-vals.down)/100,vals.approved)).fees;
   const mr=vals.fixrate/100/12,ir=invReturn/100,cash=vals.cash;
   const mortgageMoBase=mpay(loan,vals.fixrate,n);
   const scMo=Math.round(vals.sqft*scRate/12);
   let buyerCash=Math.max(0,cash-upfront),renterCash=cash,loanBal2=loan,propVal2=price,rentMonthNow=rentAnnual/12,rentYearNow=rentAnnual;
+  const fixMonths=vals.fixperiod*12;
+  const vrBvr=variableRate(parseFloat(document.getElementById('eibor').value)||3.45);
+  // After fixed period, recalc payment on remaining balance at variable rate
+  let mortgagePayCurrent=mortgageMoBase;
   const rows=[];
   for(let yr=1;yr<=years;yr++){
     for(let mm=0;mm<12;mm++){
-      const buyerMonthly=(loanBal2>0?mortgageMoBase+ins:0)+scMo;
+      const monthIdx=(yr-1)*12+mm;
+      // Switch to variable rate payment after fixed period
+      if(monthIdx===fixMonths&&loanBal2>0){const remMonths=n-fixMonths;mortgagePayCurrent=mpay(loanBal2,vrBvr,remMonths);}
+      const insNow=loanBal2>0?(loanBal2*0.000112+vals.price*0.001/12):0;
+      const buyerMonthly=(loanBal2>0?mortgagePayCurrent+insNow:0)+scMo;
       const renterMonthly=rentMonthNow;
       buyerCash*=(1+ir/12);renterCash*=(1+ir/12);
       const d=buyerMonthly-renterMonthly;
       if(d>0)renterCash+=d;else buyerCash+=(-d);
-      if(loanBal2>0){const ii=loanBal2*mr;loanBal2=Math.max(0,loanBal2-(mortgageMoBase-ii));}
+      if(loanBal2>0){const rateNow=(monthIdx<fixMonths?mr:vrBvr/100/12);const ii=loanBal2*rateNow;loanBal2=Math.max(0,loanBal2-(mortgagePayCurrent-ii));}
     }
     propVal2*=(1+propGrowth/100);
     rentYearNow=rentMonthNow*12;
@@ -1688,7 +1712,7 @@ function calcLiving(){
   const scNote=document.getElementById('sc-note');
   if(scNote)scNote.textContent=(currency==='USD'?'$':'AED')+'/sqft/yr';
   // Mortgage payment (fixed + variable)
-  const loan=Math.min(vals.price*(100-vals.down)/100,vals.approved);
+  const loan=Math.min(vals.price*(1-vals.down/100),vals.bval*(vals.price>5000000?0.70:0.80),vals.approved);
   const n=vals.years*12,rf=vals.fixrate/100/12;
   const pf=loan>0?loan*rf*Math.pow(1+rf,n)/(Math.pow(1+rf,n)-1):0;
   const margin=salaryTransfer?1.5:1.89;
@@ -1696,7 +1720,7 @@ function calcLiving(){
   const vrate=Math.max(1.99,eibor+margin)/100/12;
   const pv=loan>0?loan*vrate*Math.pow(1+vrate,n)/(Math.pow(1+vrate,n)-1):0;
   // Insurance — IDENTICAL formula to Simple mode (no mid-calc rounding)
-  const ins=loan*0.000112+vals.price*0.0005/12;
+  const ins=loan*0.000112+vals.price*0.001/12;
   // Store mortgage-only for the "of which mortgage to bank" line
   window._advMortgageOnly=Math.round(pf);
   // All-in monthly = mortgage + insurance + living (NOT pre-rounded; fmt() rounds once, like Simple)
