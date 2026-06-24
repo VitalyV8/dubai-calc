@@ -94,14 +94,14 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,s
 .chevron{font-size:12px;color:var(--muted);transition:transform .35s cubic-bezier(.4,0,.2,1)}
 .chevron.open{transform:rotate(180deg)}
 .card-body-wrap{display:grid;grid-template-rows:0fr;overflow:hidden;transition:grid-template-rows .4s cubic-bezier(.4,0,.2,1)}
-.card-body-wrap.open{grid-template-rows:1fr}
+.card-body-wrap.open{grid-template-rows:1fr}.card-body-wrap.open .card-body-inner{padding-top:20px}
 .card-body-inner{overflow:hidden;padding-top:0;transition:padding-top .4s cubic-bezier(.4,0,.2,1)}
-.card-body-wrap.open .card-body-inner{padding-top:20px}
+.card-body-wrap.open 
 .field{margin-bottom:26px}
 .field:last-child{margin-bottom:0}
 .ftop{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;gap:8px}
 .lbl-group{display:inline-flex;align-items:baseline;gap:6px;flex:1;min-width:0}
-.lbl-group .flabel{flex:0 1 auto}
+.lbl-group 
 .flabel-opt{font-size:11px;color:var(--muted);font-weight:400;flex-shrink:0}.unit-badge{font-size:11px;color:var(--muted);font-weight:600;flex-shrink:0;white-space:nowrap;margin-left:6px}
 .flabel{font-size:var(--fs-base);color:var(--text);flex:1;min-width:0;display:flex;align-items:center;gap:6px;flex-wrap:nowrap}
 .finput{font-size:16px;font-weight:500;color:var(--text);border:1px solid var(--border);border-radius:10px;padding:7px 11px;width:112px;flex-shrink:0;text-align:right;background:var(--bg);transition:border .15s,background .15s,color .15s;-webkit-text-size-adjust:none;margin-top:1px;margin-left:auto}
@@ -678,10 +678,10 @@ let budgetVals = {};
 const EMIRATES = {
   dubai:    {name:'Dubai',          dld:4, agency:2, valuation:3150, label:'DLD'},
   abudhabi: {name:'Abu Dhabi',      dld:2, agency:2, valuation:5000, label:'ADM ownership fee'},
-  sharjah:  {name:'Sharjah',        dld:4, agency:2, valuation:3000, label:'SRERD ownership fee'},
-  ajman:    {name:'Ajman',          dld:2, agency:2, valuation:3000, label:'ALD ownership fee'},
-  rak:      {name:'Ras Al Khaimah', dld:4, agency:2, valuation:3000, label:'RAK Municipality'},
-  fujairah: {name:'Fujairah',       dld:4, agency:2, valuation:3000, label:'Fujairah Municipality'},
+  sharjah:  {name:'Sharjah',        dld:2, agency:2, valuation:3000, label:'SRERD registration'},
+  ajman:    {name:'Ajman',          dld:2, agency:2, valuation:3000, label:'Ajman registration'},
+  rak:      {name:'Ras Al Khaimah', dld:2, agency:2, valuation:3000, label:'RAK registration'},
+  fujairah: {name:'Fujairah',       dld:4, agency:2, valuation:3000, label:'Fujairah registration'},
   uaq:      {name:'Umm Al Quwain',  dld:3, agency:2, valuation:3000, label:'UAQ Municipality'},
 };
 
@@ -710,11 +710,11 @@ function shareCalc(){
   x.fillStyle=muted; x.font='600 30px -apple-system,system-ui,sans-serif'; x.fillText((t('field.price')||'Property price').toUpperCase(),120,cy+80);
   x.fillStyle=text; x.font='700 80px -apple-system,system-ui,sans-serif'; x.fillText(fmt(vals.price),120,cy+165);
   x.strokeStyle=isDark?'#333':'#eee'; x.lineWidth=2; x.beginPath(); x.moveTo(120,cy+210); x.lineTo(W-120,cy+210); x.stroke();
-  const rows=[[t('field.down')+' ('+vals.down+'%)',fmt(vals.price-loan)],[t('row.upfront'),fmt(upfront)],['Loan',fmt(loan)],[t('btn.fixed')+' \u00b7 '+t('btn.monthly'),fmt(Math.round(pay))]];
+  const rows=[[t('field.down')+' ('+vals.down+'%)',fmt(vals.price-loan)],[t('row.upfront'),fmt(upfront)],['Loan',fmt(loan)],[t('btn.fixed')+' \u00b7 '+t('btn.monthly'),fmt(pay)]];
   let ry=cy+290;
   rows.forEach(([k,v])=>{x.fillStyle=muted;x.font='400 34px -apple-system,system-ui,sans-serif';x.fillText(k,120,ry);x.fillStyle=text;x.font='700 40px -apple-system,system-ui,sans-serif';x.textAlign='right';x.fillText(v,W-120,ry);x.textAlign='left';ry+=90;});
   ry+=10; x.fillStyle=isDark?'#13301f':'#e8f5ee'; roundRect(x,120,ry,W-240,140,20); x.fill();
-  x.fillStyle=green; x.font='700 64px -apple-system,system-ui,sans-serif'; x.fillText(fmt(Math.round(pay)),160,ry+115);
+  x.fillStyle=green; x.font='700 64px -apple-system,system-ui,sans-serif'; x.fillText(fmt(pay),160,ry+115);
   x.fillStyle=muted; x.font='400 26px -apple-system,system-ui,sans-serif'; x.textAlign='center';
   x.fillText(EMIRATES[currentEmirate].name+' \u00b7 '+vals.years+'yr \u00b7 '+vals.fixrate+'%',W/2,H-70); x.textAlign='left';
   cv.toBlob(blob=>{
@@ -739,8 +739,9 @@ function obPick(field,value){
     if(value==='custom'){finishOnboarding();return;}
     const p=OB_PRESETS[value];
     if(p){vals.price=p.price;vals.sqft=p.sqft;vals.cash=p.cash;vals.bval=p.price;vals.approved=p.price;}
-    document.getElementById('ob-step-1').style.display='none';
-    document.getElementById('ob-step-2').style.display='block';
+    const obs1=document.getElementById('ob-step-1'),obs2=document.getElementById('ob-step-2');
+    if(obs1)obs1.style.display='none';
+    if(obs2)obs2.style.display='block';
   } else if(field==='emirate'){
     if(value!=='other'){currentEmirate=value;const cfg=EMIRATES[value];vals.dld=cfg.dld;vals.agency=cfg.agency;const ne=document.getElementById('emi-name'),re=document.getElementById('emi-rate');if(ne)ne.textContent=cfg.name;if(re)re.textContent=cfg.dld+'%';}
     finishOnboarding();
@@ -1106,9 +1107,16 @@ function paintSlider(el){if(!el)return;const min=+el.min,max=+el.max,val=+el.val
 function paintAllSliders(){document.querySelectorAll('input[type=range]').forEach(paintSlider);}
 function mpay(loan,rate,months){const r=rate/100/12,n=months;if(r===0||n===0)return loan/(n||1);return loan*r*Math.pow(1+r,n)/(Math.pow(1+r,n)-1);}
 function closingCosts(price,loan){
-  const dld=price*vals.dld/100+580,agency=price*vals.agency/100,trustee=4200,noc=1000;
+  // Government fees (no VAT): DLD, trustee, NOC, mortgage registration
+  const dld=price*vals.dld/100+580;
+  const trustee=price>=500000?4200:2100;
+  const noc=1000;
   const hasLoan=loan>0;
-  const valuation=hasLoan?3000:0,mortgageReg=hasLoan?loan*0.0025+290:0,bankFee=hasLoan?loan*0.005:0;
+  const mortgageReg=hasLoan?loan*0.0025+290:0;
+  // Services (5% VAT applies): agency, valuation, bank arrangement fee
+  const agency=(price*vals.agency/100)*1.05;
+  const valuation=hasLoan?3000*1.05:0;
+  const bankFee=hasLoan?(loan*0.005)*1.05:0;
   const mortgageFees=valuation+mortgageReg+bankFee;
   const fees=dld+agency+trustee+noc+mortgageFees;
   return {dld,agency,trustee,noc,valuation,mortgageReg,bankFee,mortgageFees,fees};
@@ -1165,9 +1173,10 @@ function setTag(id,manual,text){
 let bvalManual=false;
 function autoDown(){
   if(downManual)return;
-  const approxLoan=Math.min(vals.bval*0.8,vals.approved),fees=closingCosts(vals.price,approxLoan).fees;
+  const ltvCap=vals.price>5000000?0.70:0.80;
+  const approxLoan=Math.min(vals.bval*ltvCap,vals.approved),fees=closingCosts(vals.price,approxLoan).fees;
   const valuationGap=Math.max(0,vals.price-vals.bval),availForDown=vals.cash-fees-valuationGap;
-  const minDown=vals.price>5000000?30:20;const pct=clamp(Math.floor(availForDown/vals.bval*100),minDown,80);
+  const minDown=vals.price>5000000?30:20;const pct=clamp(Math.floor(availForDown/vals.price*100),minDown,80);
   vals.down=pct;const downEl=document.getElementById('down');downEl.value=pct;document.getElementById('t-down').value=String(pct);
   downManual=false;setTag('down-tag',false);if(typeof paintSlider==='function')paintSlider(downEl);
 }
@@ -1416,8 +1425,8 @@ function simpleCalc(){
     vals.sqft=sqft;document.getElementById('sqft').value=valToSlider('sqft',sqft);document.getElementById('t-sqft').value=fmtN(sqft);
     if(!bvalManual){vals.bval=vals.price;document.getElementById('bval').value=valToSlider('bval',vals.price);document.getElementById('t-bval').value=fmtDisplay('bval',vals.price);}
     // Reset approved to price if no income — prevents stale saved value constraining loan
-    const incVal=parseFloat((document.getElementById('t-income')||{}).value||'0')||0;
-    if(!incVal&&!approvedManual){vals.approved=vals.price;}
+    const incVal=parseFloat((document.getElementById('t-income2')||{}).value.replace(/[^0-9]/g,'')||'0')||0;
+    if(!incVal&&!approvedManual){vals.approved=vals.price;const apEl=document.getElementById('approved'),tapEl=document.getElementById('t-approved');if(apEl){apEl.value=valToSlider('approved',vals.price);paintSlider(apEl);}if(tapEl)tapEl.value=fmtDisplay('approved',vals.price);}
     autoDown();autoUpdateDewa(sqft);autoUpdateCooling(sqft);
     if(!price||!cash){document.getElementById('s-result').innerHTML='';return;}
     calc();
@@ -1471,13 +1480,13 @@ function refreshInputs(){
 function calc(){
   const{price,cash,approved,bval,down:dp,years,eibor,fixrate}=vals;
   const vr=variableRate(eibor),n=years*12;
-  const maxLoanFromValuation=bval*(100-dp)/100,loan=Math.min(approved,maxLoanFromValuation);
+  const loan=Math.min(price*(1-dp/100),bval*(price>5000000?0.70:0.80),approved);
   const da=price-loan,valuationGap=Math.max(0,price-bval);
   const cc=closingCosts(price,loan);
   const ins=loan*0.000112+price*0.001/12,pf=mpay(loan,fixrate,n),pv=mpay(loan,vr,n);
   window._advMortgageOnly=Math.round(pf);
   const p3e=document.getElementById('pay-3');if(p3e)p3e.textContent=fmt(Math.round(pf)*(advPeriod==='year'?12:1))+(advPeriod==='year'?' /yr':' /mo');
-  const pve=document.getElementById('pay-var');if(pve)pve.textContent=fmt(Math.round(pv+ins));
+  const pve=document.getElementById('pay-var');if(pve)pve.textContent=fmt(pv+ins);
   document.getElementById('var-sub').textContent=vr.toFixed(2)+'%';
   const rfl=document.getElementById('rc-fixrate-lbl2');if(rfl)rfl.textContent='Fixed \u00b7 '+fixrate.toFixed(2)+'%';
   const pn=document.getElementById('rc-fixperiod-note');if(pn)pn.textContent='for '+vals.fixperiod+'yr, then variable';
@@ -1607,7 +1616,7 @@ function calcBvR(){
   const rentInc=parseFloat(document.getElementById('rent-inc').value)||5;
   const propGrowth=parseFloat(document.getElementById('prop-growth').value)||5;
   const invReturn=parseFloat(document.getElementById('bvr-inv-rate').value)||5;
-  const years=vals.years,price=vals.price,loan=price-price*vals.down/100;
+  const years=vals.years,price=vals.price,loan=Math.min(price*(1-vals.down/100),vals.bval*(price>5000000?0.70:0.80),vals.approved);
   const n=years*12,ins=loan*0.000112+price*0.001/12,mortgageMo=mpay(loan,vals.fixrate,n)+ins;
   const scRate=parseFloat(document.getElementById('sc').value)||23,scAnn=vals.sqft*scRate;
   const upfront=price*vals.down/100+closingCosts(price,Math.min(price*(100-vals.down)/100,vals.approved)).fees;
@@ -1737,7 +1746,7 @@ function calcLiving(){
   const gvy=document.getElementById('grand-var-yr');if(gvy)gvy.textContent=fmt(advGrandVar*12);
 }
 function calcPP(){
-  const loanAED=vals.price-vals.price*vals.down/100,totalMonths=vals.years*12,monthRate=vals.fixrate/100/12;
+  const loanAED=Math.min(vals.price*(1-vals.down/100),vals.bval*(vals.price>5000000?0.70:0.80),vals.approved),totalMonths=vals.years*12,monthRate=vals.fixrate/100/12;
   let ppMonth=parseInt(document.getElementById('pp-month').value)||1;
   const ppAmt=parseFloat(document.getElementById('pp-amt').value)||0;
   if(ppMonth>=totalMonths){updatePPResults('<div style="text-align:center;color:var(--muted);font-size:12px;padding:8px 0">Prepayment month exceeds loan term.</div>');document.getElementById('pp-strategy').innerHTML='';return;}
@@ -1761,7 +1770,7 @@ function calcPP(){
     html+=`<div class="t-lbl" style="margin-bottom:10px">REDUCE TERM</div><div class="trow"><span class="t-name">Months remaining (before)</span><span style="font-size:14px;font-weight:600">${remainingMonths} mo</span></div><div class="trow"><span class="t-name">Months remaining (after)</span><span style="font-size:14px;font-weight:600;color:var(--green)">${Math.max(0,newMonths)} mo</span></div><div style="height:1px;background:var(--border);margin:10px 0"></div><div class="trow"><span class="t-name">Months saved</span><span style="font-size:16px;font-weight:700;color:var(--green)">${Math.max(0,monthsSaved)} mo</span></div><div class="trow"><span class="t-name">Interest saved</span><span style="font-size:16px;font-weight:700;color:var(--green)">${fmt(Math.max(0,interestSaved))}</span></div>`;
   } else {
     const newPayment=mpay(newBalance,vals.fixrate,remainingMonths),paymentSaved=monthlyPayment-newPayment,totalSaved=paymentSaved*remainingMonths;
-    html+=`<div class="t-lbl" style="margin-bottom:10px">REDUCE PAYMENT</div><div class="trow"><span class="t-name">Old payment</span><span style="font-size:14px;font-weight:600">${fmt(Math.round(monthlyPayment))}</span></div><div class="trow"><span class="t-name">New payment</span><span style="font-size:14px;font-weight:600;color:var(--green)">${fmt(Math.round(newPayment))}</span></div><div style="height:1px;background:var(--border);margin:10px 0"></div><div class="trow"><span class="t-name">Monthly saving</span><span style="font-size:16px;font-weight:700;color:var(--green)">${fmt(Math.round(paymentSaved))}</span></div><div class="trow"><span class="t-name">Total interest saved</span><span style="font-size:16px;font-weight:700;color:var(--green)">${fmt(Math.round(totalSaved))}</span></div>`;
+    html+=`<div class="t-lbl" style="margin-bottom:10px">REDUCE PAYMENT</div><div class="trow"><span class="t-name">Old payment</span><span style="font-size:14px;font-weight:600">${fmt(monthlyPayment)}</span></div><div class="trow"><span class="t-name">New payment</span><span style="font-size:14px;font-weight:600;color:var(--green)">${fmt(newPayment)}</span></div><div style="height:1px;background:var(--border);margin:10px 0"></div><div class="trow"><span class="t-name">Monthly saving</span><span style="font-size:16px;font-weight:700;color:var(--green)">${fmt(paymentSaved)}</span></div><div class="trow"><span class="t-name">Total interest saved</span><span style="font-size:16px;font-weight:700;color:var(--green)">${fmt(totalSaved)}</span></div>`;
   }
   updatePPResults(html);
   const invRate=parseFloat(document.getElementById('inv-rate').value)||5,invMonthRate=invRate/100/12;
@@ -1846,7 +1855,7 @@ const I18N={
     'aff.maxloan':'Max loan by income (7\u00d7)','aff.verdict':'Verdict',
     'aff.pass':'Likely approved \u2713','aff.fail':'May be declined',
     'aff.note':'UAE banks cap mortgage payments at 50% of income (DBR) and lend up to ~7\u00d7 your annual income.',
-    'living.cooling':'District cooling',
+    'living.dewa':'DEWA','living.sc':'Service charge','living.cooling':'District cooling',
     'living.internet':'Internet','living.gas':'Gas',
     
     
@@ -1910,7 +1919,7 @@ function saveState(){
     const state={v:2,vals,currency,lang:currentLang,emirate:currentEmirate,mode:appMode,
       income:(document.getElementById('t-income2')||{}).value||'',approvedManual,salaryTransfer,
       living:{dewa:document.getElementById('dewa').value,cooling:document.getElementById('cooling').value,sc:document.getElementById('sc').value,internet:document.getElementById('internet').value,gas:document.getElementById('gas').value},coolingEdited,
-      budget:budgetVals,rentOut,rentYield,rentYieldManual,rentRealistic,downManual,bvalManual,dewaEdited,
+      budget:budgetVals,rentOut,rentYield,rentYieldManual,rentRealistic,rentManual,downManual,bvalManual,dewaEdited,
       fixPeriod:(typeof currentFixPeriodKey!=='undefined'?currentFixPeriodKey:'5'),
       checklist:checklistDone,scenarios,themeMode};
     localStorage.setItem('hayyak_state',JSON.stringify(state));
@@ -1927,6 +1936,7 @@ function loadState(){
     if(s.rentOut!==undefined)rentOut=s.rentOut;
     if(s.rentYield)rentYield=s.rentYield;
     if(s.rentYieldManual)rentYieldManual=true;
+    if(s.rentManual)rentManual=true;
     if(s.rentRealistic)rentRealistic=true;
     if(s.downManual)downManual=true;
     if(s.bvalManual)bvalManual=true;
