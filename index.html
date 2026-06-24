@@ -2,7 +2,12 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, interactive-widget=resizes-visual">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, interactive-widget=resizes-visual, viewport-fit=cover">
+  <meta name="theme-color" content="#0F0F12">
+  <meta name="theme-color" content="#F7F6F2" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#111111" media="(prefers-color-scheme: dark)">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <title>Hayyak</title>
 <link rel="apple-touch-icon" href="icon.png">
 <meta name="apple-mobile-web-app-title" content="Hayyak">
@@ -28,8 +33,8 @@
   --shadow:0 1px 3px rgba(0,0,0,0.3);
 }
 *{box-sizing:border-box;margin:0;padding:0}
-html{-webkit-text-size-adjust:100%}
-body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);padding:20px 16px 60px;max-width:540px;margin:0 auto;transition:background .3s,color .3s}
+html{-webkit-text-size-adjust:100%;background:var(--bg);min-height:100%}
+body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding:calc(20px + env(safe-area-inset-top)) calc(16px + env(safe-area-inset-right)) calc(60px + env(safe-area-inset-bottom)) calc(16px + env(safe-area-inset-left));max-width:540px;margin:0 auto;transition:background .3s,color .3s}
 #splash{position:fixed;inset:0;background:linear-gradient(145deg,#0F0F12 0%,#1a1a2e 50%,#16213e 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:999;transition:opacity .4s ease;gap:0;cursor:pointer}
 #splash.hide{opacity:0;pointer-events:none}
 #onboarding{position:fixed;inset:0;background:var(--bg);z-index:998;display:flex;align-items:center;justify-content:center;padding:24px;animation:obFade .4s ease;overflow-y:auto}
@@ -100,11 +105,12 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,s
 .field{margin-bottom:26px}
 .field:last-child{margin-bottom:0}
 .ftop{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;gap:8px}
-.lbl-group{display:inline-flex;align-items:baseline;gap:6px;flex:1;min-width:0}
+.lbl-group{display:inline-flex;align-items:center;gap:6px;flex:1;min-width:0}
+.lbl-group .flabel{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:0 1 auto}
 .lbl-group 
-.flabel-opt{font-size:11px;color:var(--muted);font-weight:400;flex-shrink:0}.unit-badge{font-size:11px;color:var(--muted);font-weight:600;flex-shrink:0;white-space:nowrap;margin-left:6px}
+.flabel-opt{font-size:11px;color:var(--muted);font-weight:400;flex-shrink:0}.unit-badge{font-size:11px;color:var(--muted);font-weight:600;flex-shrink:0;white-space:nowrap;margin-left:auto;margin-right:6px}
 .flabel{font-size:var(--fs-base);color:var(--text);flex:1;min-width:0;display:flex;align-items:center;gap:6px;flex-wrap:nowrap}
-.finput{font-size:16px;font-weight:500;color:var(--text);border:1px solid var(--border);border-radius:10px;padding:7px 11px;width:112px;flex-shrink:0;text-align:right;background:var(--bg);transition:border .15s,background .15s,color .15s;-webkit-text-size-adjust:none;margin-top:1px;margin-left:auto}
+.finput{font-size:16px;font-weight:500;color:var(--text);border:1px solid var(--border);border-radius:10px;padding:7px 11px;width:112px;flex-shrink:0;text-align:right;background:var(--bg);transition:border .15s,background .15s,color .15s;-webkit-text-size-adjust:none;margin-top:1px}
 .finput:focus{outline:none;border-color:var(--green);background:var(--card)}
 input[type=range]{width:100%;height:4px;-webkit-appearance:none;appearance:none;background:var(--track);border-radius:3px;outline:none;cursor:pointer;margin-bottom:6px;display:block}
 input[type=range]::-webkit-slider-runnable-track{height:4px;border-radius:3px;background:inherit}
@@ -284,18 +290,18 @@ input[type=range]::-moz-range-track{background:transparent;height:4px;border-rad
 <div id="view-simple">
   <div class="card" id="card-simple">
     <div class="field">
-      <div class="ftop"><span class="flabel" data-i18n="field.price">Property price</span><input class="finput" id="s-price" type="text" inputmode="numeric" value="1,500,000" oninput="simpleCalc()"><span class="unit-badge">AED</span></div>
+      <div class="ftop"><span class="flabel" data-i18n="field.price">Property price</span><span class="unit-badge">AED</span><input class="finput" id="s-price" type="text" inputmode="numeric" value="1,500,000" oninput="simpleCalc()"></div>
       <input type="range" id="s-price-range" min="0" max="1000" step="1" value="298" oninput="document.getElementById('s-price').value=fmtN(sliderToVal('s-price-range',+this.value));simpleCalc()">
       <div class="rlabels"><span id="rl-s-price-min">AED 500K</span><span id="rl-s-price-max">AED 20M</span></div>
     </div>
     <div class="field">
-      <div class="ftop"><span class="flabel" data-i18n="field.cash">Your cash available</span><input class="finput" id="s-cash" type="text" inputmode="numeric" value="420,000" oninput="simpleCalc()"><span class="unit-badge">AED</span></div>
+      <div class="ftop"><span class="flabel" data-i18n="field.cash">Your cash available</span><span class="unit-badge">AED</span><input class="finput" id="s-cash" type="text" inputmode="numeric" value="420,000" oninput="simpleCalc()"></div>
       <input type="range" id="s-cash-range" min="0" max="1000" step="1" value="327" oninput="document.getElementById('s-cash').value=fmtN(sliderToVal('s-cash-range',+this.value));simpleCalc()">
       <div class="rlabels"><span id="rl-s-cash-min">AED 100K</span><span id="rl-s-cash-max">AED 8M</span></div>
       <div class="fnote" id="s-cash-hint">Down payment + ownership fee + agency 2% + valuation &mdash; all from your cash</div>
     </div>
     <div class="field">
-      <div class="ftop"><span class="flabel" data-i18n="field.sqft">Property size</span><input class="finput" id="s-sqft" type="text" inputmode="numeric" value="800" oninput="simpleCalc()"><span class="unit-badge">sqft</span></div>
+      <div class="ftop"><span class="flabel" data-i18n="field.sqft">Property size</span><span class="unit-badge">sqft</span><input class="finput" id="s-sqft" type="text" inputmode="numeric" value="800" oninput="simpleCalc()"></div>
       <input type="range" id="s-sqft-range" min="0" max="1000" step="1" value="427" oninput="document.getElementById('s-sqft').value=fmtN(sliderToVal('s-sqft-range',+this.value));simpleCalc()">
       <div class="rlabels"><span>300 <span data-i18n="units.sqft">sqft</span></span><span>10,000 <span data-i18n="units.sqft">sqft</span></span></div>
       <div class="fnote" data-i18n="field.sqft.hint">Used to estimate DEWA, cooling and service charge</div>
@@ -309,7 +315,7 @@ input[type=range]::-moz-range-track{background:transparent;height:4px;border-rad
         </span>
       </div>
       <div id="s-rate-detail" style="display:none;padding-top:12px">
-        <div class="ftop"><span class="flabel" data-i18n="field.rate">Fixed interest rate</span><input class="finput" id="s-rate" type="text" inputmode="decimal" value="4.19" oninput="simpleCalc()"><span class="unit-badge">%</span></div>
+        <div class="ftop"><span class="flabel" data-i18n="field.rate">Fixed interest rate</span><span class="unit-badge">%</span><input class="finput" id="s-rate" type="text" inputmode="decimal" value="4.19" oninput="simpleCalc()"></div>
         <div class="seg seg-full" style="margin-top:10px">
           <button id="s-btn-rate3" onclick="setSimpleRate('3')" class="seg-btn"><span id="s-lbl-rate3">3.99% &middot; 3</span><span data-i18n="units.yr">yr</span></button>
           <button id="s-btn-rate5" onclick="setSimpleRate('5')" class="seg-btn on"><span id="s-lbl-rate5">4.19% &middot; 5</span><span data-i18n="units.yr">yr</span></button>
@@ -337,24 +343,24 @@ input[type=range]::-moz-range-track{background:transparent;height:4px;border-rad
   </div>
   <div class="card-body-wrap open" id="body-property"><div class="card-body-inner">
     <div class="field">
-      <div class="ftop"><span class="lbl-group"><span class="flabel" data-i18n="field.price">Property price</span><button class="tip-btn" onclick="event.stopPropagation();showTooltip('price')" aria-label="info">i</button></span><input class="finput" id="t-price" value="1,500,000"><span class="unit-badge">AED</span></div>
+      <div class="ftop"><span class="lbl-group"><span class="flabel" data-i18n="field.price">Property price</span><button class="tip-btn" onclick="event.stopPropagation();showTooltip('price')" aria-label="info">i</button></span><span class="unit-badge">AED</span><input class="finput" id="t-price" value="1,500,000"></div>
       <input type="range" id="price" min="0" max="1000" step="1" value="298">
       <div class="rlabels"><span id="rl-price-min">AED 500K</span><span id="rl-price-max">AED 20M</span></div>
     </div>
     <div class="field">
-      <div class="ftop"><span class="lbl-group"><span class="flabel" data-i18n="field.cash">Your cash available</span><button class="tip-btn" onclick="event.stopPropagation();showTooltip('cash')" aria-label="info">i</button></span><input class="finput" id="t-cash" value="420,000"><span class="unit-badge">AED</span></div>
+      <div class="ftop"><span class="lbl-group"><span class="flabel" data-i18n="field.cash">Your cash available</span><button class="tip-btn" onclick="event.stopPropagation();showTooltip('cash')" aria-label="info">i</button></span><span class="unit-badge">AED</span><input class="finput" id="t-cash" value="420,000"></div>
       <input type="range" id="cash" min="0" max="1000" step="1" value="327">
       <div class="rlabels"><span id="rl-cash-min">AED 100K</span><span id="rl-cash-max">AED 8M</span></div>
       <div class="fnote" id="adv-cash-hint">Down payment + ownership fee + agency 2% + valuation &mdash; all from your cash</div>
     </div>
     <div class="field">
-      <div class="ftop"><span class="lbl-group"><span class="flabel" data-i18n="field.sqft">Property size</span><button class="tip-btn" onclick="event.stopPropagation();showTooltip('sqft')" aria-label="info">i</button></span><input class="finput" id="t-sqft" value="800"><span class="unit-badge">sqft</span></div>
+      <div class="ftop"><span class="lbl-group"><span class="flabel" data-i18n="field.sqft">Property size</span><button class="tip-btn" onclick="event.stopPropagation();showTooltip('sqft')" aria-label="info">i</button></span><span class="unit-badge">sqft</span><input class="finput" id="t-sqft" value="800"></div>
       <input type="range" id="sqft" min="0" max="1000" step="1" value="427">
       <div class="rlabels"><span>300 <span data-i18n="units.sqft">sqft</span></span><span>10,000 <span data-i18n="units.sqft">sqft</span></span></div>
       <div class="fnote" data-i18n="field.sqft.hint">Used to estimate DEWA, cooling and service charge</div>
     </div>
     <div class="field">
-      <div class="ftop"><span class="lbl-group"><span class="flabel" data-i18n="income.label">Monthly income</span><button class="tip-btn" onclick="event.stopPropagation();showTooltip('income')" aria-label="info">i</button></span><input class="finput" id="t-income2" value="" placeholder="&mdash;" inputmode="numeric" oninput="this.value=this.value.replace(/[^0-9]/g,'');syncIncome(this.value)" onblur="if(this.value)this.value=parseInt(this.value).toLocaleString('en-US')" onfocus="this.value=this.value.replace(/[^0-9]/g,'')"><span class="unit-badge">AED</span></div>
+      <div class="ftop"><span class="lbl-group"><span class="flabel" data-i18n="income.label">Monthly income</span><button class="tip-btn" onclick="event.stopPropagation();showTooltip('income')" aria-label="info">i</button></span><span class="unit-badge">AED</span><input class="finput" id="t-income2" value="" placeholder="&mdash;" inputmode="numeric" oninput="this.value=this.value.replace(/[^0-9]/g,'');syncIncome(this.value)" onblur="if(this.value)this.value=parseInt(this.value).toLocaleString('en-US')" onfocus="this.value=this.value.replace(/[^0-9]/g,'')"></div>
       <div class="fnote" data-i18n="income.hint">&#x1F4A1; Add your income to check if the bank will approve this loan</div>
     </div>
     <span id="sv-val" style="display:none"></span>
@@ -369,7 +375,7 @@ input[type=range]::-moz-range-track{background:transparent;height:4px;border-rad
   </div>
   <div class="card-body-wrap open" id="body-mortgage"><div class="card-body-inner">
     <div class="field">
-      <div class="ftop"><span class="lbl-group"><span class="flabel" data-i18n="field.approved">Bank approved amount</span><button class="tip-btn" onclick="event.stopPropagation();showTooltip('approved')" aria-label="info">i</button></span><span id="approved-tag" class="tag tag-auto" style="display:none;margin:0 4px 0 0" onclick="resetApprovedAuto()"></span><input class="finput" id="t-approved" value="1,500,000"><span class="unit-badge">AED</span></div>
+      <div class="ftop"><span class="lbl-group"><span class="flabel" data-i18n="field.approved">Bank approved amount</span><button class="tip-btn" onclick="event.stopPropagation();showTooltip('approved')" aria-label="info">i</button></span><span id="approved-tag" class="tag tag-auto" style="display:none;margin:0 4px 0 0" onclick="resetApprovedAuto()"></span><span class="unit-badge">AED</span><input class="finput" id="t-approved" value="1,500,000"></div>
       <input type="range" id="approved" min="0" max="1000" step="1" value="448">
       <div class="rlabels"><span id="rl-appr-min">AED 0</span><span id="rl-appr-max">AED 15M</span></div>
       <div class="fnote" id="approved-warn" style="display:none;color:var(--amber)"></div>
@@ -378,7 +384,7 @@ input[type=range]::-moz-range-track{background:transparent;height:4px;border-rad
       <div class="ftop">
         <span class="lbl-group"><span class="flabel" data-i18n="field.bval">Bank valuation</span><button class="tip-btn" onclick="event.stopPropagation();showTooltip('bval')" aria-label="info">i</button></span>
         <span id="bval-tag" class="tag tag-auto" onclick="resetBvalAuto()" style="flex-shrink:0">auto</span>
-        <input class="finput" id="t-bval" value="1,500,000"><span class="unit-badge">AED</span>
+        <span class="unit-badge">AED</span><input class="finput" id="t-bval" value="1,500,000">
       </div>
       <input type="range" id="bval" min="0" max="1000" step="1" value="298">
       <div class="rlabels"><span id="rl-bval-min">AED 500K</span><span id="rl-bval-max">AED 20M</span></div>
@@ -388,19 +394,19 @@ input[type=range]::-moz-range-track{background:transparent;height:4px;border-rad
       <div class="ftop">
         <span class="lbl-group"><span class="flabel" data-i18n="field.down">Down payment</span><button class="tip-btn" onclick="event.stopPropagation();showTooltip('down')" aria-label="info">i</button></span>
         <span id="down-tag" class="tag tag-auto" onclick="resetDownAuto()" style="flex-shrink:0">auto</span>
-        <input class="finput" id="t-down" value="20"><span class="unit-badge">%</span>
+        <span class="unit-badge">%</span><input class="finput" id="t-down" value="20">
       </div>
       <input type="range" id="down" min="20" max="80" step="1" value="20">
       <div class="rlabels"><span data-i18n="min.20">20% min</span><span>80%</span></div>
       <div class="fnote" data-i18n="field.down.hint">Auto-set to maximise loan within your cash &middot; tap to override</div>
     </div>
     <div class="field">
-      <div class="ftop"><span class="lbl-group"><span class="flabel" data-i18n="field.loanterm">Loan term</span><button class="tip-btn" onclick="event.stopPropagation();showTooltip('years')" aria-label="info">i</button></span><input class="finput" id="t-years" value="25"><span class="unit-badge">yr</span></div>
+      <div class="ftop"><span class="lbl-group"><span class="flabel" data-i18n="field.loanterm">Loan term</span><button class="tip-btn" onclick="event.stopPropagation();showTooltip('years')" aria-label="info">i</button></span><span class="unit-badge">yr</span><input class="finput" id="t-years" value="25"></div>
       <input type="range" id="years" min="1" max="25" step="1" value="25">
       <div class="rlabels"><span data-i18n="field.years.1">1 year</span><span data-i18n="field.years.25">25 years</span></div>
     </div>
     <div class="field">
-      <div class="ftop"><span class="lbl-group"><span class="flabel" data-i18n="field.rate">Fixed interest rate</span><button class="tip-btn" onclick="event.stopPropagation();showTooltip('fixperiod')" aria-label="info">i</button></span><input class="finput" id="t-fixrate" value="4.19"><span class="unit-badge">%</span></div>
+      <div class="ftop"><span class="lbl-group"><span class="flabel" data-i18n="field.rate">Fixed interest rate</span><button class="tip-btn" onclick="event.stopPropagation();showTooltip('fixperiod')" aria-label="info">i</button></span><span class="unit-badge">%</span><input class="finput" id="t-fixrate" value="4.19"></div>
       <div class="seg seg-full" style="margin-top:10px">
         <button class="seg-btn on" id="btn-salary" onclick="setSalaryTransfer(true)" data-i18n="rate.salary">Salary transfer</button>
         <button class="seg-btn" id="btn-nonsalary" onclick="setSalaryTransfer(false)" data-i18n="rate.nonsalary">Non-salary / self-employed</button>
@@ -411,7 +417,7 @@ input[type=range]::-moz-range-track{background:transparent;height:4px;border-rad
       </div>
     </div>
     <div class="field">
-      <div class="ftop"><span class="lbl-group"><span class="flabel"><span data-i18n="field.eibor">Expected EIBOR</span><button class="tip-btn" onclick="event.stopPropagation();showTooltip('eibor')" aria-label="info">i</button></span></span><input class="finput" id="t-eibor" value="3.45"><span class="unit-badge">%</span></div>
+      <div class="ftop"><span class="lbl-group"><span class="flabel"><span data-i18n="field.eibor">Expected EIBOR</span><button class="tip-btn" onclick="event.stopPropagation();showTooltip('eibor')" aria-label="info">i</button></span></span><span class="unit-badge">%</span><input class="finput" id="t-eibor" value="3.45"></div>
       <input type="range" id="eibor" min="1" max="8" step="0.05" value="3.45">
       <div class="rlabels"><span data-i18n="field.eibor.opt">1% optimistic</span><span data-i18n="field.eibor.stress">8% stress test</span></div>
       <div class="fnote" data-i18n="field.eibor.hint">(variable rate after fixed)</div>
@@ -546,32 +552,32 @@ input[type=range]::-moz-range-track{background:transparent;height:4px;border-rad
   <div class="card-head"><span class="ctitle">Living costs</span></div>
   <div class="card-body-wrap open"><div class="card-body-inner">
     <div class="field">
-      <div class="ftop"><span class="lbl-group"><span class="flabel" data-i18n="living.dewa">DEWA</span><button class="tip-btn" onclick="event.stopPropagation();showTooltip('dewa')" aria-label="info">i</button></span><span id="dewa-tag" class="tag tag-auto" onclick="resetDewaAuto()" style="flex-shrink:0">auto</span><input class="finput" id="t-dewa" value="560"><span class="unit-badge">AED</span></div>
+      <div class="ftop"><span class="lbl-group"><span class="flabel" data-i18n="living.dewa">DEWA</span><button class="tip-btn" onclick="event.stopPropagation();showTooltip('dewa')" aria-label="info">i</button></span><span id="dewa-tag" class="tag tag-auto" onclick="resetDewaAuto()" style="flex-shrink:0">auto</span><span class="unit-badge">AED</span><input class="finput" id="t-dewa" value="560"></div>
       <input type="range" id="dewa" min="0" max="8000" step="50" value="560">
       <div class="rlabels"><span id="rl-dewa-min">AED 0</span><span id="rl-dewa-max">AED 8,000</span></div>
       <div class="fnote" data-i18n="fnote.dewa">Electricity + water + 5% housing fee &middot; cooling billed separately</div>
     </div>
     <div class="field">
-      <div class="ftop"><span class="lbl-group"><span class="flabel" data-i18n="living.cooling">District cooling</span><button class="tip-btn" onclick="event.stopPropagation();showTooltip('cooling')" aria-label="info">i</button></span><span id="cooling-tag" class="tag tag-auto" onclick="resetCoolingAuto()" style="flex-shrink:0">auto</span><input class="finput" id="t-cooling" value="720"><span class="unit-badge">AED</span></div>
+      <div class="ftop"><span class="lbl-group"><span class="flabel" data-i18n="living.cooling">District cooling</span><button class="tip-btn" onclick="event.stopPropagation();showTooltip('cooling')" aria-label="info">i</button></span><span id="cooling-tag" class="tag tag-auto" onclick="resetCoolingAuto()" style="flex-shrink:0">auto</span><span class="unit-badge">AED</span><input class="finput" id="t-cooling" value="720"></div>
       <input type="range" id="cooling" min="0" max="3000" step="50" value="720">
       <div class="rlabels"><span id="rl-cool-min">AED 0</span><span id="rl-cool-max">AED 3,000</span></div>
       <div class="fnote" data-i18n="fnote.cooling">Empower / Tabreed / Tasleem &middot; auto-estimated from size, adjust if needed</div>
     </div>
     <div class="field">
-      <div class="ftop"><span class="lbl-group"><span class="flabel" data-i18n="living.sc">Service charge</span><button class="tip-btn" onclick="event.stopPropagation();showTooltip('sc')" aria-label="info">i</button></span><input class="finput" id="t-sc" value="23"><span class="unit-badge">AED/sqft/yr</span></div>
+      <div class="ftop"><span class="lbl-group"><span class="flabel" data-i18n="living.sc">Service charge</span><button class="tip-btn" onclick="event.stopPropagation();showTooltip('sc')" aria-label="info">i</button></span><span class="unit-badge">AED/sqft/yr</span><input class="finput" id="t-sc" value="23"></div>
       <input type="range" id="sc" min="0" max="60" step="1" value="23">
       <div class="rlabels"><span id="sc-note">AED/sqft/yr</span><span></span></div>
       <div class="fnote" data-i18n="fnote.sc">Paid by owner only &middot; Dubai avg 12&ndash;30 AED/sqft/yr, up to 60 in premium towers</div>
       <div class="fnote" id="sc-monthly-hint" style="color:var(--text);font-weight:600">&mdash;</div>
     </div>
     <div class="field">
-      <div class="ftop"><span class="lbl-group"><span class="flabel" data-i18n="living.internet">Internet</span><button class="tip-btn" onclick="event.stopPropagation();showTooltip('internet')" aria-label="info">i</button></span><input class="finput" id="t-internet" value="279"><span class="unit-badge">AED</span></div>
+      <div class="ftop"><span class="lbl-group"><span class="flabel" data-i18n="living.internet">Internet</span><button class="tip-btn" onclick="event.stopPropagation();showTooltip('internet')" aria-label="info">i</button></span><span class="unit-badge">AED</span><input class="finput" id="t-internet" value="279"></div>
       <input type="range" id="internet" min="0" max="1000" step="20" value="279">
       <div class="rlabels"><span id="rl-inet-min">AED 0</span><span id="rl-inet-max">AED 1,000</span></div>
       <div class="fnote" data-i18n="fnote.internet">Etisalat / du &middot; typically AED 250&ndash;400/mo for home broadband</div>
     </div>
     <div class="field">
-      <div class="ftop"><span class="lbl-group"><span class="flabel" data-i18n="living.gas">Gas</span><button class="tip-btn" onclick="event.stopPropagation();showTooltip('gas')" aria-label="info">i</button></span><input class="finput" id="t-gas" value="55"><span class="unit-badge">AED</span></div>
+      <div class="ftop"><span class="lbl-group"><span class="flabel" data-i18n="living.gas">Gas</span><button class="tip-btn" onclick="event.stopPropagation();showTooltip('gas')" aria-label="info">i</button></span><span class="unit-badge">AED</span><input class="finput" id="t-gas" value="55"></div>
       <input type="range" id="gas" min="0" max="500" step="5" value="55">
       <div class="rlabels"><span id="rl-gas-min">AED 0</span><span id="rl-gas-max">AED 500</span></div>
     </div>
@@ -604,7 +610,7 @@ input[type=range]::-moz-range-track{background:transparent;height:4px;border-rad
   </div>
   <div class="card-body-wrap" id="body-bvr"><div class="card-body-inner">
     <div class="field">
-      <div class="ftop"><span class="lbl-group"><span class="flabel">Rent for the same place</span><button class="tip-btn" onclick="event.stopPropagation();showTooltip('rent')" aria-label="info">i</button></span><span id="rent-auto-tag" class="tag tag-auto" onclick="resetRentAuto()" style="flex-shrink:0">auto</span><input class="finput" id="t-rent" value="156,000"><span class="unit-badge">AED/yr</span></div>
+      <div class="ftop"><span class="lbl-group"><span class="flabel">Rent for the same place</span><button class="tip-btn" onclick="event.stopPropagation();showTooltip('rent')" aria-label="info">i</button></span><span id="rent-auto-tag" class="tag tag-auto" onclick="resetRentAuto()" style="flex-shrink:0">auto</span><span class="unit-badge">AED/yr</span><input class="finput" id="t-rent" value="156,000"></div>
       <input type="range" id="rent" min="50000" max="600000" step="5000" value="156000">
       <div class="rlabels"><span id="rl-rent-min">AED 50K</span><span id="rl-rent-max">AED 600K</span></div>
       <div class="fnote" id="rent-yield-note">Auto-set to 6.5% of property price &mdash; the typical Dubai rental yield. This compares the <b>same apartment</b> rented vs bought.</div>
@@ -619,7 +625,7 @@ input[type=range]::-moz-range-track{background:transparent;height:4px;border-rad
       <div id="bvr-scenario-note" class="fnote" style="margin-top:8px">Property +5%/yr &middot; Rent +5%/yr</div>
     </div>
     <div class="field">
-      <div class="ftop"><span class="lbl-group"><span class="flabel" data-i18n="bvr.invreturn">Renter invests at</span><button class="tip-btn" onclick="event.stopPropagation();showTooltip('bvrinv')" aria-label="info">i</button></span><input class="finput" id="t-bvr-inv-rate" value="5.0"><span class="unit-badge">%</span></div>
+      <div class="ftop"><span class="lbl-group"><span class="flabel" data-i18n="bvr.invreturn">Renter invests at</span><button class="tip-btn" onclick="event.stopPropagation();showTooltip('bvrinv')" aria-label="info">i</button></span><span class="unit-badge">%</span><input class="finput" id="t-bvr-inv-rate" value="5.0"></div>
       <input type="range" id="bvr-inv-rate" min="1" max="15" step="0.1" value="5" oninput="document.getElementById('t-bvr-inv-rate').value=parseFloat(this.value).toFixed(1);calcBvR()">
       <div class="rlabels"><span data-i18n="slider.1pct">1% deposit</span><span data-i18n="slider.15pct">15% stocks</span></div>
     </div>
@@ -639,13 +645,13 @@ input[type=range]::-moz-range-track{background:transparent;height:4px;border-rad
   </div>
   <div class="card-body-wrap" id="body-prepay"><div class="card-body-inner">
     <div class="field">
-      <div class="ftop"><span class="lbl-group"><span class="flabel" data-i18n="pp.atmonth">Prepayment at month</span><button class="tip-btn" onclick="event.stopPropagation();showTooltip('ppmonth')" aria-label="info">i</button></span><input class="finput" id="t-pp-month" value="12"><span class="unit-badge">mo</span></div>
+      <div class="ftop"><span class="lbl-group"><span class="flabel" data-i18n="pp.atmonth">Prepayment at month</span><button class="tip-btn" onclick="event.stopPropagation();showTooltip('ppmonth')" aria-label="info">i</button></span><span class="unit-badge">mo</span><input class="finput" id="t-pp-month" value="12"></div>
       <input type="range" id="pp-month" min="1" max="300" step="1" value="12">
       <div class="rlabels"><span data-i18n="pp.month1">Month 1</span><span data-i18n="pp.month300">Month 300</span></div>
       <div class="fnote" id="pp-month-note"></div>
     </div>
     <div class="field">
-      <div class="ftop"><span class="lbl-group"><span class="flabel" data-i18n="pp.amt">Prepayment amount</span><button class="tip-btn" onclick="event.stopPropagation();showTooltip('ppamt')" aria-label="info">i</button></span><input class="finput" id="t-pp-amt" value="200,000"><span class="unit-badge">AED</span></div>
+      <div class="ftop"><span class="lbl-group"><span class="flabel" data-i18n="pp.amt">Prepayment amount</span><button class="tip-btn" onclick="event.stopPropagation();showTooltip('ppamt')" aria-label="info">i</button></span><span class="unit-badge">AED</span><input class="finput" id="t-pp-amt" value="200,000"></div>
       <input type="range" id="pp-amt" min="0" max="5000000" step="25000" value="200000">
       <div class="rlabels"><span id="pp-amt-min">AED 0</span><span id="pp-amt-max">AED 5M</span></div>
     </div>
@@ -654,7 +660,7 @@ input[type=range]::-moz-range-track{background:transparent;height:4px;border-rad
       <button class="seg-btn" id="pp-btn-pay" onclick="setPPMode('payment')" data-i18n="pp.mode.pay">Reduce payment</button>
     </div>
     <div class="field" style="margin-bottom:16px">
-      <div class="ftop"><span class="lbl-group"><span class="flabel" data-i18n="pp.invret">Investment return (%)</span><button class="tip-btn" onclick="event.stopPropagation();showTooltip('invreturn')" aria-label="info">i</button></span><input class="finput" id="t-inv-rate" value="5.00"><span class="unit-badge">%</span></div>
+      <div class="ftop"><span class="lbl-group"><span class="flabel" data-i18n="pp.invret">Investment return (%)</span><button class="tip-btn" onclick="event.stopPropagation();showTooltip('invreturn')" aria-label="info">i</button></span><span class="unit-badge">%</span><input class="finput" id="t-inv-rate" value="5.00"></div>
       <input type="range" id="inv-rate" min="1" max="10" step="0.05" value="5">
       <div class="rlabels"><span data-i18n="slider.1pct">1% deposit</span><span data-i18n="slider.10pct">10% stocks</span></div>
     </div>
@@ -730,7 +736,7 @@ function shareCalc(){
 function roundRect(ctx,x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath();}
 
 let splashDismissed=false;
-function dismissSplash(){if(splashDismissed)return;splashDismissed=true;const s=document.getElementById('splash');if(s){s.classList.add('hide');setTimeout(()=>{if(s)s.remove();},400);}}
+function dismissSplash(){if(splashDismissed)return;splashDismissed=true;const s=document.getElementById('splash');if(s){s.classList.add('hide');setTimeout(()=>{if(s)s.remove();},400);}if(typeof applyTheme==='function')applyTheme();}
 setTimeout(dismissSplash,1400);
 document.addEventListener('DOMContentLoaded',()=>{const s=document.getElementById('splash');if(s)s.addEventListener('click',dismissSplash);});
 {const s=document.getElementById('splash');if(s)s.addEventListener('click',dismissSplash);}
@@ -1030,6 +1036,10 @@ let themeMode='auto';
 function applyTheme(){
   const isDark=themeMode==='dark'||(themeMode==='auto'&&sysDark.matches);
   document.documentElement.setAttribute('data-theme',isDark?'dark':'light');
+  // Update status bar colour to match current background so the notch area blends in
+  let tc=document.querySelector('meta[name="theme-color"]:not([media])');
+  if(!tc){tc=document.createElement('meta');tc.setAttribute('name','theme-color');document.head.appendChild(tc);}
+  tc.setAttribute('content',isDark?'#111111':'#F7F6F2');
   ['auto','light','dark'].forEach(m=>{const b=document.getElementById('btn-theme-'+m);if(b)b.classList.toggle('on',m===themeMode);});
 }
 function setTheme(m){themeMode=m;applyTheme();closeSettings();}
@@ -1773,7 +1783,13 @@ function calcPP(){
   if(isFullSettlement){html+=`<div style="background:var(--green-bg);border:1px solid var(--green-bd);border-radius:12px;padding:12px 14px"><div style="font-size:12px;font-weight:700;color:var(--green)">Full settlement at month ${ppMonth}</div></div>`;}
   else if(ppMode==='term'){
     const newMonths=Math.max(1,Math.ceil(-Math.log(1-newBalance*monthRate/monthlyPayment)/Math.log(1+monthRate)));
-    const monthsSaved=remainingMonths-newMonths,interestSaved=monthlyPayment*monthsSaved;
+    const monthsSaved=remainingMonths-newMonths;
+    // Correct interest saved: (total interest without prepay) - (total interest with prepay)
+    // Each = total payments minus the principal that payments cover. Adding ppAmt to "with" side
+    // because the prepayment itself repays principal, not interest.
+    const interestNoPrepay=monthlyPayment*remainingMonths-balance;
+    const interestWithPrepay=monthlyPayment*newMonths-newBalance;
+    const interestSaved=interestNoPrepay-interestWithPrepay;
     html+=`<div class="t-lbl" style="margin-bottom:10px">REDUCE TERM</div><div class="trow"><span class="t-name">Months remaining (before)</span><span style="font-size:14px;font-weight:600">${remainingMonths} mo</span></div><div class="trow"><span class="t-name">Months remaining (after)</span><span style="font-size:14px;font-weight:600;color:var(--green)">${Math.max(0,newMonths)} mo</span></div><div style="height:1px;background:var(--border);margin:10px 0"></div><div class="trow"><span class="t-name">Months saved</span><span style="font-size:16px;font-weight:700;color:var(--green)">${Math.max(0,monthsSaved)} mo</span></div><div class="trow"><span class="t-name">Interest saved</span><span style="font-size:16px;font-weight:700;color:var(--green)">${fmt(Math.max(0,interestSaved))}</span></div>`;
   } else {
     const newPayment=mpay(newBalance,vals.fixrate,remainingMonths),paymentSaved=monthlyPayment-newPayment,totalSaved=paymentSaved*remainingMonths;
