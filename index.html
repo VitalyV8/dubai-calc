@@ -464,16 +464,18 @@ input[type=range]::-moz-range-track{background:transparent;height:4px;border-rad
         <div style="font-size:11px;color:var(--green);font-weight:700;text-transform:uppercase;letter-spacing:.05em;margin-bottom:2px" id="rc-fixrate-lbl2">Fixed &middot; 4.19%</div>
         <div style="font-size:10px;color:var(--green);opacity:.7;margin-bottom:6px" id="rc-fixperiod-note">for 5yr, then variable</div>
         <div style="font-size:21px;font-weight:700;color:var(--green);letter-spacing:-0.5px" id="grand-3">&mdash;</div>
+        <div style="font-size:9px;color:var(--green);opacity:.6;margin-top:3px">loan + bills + everything</div>
       </div>
       <div style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px 12px">
         <div style="font-size:11px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.05em;margin-bottom:2px">Variable</div>
         <div style="font-size:10px;color:var(--muted);margin-bottom:6px"><span id="var-sub">EIBOR+1.5%</span></div>
         <div style="font-size:21px;font-weight:700;color:var(--text);letter-spacing:-0.5px" id="grand-var">&mdash;</div>
+        <div style="font-size:9px;color:var(--muted);opacity:.6;margin-top:3px">loan + bills + everything</div>
       </div>
     </div>
     <!-- mortgage-only line -->
     <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 4px 14px">
-      <span style="font-size:13px;color:var(--muted)">mortgage to bank <span style="opacity:.7">(fixed period)</span></span>
+      <span style="font-size:13px;color:var(--muted)">&#8627; of which loan to bank only</span>
       <span style="font-size:15px;font-weight:700;color:var(--text)" id="pay-3">&mdash;</span>
     </div>
     </div><!-- /payment-block -->
@@ -560,6 +562,7 @@ input[type=range]::-moz-range-track{background:transparent;height:4px;border-rad
       <input type="range" id="sc" min="0" max="60" step="1" value="23">
       <div class="rlabels"><span id="sc-note">AED/sqft/yr</span><span></span></div>
       <div class="fnote" data-i18n="fnote.sc">Paid by owner only &middot; Dubai avg 12&ndash;30 AED/sqft/yr, up to 60 in premium towers</div>
+      <div class="fnote" id="sc-monthly-hint" style="color:var(--text);font-weight:600">&mdash;</div>
     </div>
     <div class="field">
       <div class="ftop"><span class="lbl-group"><span class="flabel" data-i18n="living.internet">Internet</span><button class="tip-btn" onclick="event.stopPropagation();showTooltip('internet')" aria-label="info">i</button></span><input class="finput" id="t-internet" value="279"><span class="unit-badge">AED</span></div>
@@ -573,8 +576,9 @@ input[type=range]::-moz-range-track{background:transparent;height:4px;border-rad
       <div class="rlabels"><span id="rl-gas-min">AED 0</span><span id="rl-gas-max">AED 500</span></div>
     </div>
     <div style="background:var(--bg);border-radius:12px;padding:14px;margin-top:8px">
-      <div style="display:flex;justify-content:space-between;padding:5px 0"><span style="font-size:13px;color:var(--muted)">Fixed rate &middot; annual</span><span style="font-size:14px;font-weight:700;color:var(--green)" id="grand-3-yr">&mdash;</span></div>
-      <div style="display:flex;justify-content:space-between;padding:5px 0"><span style="font-size:13px;color:var(--muted)">Variable rate &middot; annual</span><span style="font-size:14px;font-weight:700;color:var(--text)" id="grand-var-yr">&mdash;</span></div>
+      <div style="display:flex;justify-content:space-between;padding:5px 0"><span style="font-size:13px;color:var(--muted)">Everything except loan &middot; monthly</span><span style="font-size:15px;font-weight:700;color:var(--text)" id="living-total-mo">&mdash;</span></div>
+      <div style="display:flex;justify-content:space-between;padding:5px 0"><span style="font-size:13px;color:var(--muted)">Everything except loan &middot; annual</span><span style="font-size:14px;font-weight:600;color:var(--muted)" id="living-total-yr">&mdash;</span></div>
+      <div style="font-size:11px;color:var(--muted);margin-top:8px;padding-top:8px;border-top:1px solid var(--border)">DEWA + cooling + service charge + internet + gas + insurance. Everything except the loan payment.</div>
     </div>
     <span id="dewa-note" style="display:none"></span>
   </div></div>
@@ -664,7 +668,7 @@ input[type=range]::-moz-range-track{background:transparent;height:4px;border-rad
 </div><!-- end view-advanced -->
 <script>
 const USD_RATE = 3.6725;
-const DEWA_PER_SQFT = 0.85;
+const DEWA_PER_SQFT = 0.70;
 const RENTAL_YIELD = 6.5; // typical Dubai gross rental yield %
 const COOLING_PER_SQFT = 0.85; // District cooling auto estimate UAE average (AED/sqft/mo)
 let calcLivingTotal = 0;
@@ -1725,6 +1729,7 @@ function calcLiving(){
   // sc-note label
   const scNote=document.getElementById('sc-note');
   if(scNote)scNote.textContent=(currency==='USD'?'$':'AED')+'/sqft/yr';
+  const scHint=document.getElementById('sc-monthly-hint');if(scHint)scHint.textContent='= '+fmt(sc)+'/mo for your '+Math.round(sqft)+' sqft';
   // Mortgage payment (fixed + variable)
   const loan=Math.min(vals.price*(1-vals.down/100),vals.bval*(vals.price>5000000?0.70:0.80),vals.approved);
   const n=vals.years*12,rf=vals.fixrate/100/12;
@@ -1741,9 +1746,11 @@ function calcLiving(){
   advGrand3=pf+ins+living;
   advGrandVar=pv+ins+living;
   updateAdvAllIn();
-  // Annual totals for living modal
-  const g3y=document.getElementById('grand-3-yr');if(g3y)g3y.textContent=fmt(advGrand3*12);
-  const gvy=document.getElementById('grand-var-yr');if(gvy)gvy.textContent=fmt(advGrandVar*12);
+  // Living costs totals = everything except the loan payment (utilities + SC + insurance)
+  // This equals Total all-in minus loan-to-bank, so the numbers reconcile.
+  const livingPlusIns=calcLivingTotal+ins;
+  const livingMo=document.getElementById('living-total-mo');if(livingMo)livingMo.textContent=fmt(livingPlusIns);
+  const livingYr=document.getElementById('living-total-yr');if(livingYr)livingYr.textContent=fmt(livingPlusIns*12);
 }
 function calcPP(){
   const loanAED=Math.min(vals.price*(1-vals.down/100),vals.bval*(vals.price>5000000?0.70:0.80),vals.approved),totalMonths=vals.years*12,monthRate=vals.fixrate/100/12;
