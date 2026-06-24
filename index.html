@@ -546,14 +546,14 @@ input[type=range]::-moz-range-track{background:transparent;height:4px;border-rad
   <div class="card-head"><span class="ctitle">Living costs</span></div>
   <div class="card-body-wrap open"><div class="card-body-inner">
     <div class="field">
-      <div class="ftop"><span class="lbl-group"><span class="flabel" data-i18n="living.dewa">DEWA</span><button class="tip-btn" onclick="event.stopPropagation();showTooltip('dewa')" aria-label="info">i</button></span><span id="dewa-tag" class="tag tag-auto" onclick="resetDewaAuto()" style="flex-shrink:0">auto</span><input class="finput" id="t-dewa" value="680"><span class="unit-badge">AED</span></div>
-      <input type="range" id="dewa" min="0" max="8000" step="50" value="680">
+      <div class="ftop"><span class="lbl-group"><span class="flabel" data-i18n="living.dewa">DEWA</span><button class="tip-btn" onclick="event.stopPropagation();showTooltip('dewa')" aria-label="info">i</button></span><span id="dewa-tag" class="tag tag-auto" onclick="resetDewaAuto()" style="flex-shrink:0">auto</span><input class="finput" id="t-dewa" value="560"><span class="unit-badge">AED</span></div>
+      <input type="range" id="dewa" min="0" max="8000" step="50" value="560">
       <div class="rlabels"><span id="rl-dewa-min">AED 0</span><span id="rl-dewa-max">AED 8,000</span></div>
       <div class="fnote" data-i18n="fnote.dewa">Electricity + water + 5% housing fee &middot; cooling billed separately</div>
     </div>
     <div class="field">
-      <div class="ftop"><span class="lbl-group"><span class="flabel" data-i18n="living.cooling">District cooling</span><button class="tip-btn" onclick="event.stopPropagation();showTooltip('cooling')" aria-label="info">i</button></span><span id="cooling-tag" class="tag tag-auto" onclick="resetCoolingAuto()" style="flex-shrink:0">auto</span><input class="finput" id="t-cooling" value="680"><span class="unit-badge">AED</span></div>
-      <input type="range" id="cooling" min="0" max="3000" step="50" value="680">
+      <div class="ftop"><span class="lbl-group"><span class="flabel" data-i18n="living.cooling">District cooling</span><button class="tip-btn" onclick="event.stopPropagation();showTooltip('cooling')" aria-label="info">i</button></span><span id="cooling-tag" class="tag tag-auto" onclick="resetCoolingAuto()" style="flex-shrink:0">auto</span><input class="finput" id="t-cooling" value="720"><span class="unit-badge">AED</span></div>
+      <input type="range" id="cooling" min="0" max="3000" step="50" value="720">
       <div class="rlabels"><span id="rl-cool-min">AED 0</span><span id="rl-cool-max">AED 3,000</span></div>
       <div class="fnote" data-i18n="fnote.cooling">Empower / Tabreed / Tasleem &middot; auto-estimated from size, adjust if needed</div>
     </div>
@@ -670,7 +670,7 @@ input[type=range]::-moz-range-track{background:transparent;height:4px;border-rad
 const USD_RATE = 3.6725;
 const DEWA_PER_SQFT = 0.70;
 const RENTAL_YIELD = 6.5; // typical Dubai gross rental yield %
-const COOLING_PER_SQFT = 0.85; // District cooling auto estimate UAE average (AED/sqft/mo)
+const COOLING_PER_SQFT = 0.90; // District cooling auto estimate UAE average (AED/sqft/mo, higher in summer)
 let calcLivingTotal = 0;
 let rentOut = false;
 let rentYield = 7.0;
@@ -2043,7 +2043,14 @@ if(restored){
   if(rentOut)setRentOut(true);
   applyTheme();
   autoDown();
+  if(!dewaEdited)autoUpdateDewa(vals.sqft);
+  if(!coolingEdited)autoUpdateCooling(vals.sqft);
   calc();simpleCalc();calcLiving();calcBvR();calcPP();
+}else{
+  // Fresh load - ensure DEWA/cooling match current rates not stale HTML defaults
+  if(typeof autoUpdateDewa==='function')autoUpdateDewa(vals.sqft);
+  if(typeof autoUpdateCooling==='function')autoUpdateCooling(vals.sqft);
+  if(typeof calcLiving==='function')calcLiving();
 }
 paintAllSliders();
 setTimeout(paintAllSliders,150);
