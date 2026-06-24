@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="splash-loading">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, interactive-widget=resizes-visual, viewport-fit=cover">
@@ -31,7 +31,8 @@
   --shadow:0 1px 3px rgba(0,0,0,0.3);
 }
 *{box-sizing:border-box;margin:0;padding:0}
-html{-webkit-text-size-adjust:100%;background:var(--bg);min-height:100%;scroll-behavior:smooth;-webkit-overflow-scrolling:touch}
+html{-webkit-text-size-adjust:100%;background:var(--bg);min-height:100%;scroll-behavior:smooth;-webkit-overflow-scrolling:touch;transition:background .4s ease}
+html.splash-loading{background:#0F0F12}
 body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding:calc(20px + env(safe-area-inset-top)) calc(16px + env(safe-area-inset-right)) calc(60px + env(safe-area-inset-bottom)) calc(16px + env(safe-area-inset-left));max-width:540px;margin:0 auto;transition:background .3s,color .3s}
 #splash{position:fixed;top:0;left:0;right:0;bottom:0;width:100vw;height:100vh;height:100dvh;margin:0;background:linear-gradient(145deg,#0F0F12 0%,#1a1a2e 50%,#16213e 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:999;transition:opacity .4s ease;gap:0;cursor:pointer}
 #splash.hide{opacity:0;pointer-events:none}
@@ -737,7 +738,7 @@ function shareCalc(){
 function roundRect(ctx,x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath();}
 
 let splashDismissed=false;
-function dismissSplash(){if(splashDismissed)return;splashDismissed=true;const s=document.getElementById('splash');if(s){s.classList.add('hide');setTimeout(()=>{if(s)s.remove();},400);}if(typeof applyTheme==='function')applyTheme();}
+function dismissSplash(){if(splashDismissed)return;splashDismissed=true;const s=document.getElementById('splash');if(s){s.classList.add('hide');setTimeout(()=>{document.documentElement.classList.remove('splash-loading');if(typeof applyTheme==='function')applyTheme();if(s)s.remove();},400);}else{document.documentElement.classList.remove('splash-loading');if(typeof applyTheme==='function')applyTheme();}}
 setTimeout(dismissSplash,1400);
 document.addEventListener('DOMContentLoaded',()=>{const s=document.getElementById('splash');if(s)s.addEventListener('click',dismissSplash);});
 {const s=document.getElementById('splash');if(s)s.addEventListener('click',dismissSplash);}
