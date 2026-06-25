@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, interactive-widget=resizes-visual, viewport-fit=cover">
-  <meta name="theme-color" content="#0F0F12">
+  <meta name="theme-color" content="#F7F6F2">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <title>Hayyak</title>
@@ -32,9 +32,9 @@
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html{-webkit-text-size-adjust:100%;background:var(--bg);min-height:100%;scroll-behavior:smooth;-webkit-overflow-scrolling:touch;transition:background .4s ease}
-html.splash-loading{background:#0F0F12}
+html.splash-loading{background:#F7F6F2}
 body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding:calc(20px + env(safe-area-inset-top)) calc(16px + env(safe-area-inset-right)) calc(60px + env(safe-area-inset-bottom)) calc(16px + env(safe-area-inset-left));max-width:540px;margin:0 auto;transition:background .3s,color .3s}
-#splash{position:fixed;top:0;left:0;right:0;bottom:0;width:100vw;height:100vh;height:100dvh;margin:0;background:linear-gradient(145deg,#0F0F12 0%,#1a1a2e 50%,#16213e 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:999;transition:opacity .4s ease;gap:0;cursor:pointer}
+#splash{position:fixed;top:0;left:0;right:0;bottom:0;width:100vw;height:100vh;height:100dvh;margin:0;background:#F7F6F2;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:999;transition:opacity .4s ease;gap:0;cursor:pointer}
 #splash.hide{opacity:0;pointer-events:none}
 #onboarding{position:fixed;inset:0;background:var(--bg);z-index:998;display:flex;align-items:center;justify-content:center;padding:24px;animation:obFade .4s ease;overflow-y:auto}
 @keyframes obFade{from{opacity:0}to{opacity:1}}
@@ -48,10 +48,10 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,s
 .ob-opt{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:22px 12px;border:1.5px solid var(--border);border-radius:18px;background:var(--card);cursor:pointer;font-size:14px;font-weight:600;color:var(--text);transition:all .15s;min-height:104px;text-align:center}
 .ob-opt:active{transform:scale(0.96);border-color:var(--green);background:var(--bg)}
 .ob-skip{display:block;margin:0 auto;padding:10px 24px;background:none;border:none;color:var(--muted);font-size:14px;cursor:pointer;font-weight:500}
-.splash-icon{width:96px;height:96px;margin-bottom:24px;animation:splashPop .5s cubic-bezier(.34,1.56,.64,1) forwards}
-.splash-title{font-size:32px;font-weight:700;color:#fff;letter-spacing:-1px;line-height:1}
-.splash-sub{font-size:14px;color:rgba(255,255,255,0.4);margin-top:8px;letter-spacing:0.02em}
-.splash-tagline{font-size:11px;color:rgba(255,255,255,0.25);margin-top:32px;letter-spacing:0.15em;text-transform:uppercase}
+.splash-icon{width:96px;height:96px;margin-bottom:24px;animation:splashPop .5s cubic-bezier(.34,1.56,.64,1) forwards;border-radius:22px;box-shadow:0 8px 28px rgba(0,0,0,0.35),0 0 0 1px rgba(255,255,255,0.12)}
+.splash-title{font-size:32px;font-weight:700;color:#13573d;letter-spacing:-1px;line-height:1}
+.splash-sub{font-size:14px;color:rgba(0,0,0,0.45);margin-top:8px;letter-spacing:0.02em}
+.splash-tagline{font-size:11px;color:rgba(0,0,0,0.3);margin-top:32px;letter-spacing:0.15em;text-transform:uppercase}
 @keyframes splashPop{from{transform:scale(.5) rotate(-8deg);opacity:0}to{transform:scale(1) rotate(0deg);opacity:1}}
 .period-toggle{display:flex;background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:3px;gap:3px}
 .period-btn{padding:5px 14px;border:none;border-radius:7px;font-size:12px;font-weight:600;cursor:pointer;background:transparent;color:var(--muted);transition:all .2s}
@@ -209,7 +209,7 @@ input[type=range]::-moz-range-track{background:transparent;height:4px;border-rad
   <svg class="splash-icon" viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg">
     <defs>
       <linearGradient id="iconGrad" x1="0" y1="0" x2="96" y2="96" gradientUnits="userSpaceOnUse">
-        <stop offset="0" stop-color="#1a6b4a"/><stop offset="1" stop-color="#0d4a33"/>
+        <stop offset="0" stop-color="#1a6b4a"/><stop offset="1" stop-color="#13573d"/>
       </linearGradient>
       <clipPath id="moonClip"><circle cx="73" cy="23" r="9"/></clipPath>
     </defs>
@@ -1042,7 +1042,7 @@ function applyTheme(){
   const splashVisible=!splashDismissed&&document.getElementById('splash');
   let tc=document.querySelector('meta[name="theme-color"]:not([media])');
   if(!tc){tc=document.createElement('meta');tc.setAttribute('name','theme-color');document.head.appendChild(tc);}
-  tc.setAttribute('content',splashVisible?'#0F0F12':(isDark?'#111111':'#F7F6F2'));
+  tc.setAttribute('content',splashVisible?'#F7F6F2':(isDark?'#111111':'#F7F6F2'));
   ['auto','light','dark'].forEach(m=>{const b=document.getElementById('btn-theme-'+m);if(b)b.classList.toggle('on',m===themeMode);});
 }
 function setTheme(m){themeMode=m;applyTheme();closeSettings();}
@@ -2102,6 +2102,6 @@ window.addEventListener('load',()=>{paintAllSliders();setTimeout(paintAllSliders
 
 
 <div id="tooltip-sheet" onclick="hideTooltip()"></div>
-<div style="position:fixed;bottom:2px;right:4px;font-size:9px;color:rgba(128,128,128,0.4);z-index:99999;pointer-events:none">v1250</div>
+<div style="position:fixed;bottom:2px;right:4px;font-size:9px;color:rgba(128,128,128,0.4);z-index:99999;pointer-events:none">v1253</div>
 </body>
 </html>
