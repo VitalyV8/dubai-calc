@@ -985,7 +985,13 @@ function unlockScroll(){
   document.body.classList.remove('modal-locked');
   document.body.style.top='';
   _scrollLocked=false;
+  // Restore scroll position instantly — bypass the global scroll-behavior:smooth
+  // so closing a modal doesn't visibly animate the page back into place.
+  const html=document.documentElement;
+  const prevSB=html.style.scrollBehavior;
+  html.style.scrollBehavior='auto';
   window.scrollTo(0,_scrollLockY);
+  html.style.scrollBehavior=prevSB;
 }
 function openModal(mod){
   if(mod==='budget')renderBudget();
@@ -2201,6 +2207,6 @@ document.addEventListener('DOMContentLoaded',()=>hydrateIcons());
 
 
 <div id="tooltip-sheet" onclick="hideTooltip()"></div>
-<div style="position:fixed;bottom:2px;right:4px;font-size:9px;color:rgba(128,128,128,0.4);z-index:99999;pointer-events:none">v1264</div>
+<div style="position:fixed;bottom:2px;right:4px;font-size:9px;color:rgba(128,128,128,0.4);z-index:99999;pointer-events:none">v1265</div>
 </body>
 </html>
