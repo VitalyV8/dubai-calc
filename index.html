@@ -100,6 +100,7 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,s
 .modal-bg.on{opacity:1;pointer-events:auto;touch-action:none}
 .modal{position:fixed;left:0;right:0;bottom:0;background:var(--bg);border-radius:24px 24px 0 0;max-height:88vh;overflow-y:auto;z-index:101;transform:translateY(100%);transition:transform .3s cubic-bezier(.4,0,.2,1);padding:8px 16px 40px;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
 .modal.on{transform:translateY(0);touch-action:pan-y}
+body.modal-locked{position:fixed;left:0;right:0;width:100%;overflow:hidden}
 .modal-handle{width:36px;height:4px;background:var(--track);border-radius:2px;margin:8px auto 16px}
 .modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;padding:0 4px;gap:8px;flex-wrap:wrap}
 .modal-title{font-size:var(--fs-md);font-weight:700;letter-spacing:-0.3px;flex:1;min-width:0}
@@ -576,8 +577,8 @@ input[type=range]::-moz-range-track{background:transparent;height:4px;border-rad
       <div class="fnote" data-i18n="fnote.dewa">Electricity + water + 5% housing fee &middot; cooling billed separately</div>
     </div>
     <div class="field">
-      <div class="ftop"><span class="lbl-group"><span class="flabel" data-i18n="living.cooling">District cooling</span><button class="tip-btn" onclick="event.stopPropagation();showTooltip('cooling')" aria-label="info">i</button></span><span id="cooling-tag" class="tag tag-auto" onclick="resetCoolingAuto()" style="flex-shrink:0">auto</span><span class="unit-badge">AED</span><input class="finput" id="t-cooling" value="720"></div>
-      <input type="range" id="cooling" min="0" max="3000" step="50" value="720">
+      <div class="ftop"><span class="lbl-group"><span class="flabel" data-i18n="living.cooling">District cooling</span><button class="tip-btn" onclick="event.stopPropagation();showTooltip('cooling')" aria-label="info">i</button></span><span id="cooling-tag" class="tag tag-auto" onclick="resetCoolingAuto()" style="flex-shrink:0">auto</span><span class="unit-badge">AED</span><input class="finput" id="t-cooling" value="360"></div>
+      <input type="range" id="cooling" min="0" max="3000" step="50" value="360">
       <div class="rlabels"><span id="rl-cool-min">AED 0</span><span id="rl-cool-max">AED 3,000</span></div>
       <div class="fnote" data-i18n="fnote.cooling">Empower / Tabreed / Tasleem &middot; auto-estimated from size, adjust if needed</div>
     </div>
@@ -747,7 +748,7 @@ function hydrateIcons(root){
 const USD_RATE = 3.6725;
 const DEWA_PER_SQFT = 0.70;
 const RENTAL_YIELD = 6.5; // typical Dubai gross rental yield %
-const COOLING_PER_SQFT = 0.90; // District cooling auto estimate UAE average (AED/sqft/mo, higher in summer)
+const COOLING_PER_SQFT = 0.45; // District cooling auto estimate (AED/sqft/mo). Calibrated to real Dubai bills: efficient Emaar communities (Creek Harbour) ~0.27/sqft summer, pricier Empower areas higher; 0.45 is a realistic mid. Field is editable per unit.
 let calcLivingTotal = 0;
 let rentOut = false;
 let rentYield = 7.0;
@@ -971,6 +972,21 @@ function confirmBudgetEditor(){if(!_bedKey)return;const raw=document.getElementB
 function closeBudgetEditor(){document.getElementById('budget-editor').classList.remove('show');document.getElementById('budget-editor-bg').classList.remove('show');_bedKey=null;const inp=document.getElementById('bed-input');if(inp)inp.blur();}
 
 let openedModal=null;
+let _scrollLockY=0,_scrollLocked=false;
+function lockScroll(){
+  if(_scrollLocked)return;
+  _scrollLockY=window.scrollY||document.documentElement.scrollTop||0;
+  document.body.style.top=(-_scrollLockY)+'px';
+  document.body.classList.add('modal-locked');
+  _scrollLocked=true;
+}
+function unlockScroll(){
+  if(!_scrollLocked)return;
+  document.body.classList.remove('modal-locked');
+  document.body.style.top='';
+  _scrollLocked=false;
+  window.scrollTo(0,_scrollLockY);
+}
 function openModal(mod){
   if(mod==='budget')renderBudget();
   if(mod==='checklist')renderChecklist();
@@ -986,6 +1002,7 @@ function openModal(mod){
     const headExtras=src.querySelector('.card-head > div');
     if(headExtras&&mod==='living'){const chev=headExtras.querySelector('.chevron');if(chev)chev.style.display='none';headExtras.style.marginBottom='16px';headExtras.style.justifyContent='center';body.insertBefore(headExtras,body.firstChild);}
   }
+  lockScroll();
   document.getElementById('modal-bg').classList.add('on');
   modal.classList.add('on');openedModal=mod;
   if(mod==='bvr'&&typeof calcBvR==='function')calcBvR();
@@ -998,7 +1015,7 @@ function closeModal(){
   document.getElementById('modal-bg').classList.remove('on');
   document.getElementById('modal-'+openedModal).classList.remove('on');
   openedModal=null;
-
+  unlockScroll();
 }
 
 const CHECKLIST={
@@ -2184,6 +2201,6 @@ document.addEventListener('DOMContentLoaded',()=>hydrateIcons());
 
 
 <div id="tooltip-sheet" onclick="hideTooltip()"></div>
-<div style="position:fixed;bottom:2px;right:4px;font-size:9px;color:rgba(128,128,128,0.4);z-index:99999;pointer-events:none">v1262</div>
+<div style="position:fixed;bottom:2px;right:4px;font-size:9px;color:rgba(128,128,128,0.4);z-index:99999;pointer-events:none">v1264</div>
 </body>
 </html>
