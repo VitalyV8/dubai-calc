@@ -89,12 +89,12 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,s
 .emi-opt:hover{background:var(--bg)}
 .emi-opt > span:first-child{color:var(--text)}
 .emi-opt > span:last-child{font-size:12px;color:var(--muted);font-weight:500}
-.modules-strip{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
-.module-card{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:14px;cursor:pointer;box-shadow:var(--shadow);transition:transform .15s;display:flex;flex-direction:column;min-height:100px}
+.modules-strip{display:grid;grid-template-columns:1fr 1fr;grid-auto-rows:1fr;gap:10px;margin-bottom:10px}
+.module-card{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:14px 10px;cursor:pointer;box-shadow:var(--shadow);transition:transform .15s;display:flex;flex-direction:column;min-height:100px}
 .module-card:active{transform:scale(0.97)}
-.module-icon{line-height:1;margin-bottom:auto;color:var(--green);display:inline-flex}
+.module-icon{line-height:1;color:var(--green);display:inline-flex;align-self:flex-start}
 .module-icon .ic{width:24px;height:24px}
-.module-name{font-size:var(--fs-base);font-weight:600;line-height:1.25;color:var(--text);letter-spacing:-0.01em;margin-top:12px}
+.module-name{font-size:12.5px;font-weight:600;line-height:1.25;color:var(--text);letter-spacing:-0.02em;margin-top:12px}
 .module-desc{font-size:var(--fs-xs);color:var(--muted);line-height:1.3;margin-top:3px}
 .modal-bg{position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:100;opacity:0;pointer-events:none;transition:opacity .25s}
 .modal-bg.on{opacity:1;pointer-events:auto;touch-action:none}
@@ -380,7 +380,7 @@ input[type=range]::-moz-range-track{background:transparent;height:4px;border-rad
     </div>
     <div class="field">
       <div class="ftop"><span class="lbl-group"><span class="flabel" data-i18n="income.label">Monthly income</span><button class="tip-btn" onclick="event.stopPropagation();showTooltip('income')" aria-label="info">i</button></span><span class="unit-badge">AED</span><input class="finput" id="t-income2" value="" placeholder="&mdash;" inputmode="numeric" oninput="this.value=this.value.replace(/[^0-9]/g,'');syncIncome(this.value)" onblur="if(this.value)this.value=parseInt(this.value).toLocaleString('en-US')" onfocus="this.value=this.value.replace(/[^0-9]/g,'')"></div>
-      <div class="fnote" style="display:flex;align-items:flex-start;gap:6px"><span data-ic="bulb" data-ic-size="14" style="color:var(--amber);margin-top:1px"></span><span data-i18n="income.hint">Add your income to check if the bank will approve this loan</span></div>
+      <div class="fnote" style="display:flex;align-items:flex-start;gap:6px"><span data-ic="bulb" data-ic-size="14" style="color:var(--amber);margin-top:1px"></span><span data-i18n="income.hint">Add income to check loan approval</span></div>
     </div>
     <span id="sv-val" style="display:none"></span>
     <div id="metrics" style="display:none"></div>
@@ -541,12 +541,12 @@ input[type=range]::-moz-range-track{background:transparent;height:4px;border-rad
   </div>
   <div class="card-body-wrap open" id="body-moretools"><div class="card-body-inner">
   <div class="modules-strip">
-  <div class="module-card" onclick="openModal('budget')"><span class="module-icon" data-ic="chartBar" data-ic-size="24"></span><div class="module-name" data-i18n="tool.budget">Monthly budget</div><div class="module-desc" data-i18n="tool.budget.desc">Full cost of living in UAE</div></div>
-  <div class="module-card" onclick="openModal('living')"><span class="module-icon" data-ic="bulb" data-ic-size="24"></span><div class="module-name" data-i18n="tool.living">Living costs</div><div class="module-desc" data-i18n="tool.living.desc">Utilities, service charge, rental yield</div></div>
-  <div class="module-card" onclick="openModal('bvr')"><span class="module-icon" data-ic="scale" data-ic-size="24"></span><div class="module-name" data-i18n="tool.bvr">Buy vs Rent</div><div class="module-desc" data-i18n="tool.bvr.desc">Compare wealth over 25 years</div></div>
-  <div class="module-card" onclick="openModal('prepay')"><span class="module-icon" data-ic="forward" data-ic-size="24"></span><div class="module-name" data-i18n="tool.prepay">Early repayment</div><div class="module-desc" data-i18n="tool.prepay.desc">How much you save by paying early</div></div>
+  <div class="module-card" onclick="openModal('budget')"><span class="module-icon" data-ic="chartBar" data-ic-size="24"></span><div class="module-name" data-i18n="tool.budget">Monthly budget</div><div class="module-desc" data-i18n="tool.budget.desc">Full cost of living</div></div>
+  <div class="module-card" onclick="openModal('living')"><span class="module-icon" data-ic="bulb" data-ic-size="24"></span><div class="module-name" data-i18n="tool.living">Living costs</div><div class="module-desc" data-i18n="tool.living.desc">Utilities &amp; charges</div></div>
+  <div class="module-card" onclick="openModal('bvr')"><span class="module-icon" data-ic="scale" data-ic-size="24"></span><div class="module-name" data-i18n="tool.bvr">Buy vs Rent</div><div class="module-desc" data-i18n="tool.bvr.desc">Wealth over 25 years</div></div>
+  <div class="module-card" onclick="openModal('prepay')"><span class="module-icon" data-ic="forward" data-ic-size="24"></span><div class="module-name" data-i18n="tool.prepay">Early repayment</div><div class="module-desc" data-i18n="tool.prepay.desc">Save by paying early</div></div>
   <div class="module-card" onclick="openModal('checklist')"><span class="module-icon" data-ic="clipboard" data-ic-size="24"></span><div class="module-name" data-i18n="tool.checklist">Bank checklist</div><div class="module-desc" data-i18n="tool.checklist.desc">Documents &amp; steps</div></div>
-  <div class="module-card" onclick="openModal('scenarios')"><span class="module-icon" data-ic="chartBar" data-ic-size="24"></span><div class="module-name" data-i18n="tool.scenarios">Compare scenarios</div><div class="module-desc" data-i18n="tool.scenarios.desc">Side-by-side scenario comparison</div></div>
+  <div class="module-card" onclick="openModal('scenarios')"><span class="module-icon" data-ic="chartBar" data-ic-size="24"></span><div class="module-name" data-i18n="tool.scenarios">Compare scenarios</div><div class="module-desc" data-i18n="tool.scenarios.desc">Compare side by side</div></div>
 </div>
   </div></div>
 </div>
@@ -1943,17 +1943,17 @@ const I18N={
     'sec.total':'Total cost over loan term','sec.living':'Living costs / month',
     'sec.moretools':'More tools','sec.payment':'Monthly cost','sec.atclosing':'Cash you need upfront',
     
-    'tool.living':'Living costs','tool.living.desc':'Utilities, service charge, rental yield',
-    'tool.bvr':'Buy vs Rent','tool.bvr.desc':'Compare wealth over 25 years',
-    'tool.prepay':'Early repayment','tool.prepay.desc':'How much you save by paying early',
+    'tool.living':'Living costs','tool.living.desc':'Utilities & charges',
+    'tool.bvr':'Buy vs Rent','tool.bvr.desc':'Wealth over 25 years',
+    'tool.prepay':'Early repayment','tool.prepay.desc':'Save by paying early',
     'tool.checklist':'Bank checklist','tool.checklist.desc':'Documents & steps',
-    'tool.scenarios':'Compare scenarios','tool.scenarios.desc':'Side-by-side scenario comparison',
+    'tool.scenarios':'Compare scenarios','tool.scenarios.desc':'Compare side by side',
     
-    'tool.budget':'Monthly budget','tool.budget.desc':'Full cost of living in UAE',
+    'tool.budget':'Monthly budget','tool.budget.desc':'Full cost of living',
     'btn.fixed':'Fixed','btn.variable':'Variable','btn.monthly':'Monthly','btn.annual':'Annual',
     'btn.owner':'Own','btn.renting':'Rent out',
     'income.label':'Monthly income','income.optional':'(optional)',
-    'income.hint':'Add your income to check if the bank will approve this loan',
+    'income.hint':'Add income to check loan approval',
     'row.down':'Down payment','row.total':'Total at closing','row.upfront':'Upfront at closing',
     'row.mortgage':'Mortgage payments','row.living':'Living costs',
     'row.interest':'Of which mortgage interest','row.cashleft':'Left in your pocket',
@@ -2005,7 +2005,7 @@ const I18N={
     'scen.add':'Save current as scenario','scen.scenario':'Scenario','scen.priority':'What matters most?',
     'scen.p.monthly':'Low payment','scen.p.interest':'Less interest','scen.p.upfront':'Low upfront',
     'scen.best':'BEST','scen.savings':'Best option saves','scen.ininterest':'in interest','scen.cheaper':'less monthly',
-    'scen.empty.title':'No scenarios yet','scen.intro':'Save your current numbers, tweak the inputs, save again \u2014 then compare side by side.',
+    'scen.empty.title':'No scenarios yet','scen.intro':'Save, tweak inputs, save again \u2014 compare side by side.',
     'donut.property':'Property','donut.interest':'Interest','donut.fees':'Fees','donut.living':'Living',
     'share.btn':'Share this calculation','share.text':'My UAE property calculation from Hayyak',
     'budget.housing':'Housing','budget.housing.hint':'Mortgage + DEWA + cooling + service charge from your calculation',
@@ -2207,6 +2207,6 @@ document.addEventListener('DOMContentLoaded',()=>hydrateIcons());
 
 
 <div id="tooltip-sheet" onclick="hideTooltip()"></div>
-<div style="position:fixed;bottom:2px;right:4px;font-size:9px;color:rgba(128,128,128,0.4);z-index:99999;pointer-events:none">v1265</div>
+<div style="position:fixed;bottom:2px;right:4px;font-size:9px;color:rgba(128,128,128,0.4);z-index:99999;pointer-events:none">v1271</div>
 </body>
 </html>
