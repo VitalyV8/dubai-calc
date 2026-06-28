@@ -599,9 +599,10 @@ input[type=range]::-moz-range-track{background:transparent;height:4px;border-rad
       <div class="rlabels"><span id="rl-gas-min">AED 0</span><span id="rl-gas-max">AED 500</span></div>
     </div>
     <div style="background:var(--bg);border-radius:12px;padding:14px;margin-top:8px">
-      <div style="display:flex;justify-content:space-between;padding:5px 0"><span style="font-size:13px;color:var(--muted)">Everything except loan &middot; monthly</span><span style="font-size:15px;font-weight:700;color:var(--text)" id="living-total-mo">&mdash;</span></div>
-      <div style="display:flex;justify-content:space-between;padding:5px 0"><span style="font-size:13px;color:var(--muted)">Everything except loan &middot; annual</span><span style="font-size:14px;font-weight:600;color:var(--muted)" id="living-total-yr">&mdash;</span></div>
-      <div style="font-size:11px;color:var(--muted);margin-top:8px;padding-top:8px;border-top:1px solid var(--border)">DEWA + cooling + service charge + internet + gas + insurance. Everything except the loan payment.</div>
+      <div id="living-breakdown"></div>
+      <div style="display:flex;justify-content:space-between;padding:5px 0"><span style="font-size:13px;color:var(--muted)" id="living-mo-lbl">Everything except loan &middot; monthly</span><span style="font-size:15px;font-weight:700;color:var(--text)" id="living-total-mo">&mdash;</span></div>
+      <div style="display:flex;justify-content:space-between;padding:5px 0"><span style="font-size:13px;color:var(--muted)" id="living-yr-lbl">Everything except loan &middot; annual</span><span style="font-size:14px;font-weight:600;color:var(--muted)" id="living-total-yr">&mdash;</span></div>
+      <div style="font-size:11px;color:var(--muted);margin-top:8px;padding-top:8px;border-top:1px solid var(--border)" id="living-foot">DEWA + cooling + service charge + internet + gas + insurance. Everything except the loan payment.</div>
     </div>
     <span id="dewa-note" style="display:none"></span>
   </div></div>
@@ -1872,6 +1873,34 @@ function calcLiving(){
   const livingPlusIns=calcLivingTotal+ins;
   const livingMo=document.getElementById('living-total-mo');if(livingMo)livingMo.textContent=fmt(livingPlusIns);
   const livingYr=document.getElementById('living-total-yr');if(livingYr)livingYr.textContent=fmt(livingPlusIns*12);
+  // Itemized breakdown so the total is transparent (not a black box)
+  const bd=document.getElementById('living-breakdown');
+  if(bd){
+    const rows=[];
+    if(rentOut){
+      rows.push(['Service charge',sc]);
+      rows.push(['Insurance \u00b7 life + property',Math.round(ins)]);
+    }else{
+      if(dewa>0)rows.push(['DEWA',Math.round(dewa)]);
+      if(cooling>0)rows.push(['District cooling',Math.round(cooling)]);
+      rows.push(['Service charge',sc]);
+      if(internet>0)rows.push(['Internet',Math.round(internet)]);
+      if(gas>0)rows.push(['Gas',Math.round(gas)]);
+      rows.push(['Insurance \u00b7 life + property',Math.round(ins)]);
+    }
+    bd.innerHTML=rows.map(function(r){return '<div style="display:flex;justify-content:space-between;padding:4px 0;font-size:12px;color:var(--muted)"><span>'+r[0]+'</span><span style="direction:ltr;font-weight:600;color:var(--text)">'+fmt(r[1])+'</span></div>';}).join('')+'<div style="height:1px;background:var(--border);margin:6px 0 2px"></div>';
+  }
+  // Rent-out: tenant pays utilities, so the total is only service charge + insurance — make that explicit
+  const lf=document.getElementById('living-foot'),lml=document.getElementById('living-mo-lbl'),lyl=document.getElementById('living-yr-lbl');
+  if(rentOut){
+    if(lf)lf.textContent='Service charge + insurance only \u2014 your tenant pays DEWA, cooling, internet & gas.';
+    if(lml)lml.textContent='Your costs (tenant pays utilities) \u00b7 monthly';
+    if(lyl)lyl.textContent='Your costs (tenant pays utilities) \u00b7 annual';
+  }else{
+    if(lf)lf.textContent='DEWA + cooling + service charge + internet + gas + insurance. Everything except the loan payment.';
+    if(lml)lml.textContent='Everything except loan \u00b7 monthly';
+    if(lyl)lyl.textContent='Everything except loan \u00b7 annual';
+  }
 }
 function calcPP(){
   const loanAED=Math.min(vals.price*(1-vals.down/100),vals.bval*(vals.price>5000000?0.70:0.80),vals.approved),totalMonths=vals.years*12,monthRate=vals.fixrate/100/12;
@@ -2209,6 +2238,6 @@ document.addEventListener('DOMContentLoaded',()=>hydrateIcons());
 
 
 <div id="tooltip-sheet" onclick="hideTooltip()"></div>
-<div style="position:fixed;bottom:2px;right:4px;font-size:9px;color:rgba(128,128,128,0.4);z-index:99999;pointer-events:none">v1274</div>
+<div style="position:fixed;bottom:2px;right:4px;font-size:9px;color:rgba(128,128,128,0.4);z-index:99999;pointer-events:none">v1276</div>
 </body>
 </html>
