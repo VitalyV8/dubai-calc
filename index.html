@@ -41,7 +41,7 @@ button:active{transform:scale(0.95)}
 .seg-btn:active{transform:scale(0.93)}
 .mode-btn:active{transform:scale(0.97)}
 [onclick]:not(button):not(.module-card):active{opacity:.6}
-html{-webkit-text-size-adjust:100%;background:var(--bg);min-height:100%;scroll-behavior:smooth;-webkit-overflow-scrolling:touch;transition:background .4s ease}
+html{-webkit-text-size-adjust:100%;background:var(--bg);min-height:100%;scroll-behavior:smooth;overflow-y:scroll;-webkit-overflow-scrolling:touch;transition:background .4s ease}
 html.splash-loading{background:#F7F6F2}
 body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding:calc(20px + env(safe-area-inset-top)) calc(16px + env(safe-area-inset-right)) calc(60px + env(safe-area-inset-bottom)) calc(16px + env(safe-area-inset-left));max-width:540px;margin:0 auto;transition:background .3s,color .3s}
 #splash{position:fixed;top:0;left:0;right:0;bottom:0;width:100vw;height:100vh;height:100dvh;margin:0;background:#F7F6F2;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:999;transition:opacity .4s ease;gap:0;cursor:pointer}
@@ -403,7 +403,7 @@ input[type=range]::-moz-range-track{background:transparent;height:4px;border-rad
   </div>
   <div class="card-body-wrap open" id="body-mortgage"><div class="card-body-inner">
     <div class="field">
-      <div class="ftop"><span class="lbl-group"><span class="flabel" data-i18n="field.approved">Bank approved amount</span><button class="tip-btn" onclick="event.stopPropagation();showTooltip('approved')" aria-label="info">i</button></span><span id="approved-tag" class="tag tag-auto" style="display:none;margin:0 4px 0 0" onclick="resetApprovedAuto()"></span><span class="unit-badge">AED</span><input class="finput" id="t-approved" value="1,500,000"></div>
+      <div class="ftop"><span class="lbl-group"><span class="flabel" data-i18n="field.approved">Bank approved amount</span><button class="tip-btn" onclick="event.stopPropagation();showTooltip('approved')" aria-label="info">i</button></span><span id="approved-tag" class="tag tag-auto" style="display:none;margin:0 4px 0 0" onclick="resetApprovedAuto()"></span><span class="unit-badge">AED</span><input class="finput" id="t-approved" value="" placeholder="&mdash;"></div>
       <input type="range" id="approved" min="0" max="1000" step="1" value="448">
       <div class="rlabels"><span id="rl-appr-min">AED 0</span><span id="rl-appr-max">AED 15M</span></div>
       <div class="fnote" id="approved-warn" style="display:none;color:var(--amber)"></div>
@@ -570,13 +570,13 @@ input[type=range]::-moz-range-track{background:transparent;height:4px;border-rad
   <div class="card-body-wrap open"><div class="card-body-inner">
     <div class="field">
       <div class="ftop"><span class="lbl-group"><span class="flabel" data-i18n="living.dewa">DEWA</span><button class="tip-btn" onclick="event.stopPropagation();showTooltip('dewa')" aria-label="info">i</button></span><span id="dewa-tag" class="tag tag-auto" onclick="resetDewaAuto()" style="flex-shrink:0">auto</span><span class="unit-badge">AED</span><input class="finput" id="t-dewa" value="560"></div>
-      <input type="range" id="dewa" min="0" max="8000" step="50" value="560">
+      <input type="range" id="dewa" min="0" max="8000" step="1" value="560">
       <div class="rlabels"><span id="rl-dewa-min">AED 0</span><span id="rl-dewa-max">AED 8,000</span></div>
       <div class="fnote" data-i18n="fnote.dewa">Electricity + water + 5% housing fee &middot; cooling billed separately</div>
     </div>
     <div class="field">
-      <div class="ftop"><span class="lbl-group"><span class="flabel" data-i18n="living.cooling">District cooling</span><button class="tip-btn" onclick="event.stopPropagation();showTooltip('cooling')" aria-label="info">i</button></span><span id="cooling-tag" class="tag tag-auto" onclick="resetCoolingAuto()" style="flex-shrink:0">auto</span><span class="unit-badge">AED</span><input class="finput" id="t-cooling" value="360"></div>
-      <input type="range" id="cooling" min="0" max="3000" step="50" value="360">
+      <div class="ftop"><span class="lbl-group"><span class="flabel" data-i18n="living.cooling">District cooling</span><button class="tip-btn" onclick="event.stopPropagation();showTooltip('cooling')" aria-label="info">i</button></span><span id="cooling-tag" class="tag tag-auto" onclick="resetCoolingAuto()" style="flex-shrink:0">auto</span><span class="unit-badge">AED</span><input class="finput" id="t-cooling" value="280"></div>
+      <input type="range" id="cooling" min="0" max="3000" step="1" value="280">
       <div class="rlabels"><span id="rl-cool-min">AED 0</span><span id="rl-cool-max">AED 3,000</span></div>
       <div class="fnote" data-i18n="fnote.cooling">Empower / Tabreed / Tasleem &middot; auto-estimated from size, adjust if needed</div>
     </div>
@@ -747,7 +747,7 @@ function hydrateIcons(root){
 const USD_RATE = 3.6725;
 const DEWA_PER_SQFT = 0.70;
 const RENTAL_YIELD = 6.5; // typical Dubai gross rental yield %
-const COOLING_PER_SQFT = 0.45; // District cooling auto estimate (AED/sqft/mo). Calibrated to real Dubai bills: efficient Emaar communities (Creek Harbour) ~0.27/sqft summer, pricier Empower areas higher; 0.45 is a realistic mid. Field is editable per unit.
+const COOLING_PER_SQFT = 0.35; // District cooling auto estimate (AED/sqft/mo). Calibrated to a real Emaar EDC bill (Creek Harbour 1BR, ~750sqft): shoulder-season ~252 AED/mo incl VAT = ~0.335/sqft; winter ~130, summer peak ~320. 0.35 is a realistic typical-month mid. Field is editable per unit.
 let calcLivingTotal = 0;
 let rentOut = false;
 let rentYield = 7.0;
@@ -771,6 +771,8 @@ let currentEmirate = 'dubai';
 let currency='AED';
 let dewaEdited=false, coolingEdited=false, downManual=false, approvedManual=false, rentManual = false;
 const vals={price:1500000,cash:420000,approved:1500000,bval:1500000,down:20,years:25,eibor:3.45,sqft:800,fixrate:4.19,fixperiod:5,dld:4,agency:2};
+function aCap(){return vals.approved>0?vals.approved:1e15;} // approved 0 = explicit cash purchase = no loan
+function aprBlank(){const i=document.getElementById('t-income2');const hasInc=i&&parseFloat(String(i.value).replace(/[^0-9.]/g,''))>0;return !hasInc&&!approvedManual;} // show approved field empty when income not entered
 let fixPeriodManual=false;
 
 function shareCalc(){
@@ -783,7 +785,7 @@ function shareCalc(){
   x.fillStyle='#fff'; x.font='700 64px -apple-system,system-ui,sans-serif'; x.fillText('H',100,138);
   x.fillStyle=text; x.font='700 56px -apple-system,system-ui,sans-serif'; x.fillText('Hayyak',200,120);
   x.fillStyle=muted; x.font='400 28px -apple-system,system-ui,sans-serif'; x.fillText('Property & living \u00b7 UAE',200,160);
-  const loan=Math.min(vals.price*(1-vals.down/100),vals.bval*(vals.price>5000000?0.70:0.80),vals.approved);
+  const loan=Math.min(vals.price*(1-vals.down/100),vals.bval*(vals.price>5000000?0.70:0.80),aCap());
   const n=vals.years*12,r=vals.fixrate/100/12;
   const pay=r>0?loan*r*Math.pow(1+r,n)/(Math.pow(1+r,n)-1):loan/n;
   const cc=closingCosts(vals.price,loan); const upfront=(vals.price-loan)+cc.fees;
@@ -942,7 +944,7 @@ function setBudgetPeriod(p){
 function renderBudget(){
   const body=document.getElementById('modal-budget-body');if(!body)return;
   const clt=typeof calcLivingTotal==='number'?calcLivingTotal:0;
-  const loan=Math.min(vals.price*(1-vals.down/100),vals.bval*(vals.price>5000000?0.70:0.80),vals.approved);
+  const loan=Math.min(vals.price*(1-vals.down/100),vals.bval*(vals.price>5000000?0.70:0.80),aCap());
   const n=vals.years*12,r=vals.fixrate/100/12;
   const mortgagePay=r>0?loan*r*Math.pow(1+r,n)/(Math.pow(1+r,n)-1):loan/n;
   const ins=loan*0.000112+vals.price*0.001/12;
@@ -1062,7 +1064,7 @@ function toggleCheck(id){checklistDone[id]=!checklistDone[id];renderChecklist();
 
 let scenarios=[], scenPriority='monthly';
 function snapshotScenario(){
-  const loan=Math.min(vals.price*(1-vals.down/100),vals.bval*(vals.price>5000000?0.70:0.80),vals.approved);
+  const loan=Math.min(vals.price*(1-vals.down/100),vals.bval*(vals.price>5000000?0.70:0.80),aCap());
   const n=vals.years*12,r=vals.fixrate/100/12;
   const pay=r>0?loan*r*Math.pow(1+r,n)/(Math.pow(1+r,n)-1):loan/n;
   const upfront=(vals.price-loan)+closingCosts(vals.price,loan).fees;
@@ -1304,7 +1306,7 @@ let bvalManual=false;
 function autoDown(){
   if(downManual)return;
   const ltvCap=vals.price>5000000?0.70:0.80;
-  const approxLoan=Math.min(vals.bval*ltvCap,vals.approved),fees=closingCosts(vals.price,approxLoan).fees;
+  const approxLoan=Math.min(vals.bval*ltvCap,aCap()),fees=closingCosts(vals.price,approxLoan).fees;
   const valuationGap=Math.max(0,vals.price-vals.bval),availForDown=vals.cash-fees-valuationGap;
   const minDown=vals.price>5000000?30:20;const pct=clamp(Math.floor(availForDown/vals.price*100),minDown,80);
   vals.down=pct;const downEl=document.getElementById('down');downEl.value=pct;document.getElementById('t-down').value=String(pct);
@@ -1346,7 +1348,15 @@ function syncIncome(val){
     vals.approved=estApproved;const ar=document.getElementById('approved'),tar=document.getElementById('t-approved');
     if(ar){ar.value=valToSlider('approved',estApproved);paintSlider(ar);}if(tar)tar.value=fmtDisplay('approved',estApproved);
     if(apTag){apTag.style.display='';apTag.textContent=t('tag.auto');apTag.className='tag tag-auto';}
-  } else {if(apTag)apTag.style.display='none';}
+  } else {
+    if(apTag)apTag.style.display='none';
+    if(!approvedManual){
+      vals.approved=vals.price;
+      const ar=document.getElementById('approved'),tar=document.getElementById('t-approved');
+      if(ar){ar.value=valToSlider('approved',vals.price);paintSlider(ar);}
+      if(tar)tar.value='';
+    }
+  }
   calc();scheduleSave();
 }
 function fromSlider(key){
@@ -1367,6 +1377,7 @@ function fromText(key){
   if(SLIDER_RANGE[key]){const r=SLIDER_RANGE[key];aedVal=clamp(aedVal,r.min,r.max);s.value=valToSlider(key,aedVal);}
   else{aedVal=clamp(aedVal,parseFloat(s.min),parseFloat(s.max));s.value=aedVal;}
   vals[key]=aedVal;
+  if(key==='approved')approvedManual=true;
   if(key==='sqft'){autoUpdateDewa(aedVal);dewaEdited=false;setTag('dewa-tag',false);autoUpdateCooling(aedVal);coolingEdited=false;const ss=document.getElementById('s-sqft-range');if(ss){ss.value=valToSlider('s-sqft-range',aedVal);paintSlider(ss);}}
   if(key==='cash')autoDown();
   else if(key==='price'){if(!downManual)autoDown();autoUpdateRent();if(!bvalManual){vals.bval=aedVal;document.getElementById('bval').value=valToSlider('bval',aedVal);document.getElementById('t-bval').value=fmtDisplay('bval',aedVal);setTag('bval-tag',false,'auto');}}
@@ -1374,7 +1385,7 @@ function fromText(key){
   if(key==='approved'){approvedManual=true;const inc2=document.getElementById('t-income2');const hasIncome=inc2&&parseFloat(String(inc2.value).replace(/[^0-9.]/g,''))>0;const apTag=document.getElementById('approved-tag');if(hasIncome&&apTag){apTag.style.display='';apTag.textContent=t('tag.manual');apTag.className='tag tag-manual';}}
   calc();
 }
-function blurText(key){document.getElementById('t-'+key).value=fmtDisplay(key,vals[key]);}
+function blurText(key){const el=document.getElementById('t-'+key);if(!el)return;el.value=(key==='approved'&&aprBlank())?'':fmtDisplay(key,vals[key]);}
 ['price','cash','approved','bval','down','years','eibor','sqft'].forEach(key=>{
   document.getElementById(key).addEventListener('input',()=>{if(key==='down'){downManual=true;setTag('down-tag',true);}fromSlider(key);});
   const tin=document.getElementById('t-'+key);
@@ -1435,7 +1446,7 @@ function renderRentPanelSimple(price,monthly,sqft,el){
 }
 function _updateRentSimple(el,price,monthly,sqft){
   if(!price)return;
-  const loan=Math.min(price*(1-vals.down/100),vals.bval*(vals.price>5000000?0.70:0.80),vals.approved);
+  const loan=Math.min(price*(1-vals.down/100),vals.bval*(vals.price>5000000?0.70:0.80),aCap());
   const monthlyRent=Math.round(price*rentYield/100/12);
   const scRate=parseFloat((document.getElementById('sc')||{}).value)||23;
   const sc=Math.round(sqft*scRate/12);
@@ -1464,7 +1475,7 @@ function renderRentPanel(price,monthly,sqft,panelId){
 }
 function _updateRentNumbers(el,price,monthly,sqft){
   if(!price)return;
-  const loan=Math.min(price*(1-vals.down/100),vals.bval*(vals.price>5000000?0.70:0.80),vals.approved);
+  const loan=Math.min(price*(1-vals.down/100),vals.bval*(vals.price>5000000?0.70:0.80),aCap());
   const monthlyRent=Math.round(price*rentYield/100/12);
   const scRate=parseFloat((document.getElementById('sc')||{}).value)||23;
   const sc=Math.round(sqft*scRate/12);
@@ -1556,14 +1567,14 @@ function simpleCalc(){
     if(!bvalManual){vals.bval=vals.price;document.getElementById('bval').value=valToSlider('bval',vals.price);document.getElementById('t-bval').value=fmtDisplay('bval',vals.price);}
     // Reset approved to price if no income — prevents stale saved value constraining loan
     const incVal=parseFloat((document.getElementById('t-income2')||{}).value.replace(/[^0-9]/g,'')||'0')||0;
-    if(!incVal&&!approvedManual){vals.approved=vals.price;const apEl=document.getElementById('approved'),tapEl=document.getElementById('t-approved');if(apEl){apEl.value=valToSlider('approved',vals.price);paintSlider(apEl);}if(tapEl)tapEl.value=fmtDisplay('approved',vals.price);}
+    if(!incVal&&!approvedManual){vals.approved=vals.price;const apEl=document.getElementById('approved'),tapEl=document.getElementById('t-approved');if(apEl){apEl.value=valToSlider('approved',vals.price);paintSlider(apEl);}if(tapEl)tapEl.value='';}
     autoDown();autoUpdateDewa(sqft);autoUpdateCooling(sqft);
     if(!price||!cash){document.getElementById('s-result').innerHTML='';return;}
     calc();
   } else {if(!price||!cash){document.getElementById('s-result').innerHTML='';return;}}
   // Use vals computed by calc() above — single source of truth
   const downPct=vals.down,downAmt=vals.price*downPct/100;
-  const loan=Math.min(vals.price*(1-vals.down/100),vals.bval*(vals.price>5000000?0.70:0.80),vals.approved);
+  const loan=Math.min(vals.price*(1-vals.down/100),vals.bval*(vals.price>5000000?0.70:0.80),aCap());
   const cc=closingCosts(vals.price,loan),fees=cc.fees,upfront=downAmt+fees;
   const n=vals.years*12,mr=vals.fixrate/100/12;
   const monthly=loan>0?loan*mr*Math.pow(1+mr,n)/(Math.pow(1+mr,n)-1):0;
@@ -1588,7 +1599,7 @@ function simpleCalc(){
 }
 
 function refreshInputs(){
-  ['price','cash','approved','bval'].forEach(key=>{const el=document.getElementById('t-'+key);if(el)el.value=fmtDisplay(key,vals[key]);});
+  ['price','cash','approved','bval'].forEach(key=>{const el=document.getElementById('t-'+key);if(el)el.value=(key==='approved'&&aprBlank())?'':fmtDisplay(key,vals[key]);});
   const isUSD=currency==='USD';
   const spEl=document.getElementById('s-price'),scEl=document.getElementById('s-cash'),sqEl=document.getElementById('s-sqft');
   if(spEl)spEl.value=isUSD?Math.round(vals.price/USD_RATE).toLocaleString('en-US'):fmtN(vals.price);
@@ -1741,10 +1752,10 @@ function calcBvR(){
   const rentInc=parseFloat(document.getElementById('rent-inc').value)||5;
   const propGrowth=parseFloat(document.getElementById('prop-growth').value)||5;
   const invReturn=parseFloat(document.getElementById('bvr-inv-rate').value)||5;
-  const years=vals.years,price=vals.price,loan=Math.min(price*(1-vals.down/100),vals.bval*(price>5000000?0.70:0.80),vals.approved);
+  const years=vals.years,price=vals.price,loan=Math.min(price*(1-vals.down/100),vals.bval*(price>5000000?0.70:0.80),aCap());
   const n=years*12,ins=loan*0.000112+price*0.001/12,mortgageMo=mpay(loan,vals.fixrate,n)+ins;
   const scRate=parseFloat(document.getElementById('sc').value)||23,scAnn=vals.sqft*scRate;
-  const upfront=price*vals.down/100+closingCosts(price,Math.min(price*(100-vals.down)/100,vals.approved)).fees;
+  const upfront=price*vals.down/100+closingCosts(price,Math.min(price*(100-vals.down)/100,aCap())).fees;
   const mr=vals.fixrate/100/12,ir=invReturn/100,cash=vals.cash;
   const mortgageMoBase=mpay(loan,vals.fixrate,n);
   const scMo=Math.round(vals.sqft*scRate/12);
@@ -1852,7 +1863,7 @@ function calcLiving(){
   if(scNote)scNote.textContent=(currency==='USD'?'$':'AED')+'/sqft/yr';
   const scHint=document.getElementById('sc-monthly-hint');if(scHint)scHint.textContent='= '+fmt(sc)+'/mo for your '+Math.round(sqft)+' sqft';
   // Mortgage payment (fixed + variable)
-  const loan=Math.min(vals.price*(1-vals.down/100),vals.bval*(vals.price>5000000?0.70:0.80),vals.approved);
+  const loan=Math.min(vals.price*(1-vals.down/100),vals.bval*(vals.price>5000000?0.70:0.80),aCap());
   const n=vals.years*12,rf=vals.fixrate/100/12;
   const pf=loan>0?loan*rf*Math.pow(1+rf,n)/(Math.pow(1+rf,n)-1):0;
   const margin=salaryTransfer?1.5:1.89;
@@ -1903,7 +1914,7 @@ function calcLiving(){
   }
 }
 function calcPP(){
-  const loanAED=Math.min(vals.price*(1-vals.down/100),vals.bval*(vals.price>5000000?0.70:0.80),vals.approved),totalMonths=vals.years*12,monthRate=vals.fixrate/100/12;
+  const loanAED=Math.min(vals.price*(1-vals.down/100),vals.bval*(vals.price>5000000?0.70:0.80),aCap()),totalMonths=vals.years*12,monthRate=vals.fixrate/100/12;
   let ppMonth=parseInt(document.getElementById('pp-month').value)||1;
   const ppAmt=parseFloat(document.getElementById('pp-amt').value)||0;
   if(ppMonth>=totalMonths){updatePPResults('<div style="text-align:center;color:var(--muted);font-size:12px;padding:8px 0">Prepayment month exceeds loan term.</div>');document.getElementById('pp-strategy').innerHTML='';return;}
@@ -2197,7 +2208,7 @@ if(restored){
     vals.approved=vals.price;
     const arEl=document.getElementById('approved'),tarEl=document.getElementById('t-approved');
     if(arEl){arEl.value=valToSlider('approved',vals.price);paintSlider(arEl);}
-    if(tarEl)tarEl.value=fmtDisplay('approved',vals.price);
+    if(tarEl)tarEl.value='';
   }
   if(rentOut)setRentOut(true);
   applyTheme();
@@ -2238,6 +2249,6 @@ document.addEventListener('DOMContentLoaded',()=>hydrateIcons());
 
 
 <div id="tooltip-sheet" onclick="hideTooltip()"></div>
-<div style="position:fixed;bottom:2px;right:4px;font-size:9px;color:rgba(128,128,128,0.4);z-index:99999;pointer-events:none">v1276</div>
+<div style="position:fixed;bottom:2px;right:4px;font-size:9px;color:rgba(128,128,128,0.4);z-index:99999;pointer-events:none">v1282</div>
 </body>
 </html>
