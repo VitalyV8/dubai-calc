@@ -388,7 +388,7 @@ input[type=range]::-moz-range-track{background:transparent;height:4px;border-rad
       <div class="fnote" data-i18n="field.sqft.hint">Used to estimate DEWA, cooling and service charge</div>
     </div>
     <div class="field">
-      <div class="ftop"><span class="lbl-group"><span class="flabel" data-i18n="income.label">Monthly income</span><button class="tip-btn" onclick="event.stopPropagation();showTooltip('income')" aria-label="info">i</button></span><span class="unit-badge">AED</span><input class="finput" id="t-income2" value="" placeholder="&mdash;" inputmode="numeric" oninput="this.value=this.value.replace(/[^0-9]/g,'');syncIncome(this.value)" onblur="if(this.value)this.value=parseInt(this.value).toLocaleString('en-US')" onfocus="this.value=this.value.replace(/[^0-9]/g,'')"></div>
+      <div class="ftop"><span class="lbl-group"><span class="flabel" data-i18n="income.label">Monthly income</span><button class="tip-btn" onclick="event.stopPropagation();showTooltip('income')" aria-label="info">i</button></span><span class="unit-badge">AED</span><input class="finput" id="t-income2" value="" placeholder="&mdash;" inputmode="numeric" oninput="liveThousands(this);syncIncome(this.value)" onblur="if(this.value)this.value=parseInt(this.value.replace(/[^0-9]/g,'')||'0').toLocaleString('en-US')"></div>
       <div class="fnote" style="display:flex;align-items:flex-start;gap:6px"><span data-ic="bulb" data-ic-size="14" style="color:var(--amber);margin-top:1px"></span><span data-i18n="income.hint">Add income to check loan approval</span></div>
     </div>
     <span id="sv-val" style="display:none"></span>
@@ -445,13 +445,15 @@ input[type=range]::-moz-range-track{background:transparent;height:4px;border-rad
       </div>
     </div>
     <div class="field">
+      <div class="ftop"><span class="lbl-group"><span class="flabel">Fixed period</span><button class="tip-btn" onclick="event.stopPropagation();showTooltip('fixperiod')" aria-label="info">i</button></span><span class="unit-badge">yr</span><input class="finput" id="t-fixperiod" value="5" inputmode="numeric"></div>
+      <div class="fnote">How long the rate stays fixed before it goes variable</div>
+    </div>
+    <div class="field">
       <div class="ftop"><span class="lbl-group"><span class="flabel"><span data-i18n="field.eibor">Expected EIBOR</span><button class="tip-btn" onclick="event.stopPropagation();showTooltip('eibor')" aria-label="info">i</button></span></span><span class="unit-badge">%</span><input class="finput" id="t-eibor" value="3.85"></div>
       <input type="range" id="eibor" min="1" max="8" step="0.05" value="3.85">
       <div class="rlabels"><span data-i18n="field.eibor.opt">1% optimistic</span><span data-i18n="field.eibor.stress">8% stress test</span></div>
       <div class="fnote" data-i18n="field.eibor.hint">(variable rate after fixed)</div>
     </div>
-    <input type="hidden" id="fixperiod" value="5">
-    <input type="hidden" id="t-fixperiod" value="5">
   </div></div>
 </div>
 
@@ -498,7 +500,7 @@ input[type=range]::-moz-range-track{background:transparent;height:4px;border-rad
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
       <div class="metric"><div class="m-lbl">Loan payment</div><div class="m-val" style="font-size:18px" id="adv-val-mortgage">&mdash;</div><div class="m-sub" id="adv-mortgage-sub">per month</div></div>
-      <div class="metric" style="background:var(--amber-bg);border:1px solid var(--amber-bd)"><div class="m-lbl" style="color:var(--amber)">Total monthly</div><div class="m-val ca" style="font-size:18px" id="adv-val-allin">&mdash;</div><div class="m-sub" style="color:var(--amber);opacity:.8">loan + bills + everything</div></div>
+      <div class="metric" style="background:var(--amber-bg);border:1px solid var(--amber-bd)"><div class="m-lbl" style="color:var(--amber)" id="adv-allin-lbl">Total monthly</div><div class="m-val ca" style="font-size:18px" id="adv-val-allin">&mdash;</div><div class="m-sub" style="color:var(--amber);opacity:.8">loan + bills + everything</div></div>
     </div>
     <div style="font-size:11px;color:var(--muted);text-align:center;padding:2px 0 12px" id="adv-rate-note">Fixed 4.19% &middot; first 5 years</div>
     </div><!-- /payment-block -->
@@ -885,6 +887,8 @@ function updateAdvAllIn(){
   if(aEl){if(allin>0){aEl.textContent=fmt(allin*mult);aEl.classList.remove('num-pulse');void aEl.offsetWidth;aEl.classList.add('num-pulse');}else aEl.textContent='\u2014';}
   const subEl=document.getElementById('adv-mortgage-sub');
   if(subEl)subEl.textContent=advPeriod==='year'?'per year':'per month';
+  const allinLbl=document.getElementById('adv-allin-lbl');
+  if(allinLbl)allinLbl.textContent=advPeriod==='year'?'Total annual':'Total monthly';
   const noteEl=document.getElementById('adv-rate-note');
   if(noteEl){
     const fp=vals.fixperiod||5;
@@ -957,9 +961,10 @@ function renderBudget(){
   const rows=Object.keys(BUDGET_DEFAULTS).filter(k=>{if(BUDGET_DEFAULTS[k].rentOnly)return rentOut;return true;}).map(k=>{
     const d=BUDGET_DEFAULTS[k],v=budgetVals[k],isHousing=k==='housing';
     const [smin,smax,sstep]=BSLIDERS[k]||[0,10000,250];
-    return `<div style="padding:12px 0;border-bottom:1px solid var(--border)" id="budget-row-${k}"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:${isHousing?'0':'6px'}"><span style="display:flex;align-items:center;gap:8px;font-size:14px;color:${isHousing?'var(--muted)':'var(--text)'};font-weight:500"><span style="color:var(--muted);display:inline-flex">${ic(d.icon,16)}</span><span>${t(d.key)}</span></span><span id="budget-val-${k}" style="font-size:14px;font-weight:600;color:${v>0?'var(--text)':'var(--muted)'}">${v>0?budgetDisp(v):'—'}</span></div>${isHousing?'':`<input type="range" id="budget-slider-${k}" min="${smin}" max="${smax}" step="${sstep}" value="${v}" style="width:100%;margin:0" oninput="budgetVals['${k}']=parseInt(this.value);const ve=document.getElementById('budget-val-${k}');if(ve){ve.textContent=budgetVals['${k}']>0?budgetDisp(budgetVals['${k}']):'—';ve.style.color=budgetVals['${k}']>0?'var(--text)':'var(--muted)'}updateBudgetSummary()"><div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-top:2px"><span>0</span><span>${currency==='USD'?('$'+Math.round(smax/3.6725).toLocaleString()):('AED '+smax.toLocaleString())}</span></div>`}</div>`;
+    return `<div style="padding:12px 0;border-bottom:1px solid var(--border)" id="budget-row-${k}"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:${isHousing?'0':'6px'}"><span style="display:flex;align-items:center;gap:8px;font-size:14px;color:${isHousing?'var(--muted)':'var(--text)'};font-weight:500"><span style="color:var(--muted);display:inline-flex">${ic(d.icon,16)}</span><span>${t(d.key)}</span></span><span id="budget-val-${k}" ${isHousing?'':`onclick="openBudgetEdit('${k}')" `}style="font-size:14px;font-weight:600;color:${v>0?'var(--text)':'var(--muted)'}${isHousing?'':';cursor:pointer;border-bottom:1px dashed var(--muted);padding-bottom:1px'}">${v>0?budgetDisp(v):'—'}</span></div>${isHousing?'':`<input type="range" id="budget-slider-${k}" min="${smin}" max="${smax}" step="${sstep}" value="${v}" style="width:100%;margin:0" oninput="budgetVals['${k}']=parseInt(this.value);paintSlider(this);const ve=document.getElementById('budget-val-${k}');if(ve){ve.textContent=budgetVals['${k}']>0?budgetDisp(budgetVals['${k}']):'—';ve.style.color=budgetVals['${k}']>0?'var(--text)':'var(--muted)'}updateBudgetSummary()"><div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-top:2px"><span>0</span><span>${currency==='USD'?('$'+Math.round(smax/3.6725).toLocaleString()):('AED '+smax.toLocaleString())}</span></div>`}</div>`;
   }).join('');
-  body.innerHTML=`<div style="display:flex;gap:8px;margin-bottom:14px"><div class="seg" style="flex:1"><button class="seg-btn ${budgetPeriod==='month'?'on':''}" id="bud-btn-mo" onclick="setBudgetPeriod('month')">${t('budget.period.mo')}</button><button class="seg-btn ${budgetPeriod==='year'?'on':''}" id="bud-btn-yr" onclick="setBudgetPeriod('year')">${t('budget.period.yr')}</button></div></div><div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 14px;margin-bottom:14px;display:flex;justify-content:space-between;align-items:center;gap:12px"><span style="font-size:14px;font-weight:600;color:var(--text);white-space:nowrap;display:flex;align-items:center;gap:6px">${ic('briefcase',15)} ${t('income.label')}</span><input class="finput" id="budget-income" type="text" inputmode="numeric" value="${incomeVal}" placeholder="—" style="width:120px;text-align:right" oninput="const v=parseFloat(this.value.replace(/[^0-9]/g,''))||0;const el=document.getElementById('t-income');if(el){el.value=v>0?v.toLocaleString('en-US'):''};updateBudgetSummary()"></div><div class="totals">${rows}</div><div style="background:var(--bg);border-radius:14px;padding:16px;margin-top:16px"><div style="display:flex;justify-content:space-between;align-items:center"><span id="budget-total-key" style="font-size:14px;font-weight:700">${t(budgetPeriod==='year'?'budget.total.yr':'budget.total')}</span><span id="budget-total-val" style="font-size:22px;font-weight:700;letter-spacing:-0.5px">${budgetDisp(total)}</span></div><div id="budget-summary" style="display:none"></div></div>`;
+  body.innerHTML=`<div style="display:flex;gap:8px;margin-bottom:14px"><div class="seg" style="flex:1"><button class="seg-btn ${budgetPeriod==='month'?'on':''}" id="bud-btn-mo" onclick="setBudgetPeriod('month')">${t('budget.period.mo')}</button><button class="seg-btn ${budgetPeriod==='year'?'on':''}" id="bud-btn-yr" onclick="setBudgetPeriod('year')">${t('budget.period.yr')}</button></div></div><div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 14px;margin-bottom:14px;display:flex;justify-content:space-between;align-items:center;gap:12px"><span style="font-size:14px;font-weight:600;color:var(--text);white-space:nowrap;display:flex;align-items:center;gap:6px">${ic('briefcase',15)} ${t('income.label')}</span><input class="finput" id="budget-income" type="text" inputmode="numeric" value="${incomeVal}" placeholder="—" style="width:120px;text-align:right" oninput="liveThousands(this);const v=parseFloat(this.value.replace(/[^0-9]/g,''))||0;const el=document.getElementById('t-income');if(el){el.value=v>0?v.toLocaleString('en-US'):''};updateBudgetSummary()"></div><div class="totals">${rows}</div><div style="background:var(--bg);border-radius:14px;padding:16px;margin-top:16px"><div style="display:flex;justify-content:space-between;align-items:center"><span id="budget-total-key" style="font-size:14px;font-weight:700">${t(budgetPeriod==='year'?'budget.total.yr':'budget.total')}</span><span id="budget-total-val" style="font-size:22px;font-weight:700;letter-spacing:-0.5px">${budgetDisp(total)}</span></div><div id="budget-summary" style="display:none"></div></div>`;
+  paintAllSliders();
   updateBudgetSummary();
 }
 let _bedKey=null;
@@ -982,7 +987,7 @@ function openBudgetEdit(key,doOpen=true){
 }
 function onBedInput(raw){const num=parseFloat(raw.replace(/[^0-9.]/g,''))||0;const aed=currency==='USD'?Math.round(num*3.6725):num;const monthly=budgetPeriod==='year'?Math.round(aed/12):aed;document.querySelectorAll('.bud-preset').forEach(btn=>{const p=parseInt(btn.getAttribute('onclick').match(/\d+/)[0]);btn.classList.toggle('sel',Math.abs(monthly-p)<50);});}
 function setBedPreset(p){const disp=budgetPeriod==='year'?p*12:p;const num=currency==='USD'?Math.round(disp/3.6725):disp;const inp=document.getElementById('bed-input');inp.value=num.toLocaleString('en-US');document.querySelectorAll('.bud-preset').forEach(btn=>{const bp=parseInt(btn.getAttribute('onclick').match(/\d+/)[0]);btn.classList.toggle('sel',bp===p);});}
-function confirmBudgetEditor(){if(!_bedKey)return;const raw=document.getElementById('bed-input').value;budgetVals[_bedKey]=budgetFromDisp(raw);const ve=document.getElementById('budget-val-'+_bedKey);if(ve){const v=budgetVals[_bedKey];ve.textContent=v>0?budgetDisp(v):'—';ve.style.color=v>0?'var(--text)':'var(--muted)';}updateBudgetSummary();closeBudgetEditor();}
+function confirmBudgetEditor(){if(!_bedKey)return;const raw=document.getElementById('bed-input').value;budgetVals[_bedKey]=budgetFromDisp(raw);const sl=document.getElementById('budget-slider-'+_bedKey);if(sl){sl.value=budgetVals[_bedKey];paintSlider(sl);}const ve=document.getElementById('budget-val-'+_bedKey);if(ve){const v=budgetVals[_bedKey];ve.textContent=v>0?budgetDisp(v):'—';ve.style.color=v>0?'var(--text)':'var(--muted)';}updateBudgetSummary();closeBudgetEditor();}
 function closeBudgetEditor(){document.getElementById('budget-editor').classList.remove('show');document.getElementById('budget-editor-bg').classList.remove('show');_bedKey=null;const inp=document.getElementById('bed-input');if(inp)inp.blur();}
 
 let openedModal=null;
@@ -1272,12 +1277,27 @@ function updateRateLabels(){
   set('btn-rate3','3');set('btn-rate5','5');set('s-btn-rate3','3');set('s-btn-rate5','5');
   const note=document.getElementById('rate-note');if(note){const margin=salaryTransfer?VAR_MARGIN.salary:VAR_MARGIN.nonsalary;note.textContent=t('rate.note').replace('{margin}',margin);}
 }
+function syncSimpleRateUI(){
+  const rEl=document.getElementById('s-rate');if(!rEl)return;
+  const r=parseFloat(String(rEl.value).replace(/[^0-9.]/g,''))||0;
+  const yrs=vals.fixperiod||5;
+  const sum=document.getElementById('s-rate-summary');
+  if(sum&&r>0)sum.textContent=r.toFixed(2)+'% \u00b7 '+yrs+'yr';
+  const tbl=salaryTransfer?RATE_TABLE.salary:RATE_TABLE.nonsalary;
+  const b3=document.getElementById('s-btn-rate3'),b5=document.getElementById('s-btn-rate5');
+  const a3=vals.fixperiod===3,a5=vals.fixperiod===5;
+  // Highlight the button for the ACTIVE period (so the term is always visible),
+  // and show YOUR rate on the active button (typical rate on the inactive one).
+  if(b3){b3.classList.toggle('on',a3);const sp=b3.querySelector('span');if(sp)sp.textContent=(a3&&r>0?r.toFixed(2):tbl['3'].toFixed(2))+'% \u00b7 3';}
+  if(b5){b5.classList.toggle('on',a5);const sp=b5.querySelector('span');if(sp)sp.textContent=(a5&&r>0?r.toFixed(2):tbl['5'].toFixed(2))+'% \u00b7 5';}
+}
 function setSimpleRate(periodKey){
-  currentFixPeriodKey=periodKey;const r=(salaryTransfer?RATE_TABLE.salary:RATE_TABLE.nonsalary)[periodKey];
+  currentFixPeriodKey=periodKey;const yrs=parseInt(periodKey);
+  const r=(salaryTransfer?RATE_TABLE.salary:RATE_TABLE.nonsalary)[periodKey];
+  vals.fixperiod=yrs;fixPeriodManual=false;
+  const fpEl=document.getElementById('fixperiod'),tfpEl=document.getElementById('t-fixperiod');
+  if(fpEl)fpEl.value=yrs;if(tfpEl)tfpEl.value=String(yrs);
   document.getElementById('s-rate').value=r.toFixed(2);
-  document.getElementById('s-btn-rate3').classList.toggle('on',periodKey==='3');
-  document.getElementById('s-btn-rate5').classList.toggle('on',periodKey==='5');
-  const sum=document.getElementById('s-rate-summary');if(sum)sum.textContent=r.toFixed(2)+'% \u00b7 '+periodKey+'yr';
   simpleCalc();
 }
 function toggleSimpleRate(){const d=document.getElementById('s-rate-detail'),ch=document.getElementById('s-rate-chev');const open=d.classList.toggle('open');if(ch)ch.classList.toggle('open',open);}
@@ -1292,11 +1312,18 @@ function setFixRate(periodKey,btnId){
   vals.fixrate=r;document.getElementById('t-fixrate').value=r.toFixed(2);
   ['btn-rate3','btn-rate5'].forEach(id=>{document.getElementById(id).classList.remove('on');});
   document.getElementById(btnId).classList.add('on');
-  fixPeriodManual=false;vals.fixperiod=yrs;document.getElementById('fixperiod').value=yrs;document.getElementById('t-fixperiod').value=String(yrs);
+  fixPeriodManual=false;vals.fixperiod=yrs;const _fp=document.getElementById('fixperiod');if(_fp){_fp.value=yrs;paintSlider(_fp);}document.getElementById('t-fixperiod').value=String(yrs);
   calc();
 }
-document.getElementById('fixperiod').addEventListener('input',()=>{const v=parseInt(document.getElementById('fixperiod').value);vals.fixperiod=v;document.getElementById('t-fixperiod').value=String(v);calc();});
-document.getElementById('t-fixperiod').addEventListener('input',()=>{let v=parseInt(document.getElementById('t-fixperiod').value.replace(/[^0-9]/g,''))||1;v=Math.min(10,Math.max(1,v));vals.fixperiod=v;document.getElementById('fixperiod').value=v;calc();});
+function fixPeriodChanged(v){
+  v=Math.max(1,Math.min(v,10,vals.years||25));
+  fixPeriodManual=true;vals.fixperiod=v;
+  const fp=document.getElementById('fixperiod'),tfp=document.getElementById('t-fixperiod');
+  if(fp){fp.value=v;paintSlider(fp);}if(tfp)tfp.value=String(v);
+  ['btn-rate3','btn-rate5'].forEach(id=>{const b=document.getElementById(id);if(b)b.classList.remove('on');});
+  calc();
+}
+document.getElementById('t-fixperiod').addEventListener('input',()=>{fixPeriodChanged(parseInt(document.getElementById('t-fixperiod').value.replace(/[^0-9]/g,''))||1);});
 document.getElementById('t-fixperiod').addEventListener('blur',()=>{document.getElementById('t-fixperiod').value=String(vals.fixperiod);});
 
 function setTag(id,manual,text){
@@ -1341,6 +1368,16 @@ function resetBvalAuto(){
   setTag('bval-tag',false,'auto');calc();scheduleSave();
 }
 function resetDewaAuto(){dewaEdited=false;autoUpdateDewa(vals.sqft);setTag('dewa-tag',false);calcLiving();scheduleSave();}
+function liveThousands(el){
+  if(!el)return;
+  const start=(typeof el.selectionStart==='number')?el.selectionStart:el.value.length;
+  const digitsBefore=el.value.slice(0,start).replace(/[^0-9]/g,'').length;
+  const digits=el.value.replace(/[^0-9]/g,'');
+  el.value=digits?parseInt(digits,10).toLocaleString('en-US'):'';
+  let pos=0,seen=0;
+  while(pos<el.value.length&&seen<digitsBefore){const c=el.value.charCodeAt(pos);if(c>=48&&c<=57)seen++;pos++;}
+  try{el.setSelectionRange(pos,pos);}catch(e){}
+}
 function syncIncome(val){
   const raw=String(val).replace(/[^0-9.]/g,''),num=parseFloat(raw)||0;
   const hidden=document.getElementById('t-income');if(hidden)hidden.value=num>0?num.toLocaleString('en-US'):'';
@@ -1546,6 +1583,7 @@ function setSPeriod(p){
   const mult=p==='year'?12:1;
   const vm=document.getElementById('s-val-mortgage'),va=document.getElementById('s-val-allin');
   if(vm)vm.textContent=fmt(sMortgage*mult);if(va)va.textContent=fmt(sAllIn*mult);
+  const sl=document.getElementById('s-allin-lbl');if(sl)sl.textContent=p==='year'?'Total annual':t('row.allin.label');
 }
 function buildAllInSub(){return rentOut?(t('row.allin.short.rent')||'incl. service charge'):(t('row.allin.short')||'incl. living costs');}
 
@@ -1565,6 +1603,7 @@ function simpleCalc(){
     if(price>0){vals.price=price;autoUpdateRent();document.getElementById('price').value=valToSlider('price',price);document.getElementById('t-price').value=fmtN(price);}
     if(cash>0){vals.cash=cash;document.getElementById('cash').value=valToSlider('cash',cash);document.getElementById('t-cash').value=fmtN(cash);}
     if(rate>0){vals.fixrate=rate;document.getElementById('t-fixrate').value=rate.toFixed(2);}
+    syncSimpleRateUI();
     vals.sqft=sqft;document.getElementById('sqft').value=valToSlider('sqft',sqft);document.getElementById('t-sqft').value=fmtN(sqft);
     if(!bvalManual){vals.bval=vals.price;document.getElementById('bval').value=valToSlider('bval',vals.price);document.getElementById('t-bval').value=fmtDisplay('bval',vals.price);}
     // Reset approved to price if no income — prevents stale saved value constraining loan
@@ -1594,7 +1633,7 @@ function simpleCalc(){
   else if(!loanOk){vc='warn';em=ic('alert',22);ti='Loan may exceed approval';su=`Loan ${fmt(loan)} \u00b7 check bank approval limit`;}
   else{vc='ok';em=ic('checkCircle',22);ti=t('card.canbuy');su='Your cash covers the down payment and fees';}
   sMortgage=monthly;sAllIn=allIn;sAllInSub=allInSub;
-  document.getElementById('s-result').innerHTML=`<div class="card" style="margin-top:0"><div style="display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:12px;margin-bottom:16px;border:1px solid ${vc==='ok'?'var(--green-bd)':vc==='warn'?'var(--amber-bd)':'var(--red-bd)'};background:${vc==='ok'?'var(--green-bg)':vc==='warn'?'var(--amber-bg)':'var(--red-bg)'}"><span style="display:inline-flex;color:${vc==='ok'?'var(--green)':vc==='warn'?'var(--amber)':'var(--red)'}">${em}</span><div><div style="font-size:14px;font-weight:700;color:${vc==='ok'?'var(--green)':vc==='warn'?'var(--amber)':'var(--red)'}">${ti}</div><div style="font-size:12px;color:${vc==='ok'?'var(--green)':vc==='warn'?'var(--amber)':'var(--red)'};opacity:.8;margin-top:2px">${su}</div></div></div>${price>=2000000?`<div style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:12px;margin-bottom:16px;background:linear-gradient(135deg,#FFF8E1,#FFE9B8);border:1px solid #F0C75E"><span style="color:#B8860B;display:inline-flex">${ic('award',18)}</span><div style="font-size:12px;color:#7A5C00;line-height:1.4"><strong>${t('gv.title')}</strong><br>${t('gv.desc')}</div></div>`:''}${hasEnough?`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><span class="sec-lbl" style="margin-bottom:0">${t('sec.payment')}</span><div class="seg"><button onclick="setSPeriod('month')" id="s-btn-month" class="seg-btn on">Monthly</button><button onclick="setSPeriod('year')" id="s-btn-year" class="seg-btn">Annual</button></div></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px"><div class="metric"><div class="m-lbl">${t('row.mortgage.label')}</div><div class="m-val" style="font-size:18px" id="s-val-mortgage">${fmt(monthly)}</div><div class="m-sub" id="s-sub-mortgage">${t('sub.permonth')}</div></div><div class="metric" style="background:var(--amber-bg);border:1px solid var(--amber-bd)"><div class="m-lbl" style="color:var(--amber)">${t('row.allin.label')}</div><div class="m-val ca" style="font-size:18px" id="s-val-allin">${fmt(allIn)}</div><div class="m-sub" style="color:var(--amber);opacity:.8" id="s-allin-sub">${allInSub}</div></div></div>`:''}<div class="sec-lbl">${t('sec.atclosing')}</div><div class="totals"><div class="brow"><span class="brow-lbl">${t('row.down')} (${downPct}%)</span><span class="brow-val">${fmt(downAmt)}</span></div><div class="brow"><span class="brow-lbl">${EMIRATES[currentEmirate].label} ${vals.dld}% + agency ${vals.agency}% + all fees</span><span class="brow-val">${fmt(fees)}</span></div><div class="brow" style="padding-top:12px"><span class="brow-lbl" style="font-weight:700;color:var(--text);font-size:14px">${t('row.totalneeded')}</span><span class="brow-val" style="font-size:18px;font-weight:700">${fmt(upfront)}</span></div></div></div>`;
+  document.getElementById('s-result').innerHTML=`<div class="card" style="margin-top:0"><div style="display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:12px;margin-bottom:16px;border:1px solid ${vc==='ok'?'var(--green-bd)':vc==='warn'?'var(--amber-bd)':'var(--red-bd)'};background:${vc==='ok'?'var(--green-bg)':vc==='warn'?'var(--amber-bg)':'var(--red-bg)'}"><span style="display:inline-flex;color:${vc==='ok'?'var(--green)':vc==='warn'?'var(--amber)':'var(--red)'}">${em}</span><div><div style="font-size:14px;font-weight:700;color:${vc==='ok'?'var(--green)':vc==='warn'?'var(--amber)':'var(--red)'}">${ti}</div><div style="font-size:12px;color:${vc==='ok'?'var(--green)':vc==='warn'?'var(--amber)':'var(--red)'};opacity:.8;margin-top:2px">${su}</div></div></div>${price>=2000000?`<div style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:12px;margin-bottom:16px;background:linear-gradient(135deg,#FFF8E1,#FFE9B8);border:1px solid #F0C75E"><span style="color:#B8860B;display:inline-flex">${ic('award',18)}</span><div style="font-size:12px;color:#7A5C00;line-height:1.4"><strong>${t('gv.title')}</strong><br>${t('gv.desc')}</div></div>`:''}${hasEnough?`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><span class="sec-lbl" style="margin-bottom:0">${t('sec.payment')}</span><div class="seg"><button onclick="setSPeriod('month')" id="s-btn-month" class="seg-btn on">Monthly</button><button onclick="setSPeriod('year')" id="s-btn-year" class="seg-btn">Annual</button></div></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px"><div class="metric"><div class="m-lbl">${t('row.mortgage.label')}</div><div class="m-val" style="font-size:18px" id="s-val-mortgage">${fmt(monthly)}</div><div class="m-sub" id="s-sub-mortgage">${t('sub.permonth')}</div></div><div class="metric" style="background:var(--amber-bg);border:1px solid var(--amber-bd)"><div class="m-lbl" style="color:var(--amber)" id="s-allin-lbl">${t('row.allin.label')}</div><div class="m-val ca" style="font-size:18px" id="s-val-allin">${fmt(allIn)}</div><div class="m-sub" style="color:var(--amber);opacity:.8" id="s-allin-sub">${allInSub}</div></div></div>`:''}<div class="sec-lbl">${t('sec.atclosing')}</div><div class="totals"><div class="brow"><span class="brow-lbl">${t('row.down')} (${downPct}%)</span><span class="brow-val">${fmt(downAmt)}</span></div><div class="brow"><span class="brow-lbl">${EMIRATES[currentEmirate].label} ${vals.dld}% + agency ${vals.agency}% + all fees</span><span class="brow-val">${fmt(fees)}</span></div><div class="brow" style="padding-top:12px"><span class="brow-lbl" style="font-weight:700;color:var(--text);font-size:14px">${t('row.totalneeded')}</span><span class="brow-val" style="font-size:18px;font-weight:700">${fmt(upfront)}</span></div></div></div>`;
   setSPeriod(sPeriod);
   if(typeof renderRentPanelSimple==='function'){const sp=document.getElementById('s-rent-panel');if(sp)renderRentPanelSimple(price,sMortgage,sqft,sp);}
   requestAnimationFrame(paintAllSliders);
@@ -1709,7 +1748,7 @@ function calc(){
   } else affEl.innerHTML='';
   const apTag=document.getElementById('approved-tag');
   if(apTag){if(incomeAED>0){apTag.style.display='';apTag.textContent=approvedManual?t('tag.manual'):t('tag.auto');apTag.className='tag '+(approvedManual?'tag-manual':'tag-auto');}else apTag.style.display='none';}
-  const fixMo=vals.fixperiod*12,varMo=n-fixMo,pfT=mpay(loan,fixrate,n),vr2=variableRate(parseFloat(document.getElementById('eibor').value)||3.85);
+  const fixMo=Math.min(vals.fixperiod,vals.years)*12,varMo=n-fixMo,pfT=mpay(loan,fixrate,n),vr2=variableRate(parseFloat(document.getElementById('eibor').value)||3.85);
   // Remaining balance after fixed period
   const mr2=fixrate/100/12;let balAfterFix=loan;for(let i=0;i<fixMo;i++){const ii=balAfterFix*mr2;balAfterFix=Math.max(0,balAfterFix-(pfT-ii));}
   const totalMortgagePayments=pfT*fixMo+mpay(balAfterFix,vr2,varMo)*varMo,totalInterest=totalMortgagePayments-loan,totalNoLiving=up+totalMortgagePayments;
@@ -1762,7 +1801,7 @@ function calcBvR(){
   const mortgageMoBase=mpay(loan,vals.fixrate,n);
   const scMo=Math.round(vals.sqft*scRate/12);
   let buyerCash=Math.max(0,cash-upfront),renterCash=cash,loanBal2=loan,propVal2=price,rentMonthNow=rentAnnual/12,rentYearNow=rentAnnual;
-  const fixMonths=vals.fixperiod*12;
+  const fixMonths=Math.min(vals.fixperiod,vals.years)*12;
   const vrBvr=variableRate(parseFloat(document.getElementById('eibor').value)||3.85);
   // After fixed period, recalc payment on remaining balance at variable rate
   let mortgagePayCurrent=mortgageMoBase;
@@ -2252,6 +2291,6 @@ document.addEventListener('DOMContentLoaded',()=>hydrateIcons());
 
 
 <div id="tooltip-sheet" onclick="hideTooltip()"></div>
-<div style="position:fixed;bottom:2px;right:4px;font-size:9px;color:rgba(128,128,128,0.4);z-index:99999;pointer-events:none">v1284</div>
+<div style="position:fixed;bottom:2px;right:4px;font-size:9px;color:rgba(128,128,128,0.4);z-index:99999;pointer-events:none">v1293</div>
 </body>
 </html>
