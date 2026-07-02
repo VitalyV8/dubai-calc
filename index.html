@@ -403,7 +403,7 @@ input[type=range]::-moz-range-track{background:transparent;height:4px;border-rad
   </div>
   <div class="card-body-wrap open" id="body-mortgage"><div class="card-body-inner">
     <div class="field">
-      <div class="ftop"><span class="lbl-group"><span class="flabel" data-i18n="field.approved">Bank approved amount</span><button class="tip-btn" onclick="event.stopPropagation();showTooltip('approved')" aria-label="info">i</button></span><span id="approved-tag" class="tag tag-auto" style="display:none;margin:0 4px 0 0" onclick="resetApprovedAuto()"></span><span class="unit-badge">AED</span><input class="finput" id="t-approved" value="" placeholder="&mdash;"></div>
+      <div class="ftop"><span class="lbl-group"><span class="flabel" data-i18n="field.approved">Max loan</span><button class="tip-btn" onclick="event.stopPropagation();showTooltip('approved')" aria-label="info">i</button></span><span id="approved-tag" class="tag tag-auto" style="display:none;margin:0 4px 0 0" onclick="resetApprovedAuto()"></span><span class="unit-badge">AED</span><input class="finput" id="t-approved" value="" placeholder="&mdash;"></div>
       <input type="range" id="approved" min="0" max="1000" step="1" value="448">
       <div class="rlabels"><span id="rl-appr-min">AED 0</span><span id="rl-appr-max">AED 15M</span></div>
       <div class="fnote" id="approved-warn" style="display:none;color:var(--amber)"></div>
@@ -434,25 +434,21 @@ input[type=range]::-moz-range-track{background:transparent;height:4px;border-rad
       <div class="rlabels"><span data-i18n="field.years.1">1 year</span><span data-i18n="field.years.25">25 years</span></div>
     </div>
     <div class="field">
-      <div class="ftop"><span class="lbl-group"><span class="flabel" data-i18n="field.rate">Fixed interest rate</span><button class="tip-btn" onclick="event.stopPropagation();showTooltip('fixperiod')" aria-label="info">i</button></span><span class="unit-badge">%</span><input class="finput" id="t-fixrate" value="4.19"></div>
+      <div class="ftop"><span class="lbl-group"><span class="flabel" data-i18n="field.rate">Fixed interest rate</span><button class="tip-btn" onclick="event.stopPropagation();showTooltip('rate')" aria-label="info">i</button></span><span class="unit-badge">%</span><input class="finput" id="t-fixrate" value="4.19"></div>
       <div class="seg seg-full" style="margin-top:10px">
         <button class="seg-btn on" id="btn-salary" onclick="setSalaryTransfer(true)" data-i18n="rate.salary">Salary transfer</button>
         <button class="seg-btn" id="btn-nonsalary" onclick="setSalaryTransfer(false)" data-i18n="rate.nonsalary">Non-salary / self-employed</button>
       </div>
-      <div class="seg seg-full" style="margin-top:8px">
-        <button class="seg-btn" id="btn-rate3" onclick="setFixRate('3','btn-rate3')"><span id="lbl-rate3">3.99% &middot; 3</span><span data-i18n="units.yr">yr</span></button>
-        <button class="seg-btn on" id="btn-rate5" onclick="setFixRate('5','btn-rate5')"><span id="lbl-rate5">4.19% &middot; 5</span><span data-i18n="units.yr">yr</span></button>
-      </div>
+      <div class="fnote" id="rate-typical-note">Typical bank rates: 3.99% (3yr fix) &middot; 4.19% (5yr fix)</div>
     </div>
     <div class="field">
       <div class="ftop"><span class="lbl-group"><span class="flabel">Fixed period</span><button class="tip-btn" onclick="event.stopPropagation();showTooltip('fixperiod')" aria-label="info">i</button></span><span class="unit-badge">yr</span><input class="finput" id="t-fixperiod" value="5" inputmode="numeric"></div>
-      <div class="fnote">How long the rate stays fixed before it goes variable</div>
+      <div class="fnote" id="fixperiod-note">Then the rate becomes variable &mdash; EIBOR + 1.5% bank margin</div>
     </div>
     <div class="field">
       <div class="ftop"><span class="lbl-group"><span class="flabel"><span data-i18n="field.eibor">Expected EIBOR</span><button class="tip-btn" onclick="event.stopPropagation();showTooltip('eibor')" aria-label="info">i</button></span></span><span class="unit-badge">%</span><input class="finput" id="t-eibor" value="3.85"></div>
       <input type="range" id="eibor" min="1" max="8" step="0.05" value="3.85">
       <div class="rlabels"><span data-i18n="field.eibor.opt">1% optimistic</span><span data-i18n="field.eibor.stress">8% stress test</span></div>
-      <div class="fnote" data-i18n="field.eibor.hint">(variable rate after fixed)</div>
     </div>
   </div></div>
 </div>
@@ -774,7 +770,7 @@ let currentEmirate = 'dubai';
 let currency='AED';
 let dewaEdited=false, coolingEdited=false, downManual=false, approvedManual=false, rentManual = false;
 const vals={price:1500000,cash:420000,approved:1500000,bval:1500000,down:20,years:25,eibor:3.85,sqft:800,fixrate:4.19,fixperiod:5,dld:4,agency:2};
-function aCap(){return vals.approved>0?vals.approved:1e15;} // approved 0 = explicit cash purchase = no loan
+function aCap(){if(aprBlank())return vals.price>0?vals.price:1e15;return vals.approved>0?vals.approved:1e15;} // approved 0 = explicit cash purchase = no loan; blank income = no known cap
 function aprBlank(){const i=document.getElementById('t-income2');const hasInc=i&&parseFloat(String(i.value).replace(/[^0-9.]/g,''))>0;return !hasInc&&!approvedManual;} // show approved field empty when income not entered
 let fixPeriodManual=false;
 
@@ -892,8 +888,9 @@ function updateAdvAllIn(){
   const noteEl=document.getElementById('adv-rate-note');
   if(noteEl){
     const fp=vals.fixperiod||5;
-    if(isVar){const eibor=parseFloat((document.getElementById('eibor')||{}).value)||3.85;noteEl.textContent='Variable ~'+variableRate(eibor).toFixed(2)+'% \u00b7 after '+fp+' years';}
-    else noteEl.textContent='Fixed '+(vals.fixrate||0).toFixed(2)+'% \u00b7 first '+fp+' years';
+    const fpTxt=fp===1?'1 year':fp+' years';
+    if(isVar){const eibor=parseFloat((document.getElementById('eibor')||{}).value)||3.85;noteEl.textContent='Variable ~'+variableRate(eibor).toFixed(2)+'% \u00b7 after '+fpTxt;}
+    else noteEl.textContent='Fixed '+(vals.fixrate||0).toFixed(2)+'% \u00b7 first '+fpTxt;
   }
   const bm=document.getElementById('adv-btn-month'),by=document.getElementById('adv-btn-year');
   if(bm)bm.classList.toggle('on',advPeriod==='month');if(by)by.classList.toggle('on',advPeriod==='year');
@@ -1112,7 +1109,7 @@ const TIPS={
     fixperiod:{title:'Fixed Rate Period',text:'Your rate is locked for this many years. After that it becomes variable: EIBOR + bank margin (typically 1.5%). Most people choose 3 or 5 years.'},
     insurance:{title:'Mortgage Insurance',text:'Banks require two types of insurance: Life insurance (~0.13%/yr of the loan) and Property insurance (~0.1%/yr of property value). Both included in the all-in monthly figure.'},
     allin:{title:'Monthly All-In',text:'Total monthly cost of owning: mortgage payment + DEWA + district cooling + service charge + internet + gas. Adjustable in Living costs module.'},
-    approved:{title:'Bank Approved Amount',text:'The maximum loan your bank pre-approved. If your loan calculation exceeds this, you need more cash or a lower-priced property.'},
+    approved:{title:'Max Loan Amount',text:'The maximum loan your bank pre-approved. If your loan calculation exceeds this, you need more cash or a lower-priced property.'},
     price:{title:'Property Price',text:'The agreed purchase price with the seller. Note: the bank will value the property independently — if valuation comes in lower, you pay the difference in cash.'},
     cash:{title:'Your Cash Available',text:'Total savings you can use for this purchase. Needs to cover: down payment + ownership fee (4% DLD) + agency 2% + valuation + mortgage registration fees.'},
     sqft:{title:'Property Size',text:'Used to auto-estimate DEWA consumption and service charge. You can adjust both manually in Living costs.'},
@@ -1274,8 +1271,10 @@ function variableRate(eibor){const margin=salaryTransfer?VAR_MARGIN.salary:VAR_M
 function updateRateLabels(){
   const tb=salaryTransfer?RATE_TABLE.salary:RATE_TABLE.nonsalary,yr=t('units.yr');
   const set=(id,period)=>{const el=document.getElementById(id);if(el)el.innerHTML=`<span>${tb[period].toFixed(2)}% \u00b7 ${period}</span> <span>${yr}</span>`;};
-  set('btn-rate3','3');set('btn-rate5','5');set('s-btn-rate3','3');set('s-btn-rate5','5');
+  set('s-btn-rate3','3');set('s-btn-rate5','5');
+  const tn=document.getElementById('rate-typical-note');if(tn)tn.textContent='Typical bank rates: '+tb['3'].toFixed(2)+'% (3yr fix) \u00b7 '+tb['5'].toFixed(2)+'% (5yr fix)';
   const note=document.getElementById('rate-note');if(note){const margin=salaryTransfer?VAR_MARGIN.salary:VAR_MARGIN.nonsalary;note.textContent=t('rate.note').replace('{margin}',margin);}
+  const fpn=document.getElementById('fixperiod-note');if(fpn){const m=salaryTransfer?VAR_MARGIN.salary:VAR_MARGIN.nonsalary;fpn.textContent='Then the rate becomes variable \u2014 EIBOR + '+m+'% bank margin';}
 }
 function syncSimpleRateUI(){
   const rEl=document.getElementById('s-rate');if(!rEl)return;
@@ -1305,25 +1304,20 @@ function setSalaryTransfer(on){
   salaryTransfer=on;
   document.getElementById('btn-salary').classList.toggle('on',on);
   document.getElementById('btn-nonsalary').classList.toggle('on',!on);
-  updateRateLabels();setFixRate(currentFixPeriodKey,currentFixPeriodKey==='3'?'btn-rate3':'btn-rate5');scheduleSave();
+  updateRateLabels();
+  const bucket=(vals.fixperiod<=3)?'3':'5';
+  const nr=(on?RATE_TABLE.salary:RATE_TABLE.nonsalary)[bucket];
+  vals.fixrate=nr;const tf=document.getElementById('t-fixrate');if(tf)tf.value=nr.toFixed(2);
+  calc();scheduleSave();
 }
-function setFixRate(periodKey,btnId){
-  currentFixPeriodKey=periodKey;const yrs=parseInt(periodKey);const r=(salaryTransfer?RATE_TABLE.salary:RATE_TABLE.nonsalary)[periodKey];
-  vals.fixrate=r;document.getElementById('t-fixrate').value=r.toFixed(2);
-  ['btn-rate3','btn-rate5'].forEach(id=>{document.getElementById(id).classList.remove('on');});
-  document.getElementById(btnId).classList.add('on');
-  fixPeriodManual=false;vals.fixperiod=yrs;const _fp=document.getElementById('fixperiod');if(_fp){_fp.value=yrs;paintSlider(_fp);}document.getElementById('t-fixperiod').value=String(yrs);
-  calc();
-}
-function fixPeriodChanged(v){
+function fixPeriodChanged(v,fromTyping){
   v=Math.max(1,Math.min(v,10,vals.years||25));
   fixPeriodManual=true;vals.fixperiod=v;
   const fp=document.getElementById('fixperiod'),tfp=document.getElementById('t-fixperiod');
-  if(fp){fp.value=v;paintSlider(fp);}if(tfp)tfp.value=String(v);
-  ['btn-rate3','btn-rate5'].forEach(id=>{const b=document.getElementById(id);if(b)b.classList.remove('on');});
+  if(fp){fp.value=v;paintSlider(fp);}if(tfp&&!fromTyping)tfp.value=String(v);
   calc();
 }
-document.getElementById('t-fixperiod').addEventListener('input',()=>{fixPeriodChanged(parseInt(document.getElementById('t-fixperiod').value.replace(/[^0-9]/g,''))||1);});
+document.getElementById('t-fixperiod').addEventListener('input',()=>{const el=document.getElementById('t-fixperiod');const digits=el.value.replace(/[^0-9]/g,'');if(digits!==el.value)el.value=digits;if(digits==='')return;fixPeriodChanged(parseInt(digits,10),true);});
 document.getElementById('t-fixperiod').addEventListener('blur',()=>{document.getElementById('t-fixperiod').value=String(vals.fixperiod);});
 
 function setTag(id,manual,text){
@@ -1432,7 +1426,7 @@ function blurText(key){const el=document.getElementById('t-'+key);if(!el)return;
   tin.addEventListener('blur',()=>blurText(key));
   tin.addEventListener('keydown',e=>{if(e.key==='Enter'){blurText(key);tin.blur();}});
 });
-document.getElementById('t-fixrate').addEventListener('input',()=>{const v=parseFloat(document.getElementById('t-fixrate').value.replace(/[^0-9.]/g,''));if(!isNaN(v)&&v>0&&v<=15){vals.fixrate=v;['btn-rate3','btn-rate5'].forEach(id=>document.getElementById(id).classList.remove('on'));calc();}});
+document.getElementById('t-fixrate').addEventListener('input',()=>{const v=parseFloat(document.getElementById('t-fixrate').value.replace(/[^0-9.]/g,''));if(!isNaN(v)&&v>0&&v<=15){vals.fixrate=v;calc();}});
 document.getElementById('t-fixrate').addEventListener('blur',()=>{document.getElementById('t-fixrate').value=vals.fixrate.toFixed(2);});
 document.getElementById('t-fixrate').addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('t-fixrate').blur();});
 
@@ -1660,6 +1654,7 @@ function refreshInputs(){
   paintAllSliders();
 }
 function calc(){
+  if(aprBlank())vals.approved=vals.price; // no income & not manual: approved shows "—", must not cap the loan with a stale value
   const{price,cash,approved,bval,down:dp,years,eibor,fixrate}=vals;
   const vr=variableRate(eibor),n=years*12;
   const loan=Math.min(price*(1-dp/100),bval*(price>5000000?0.70:0.80),approved);
@@ -1910,7 +1905,14 @@ function calcLiving(){
   const margin=salaryTransfer?1.5:1.89;
   const eibor=parseFloat(document.getElementById('eibor').value)||3.85;
   const vrate=Math.max(1.99,eibor+margin)/100/12;
-  const pv=loan>0?loan*vrate*Math.pow(1+vrate,n)/(Math.pow(1+vrate,n)-1):0;
+  // "Variable later" = payment AFTER the fixed period ends: balance after fixMo payments at the fixed rate, re-amortised at the variable rate over the remaining months
+  const fixMo=Math.min(vals.fixperiod||5,vals.years||25)*12;
+  let pv=pf;
+  if(loan>0&&n>fixMo){
+    const bal=rf===0?loan*(1-fixMo/n):loan*Math.pow(1+rf,fixMo)-pf*((Math.pow(1+rf,fixMo)-1)/rf);
+    const vm=n-fixMo;
+    pv=bal*vrate*Math.pow(1+vrate,vm)/(Math.pow(1+vrate,vm)-1);
+  }
   // Insurance — IDENTICAL formula to Simple mode (no mid-calc rounding)
   const ins=loan*0.000112+vals.price*0.001/12;
   // Store mortgage-only (fixed + variable) for the Loan payment metric
@@ -2063,7 +2065,7 @@ const I18N={
     'gv.title':'Eligible for Golden Visa','gv.desc':'Properties from AED 2M are eligible for a 10-year Golden Visa for you and your family',
     'sub.permonth':'principal + interest','sub.peryear':'per year',
     'sub.allin.full':'mortgage + DEWA + cooling + service charge + internet + gas',
-    'field.approved':'Bank approved amount','field.bval':'Bank valuation',
+    'field.approved':'Max loan','field.bval':'Bank valuation',
     'field.bval.hint':'Banks lend against valuation, not purchase price. Gap paid from your cash.',
     'field.down':'Down payment','field.down.hint':'Auto-set to maximise loan within your cash \u00b7 tap to override',
     'field.loanterm':'Loan term','field.years.1':'1 year','field.years.25':'25 years',
@@ -2291,6 +2293,6 @@ document.addEventListener('DOMContentLoaded',()=>hydrateIcons());
 
 
 <div id="tooltip-sheet" onclick="hideTooltip()"></div>
-<div style="position:fixed;bottom:2px;right:4px;font-size:9px;color:rgba(128,128,128,0.4);z-index:99999;pointer-events:none">v1293</div>
+<div style="position:fixed;bottom:2px;right:4px;font-size:9px;color:rgba(128,128,128,0.4);z-index:99999;pointer-events:none">v1300</div>
 </body>
 </html>
