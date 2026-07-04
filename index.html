@@ -155,10 +155,15 @@ input[type=range]::-moz-range-track{background:transparent;height:4px;border-rad
 .tag-manual{background:var(--amber-bg);color:var(--amber);transition:opacity .15s}
 .tag-manual[onclick]:hover{opacity:.75}
 .metrics{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px}
-.metric{background:var(--bg);border-radius:12px;padding:13px 14px;transition:background .3s}
+.metric{background:var(--bg);border-radius:12px;padding:13px 14px;transition:background .3s;min-width:0}
 .m-lbl{font-size:11px;color:var(--muted);margin-bottom:4px}
-.m-val{font-size:16px;font-weight:700;color:var(--text);letter-spacing:-0.3px;transition:all .2s}
-.m-sub{font-size:11px;color:var(--muted);margin-top:2px}
+.m-val{font-size:16px;font-weight:700;color:var(--text);letter-spacing:-0.3px;transition:all .2s;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.m-sub{font-size:11px;color:var(--muted);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#adv-allin-card,#s-allin-card{-webkit-tap-highlight-color:transparent;transition:transform .15s ease,background .3s;touch-action:manipulation}
+.rent-tap{cursor:pointer}
+.rent-tap:active{transform:scale(.965)}
+@keyframes rentHint{0%,100%{border-color:var(--amber-bd);box-shadow:inset 0 0 0 0 rgba(212,160,23,0)}50%{border-color:#D4A017;box-shadow:inset 0 0 0 1px #D4A017}}
+.rent-hint{animation:rentHint 1s ease-in-out 2}
 .cg{color:var(--green)!important}.cb{color:var(--blue)!important}.ca{color:var(--amber)!important}.cr{color:var(--red)!important}
 .brow{display:flex;justify-content:space-between;align-items:flex-start;padding:9px 0;border-bottom:1px solid var(--border);gap:12px}
 .brow:last-child{border-bottom:none}
@@ -202,18 +207,9 @@ input[type=range]::-moz-range-track{background:transparent;height:4px;border-rad
 
 
 
-
-
-
-
-
-
-
-
 .tip-btn{display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;border-radius:50%;background:transparent;color:var(--subtle);font-size:10px;font-weight:700;cursor:pointer;border:1.5px solid var(--border);padding:0;margin:0 0 0 6px;flex-shrink:0;vertical-align:middle;-webkit-tap-highlight-color:transparent;transition:all .15s;line-height:1}
 .tip-btn:hover,.tip-btn:active{background:var(--subtle);color:var(--card);border-color:var(--subtle)}
 #tooltip-sheet{position:fixed;left:16px;right:16px;bottom:20px;background:var(--tip-bg);color:var(--tip-sub);border:1px solid rgba(255,255,255,0.12);border-radius:18px;padding:16px 18px;z-index:9999;font-size:13px;line-height:1.6;box-shadow:0 12px 40px rgba(0,0,0,0.28),0 2px 8px rgba(0,0,0,0.12);display:none;max-width:500px;margin:0 auto}
-
 
 #tooltip-sheet strong{display:block;font-size:15px;font-weight:700;margin-bottom:6px;color:var(--tip-text)}
 #budget-editor{position:fixed;left:0;right:0;bottom:0;background:var(--card);border-radius:20px 20px 0 0;z-index:200;padding:16px 20px 40px;transform:translateY(100%);transition:transform .28s cubic-bezier(.4,0,.2,1);box-shadow:0 -4px 32px rgba(0,0,0,.15)}
@@ -496,7 +492,7 @@ input[type=range]::-moz-range-track{background:transparent;height:4px;border-rad
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
       <div class="metric"><div class="m-lbl">Loan payment</div><div class="m-val" style="font-size:18px" id="adv-val-mortgage">&mdash;</div><div class="m-sub" id="adv-mortgage-sub">per month</div></div>
-      <div class="metric" style="background:var(--amber-bg);border:1px solid var(--amber-bd)"><div class="m-lbl" style="color:var(--amber)" id="adv-allin-lbl">Total monthly</div><div class="m-val ca" style="font-size:18px" id="adv-val-allin">&mdash;</div><div class="m-sub" style="color:var(--amber);opacity:.8">loan + bills + everything</div></div>
+      <div class="metric" id="adv-allin-card" onclick="openRentModal()" style="background:var(--amber-bg);border:1px solid var(--amber-bd)"><div class="m-lbl" style="color:var(--amber)" id="adv-allin-lbl">Total monthly</div><div class="m-val ca" style="font-size:18px" id="adv-val-allin">&mdash;</div><div class="m-sub" id="adv-allin-sub" style="color:var(--amber);opacity:.8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">loan + bills + everything</div></div>
     </div>
     <div style="font-size:11px;color:var(--muted);text-align:center;padding:2px 0 12px" id="adv-rate-note">Fixed 4.19% &middot; first 5 years</div>
     </div><!-- /payment-block -->
@@ -546,8 +542,6 @@ input[type=range]::-moz-range-track{background:transparent;height:4px;border-rad
 </div>
   </div></div>
 </div>
-
-<div class="modal-bg" id="modal-bg" onclick="closeModal()"></div>
 
 <div class="modal" id="modal-budget" data-mod="budget">
   <div class="modal-head"><div class="modal-title" style="display:flex;align-items:center;gap:8px"><span data-ic="chartBar" data-ic-size="20" style="color:var(--green)"></span><span data-i18n="tool.budget">Monthly budget</span></div><button class="modal-close" onclick="closeModal()"><span data-ic="close" data-ic-size="18"></span></button></div>
@@ -609,6 +603,7 @@ input[type=range]::-moz-range-track{background:transparent;height:4px;border-rad
   <div class="modal-head"><div class="modal-title" style="display:flex;align-items:center;gap:8px"><span data-ic="bulb" data-ic-size="20" style="color:var(--green)"></span><span data-i18n="tool.living">Living costs</span></div><button class="modal-close" onclick="closeModal()"><span data-ic="close" data-ic-size="18"></span></button></div>
   <div id="modal-living-body"></div>
 </div>
+
 <div class="modal" id="modal-bvr" data-mod="bvr">
   <div class="modal-head"><div class="modal-title" style="display:flex;align-items:center;gap:8px"><span data-ic="scale" data-ic-size="20" style="color:var(--green)"></span><span data-i18n="tool.bvr">Buy vs Rent</span></div><button class="modal-close" onclick="closeModal()"><span data-ic="close" data-ic-size="18"></span></button></div>
   <div id="modal-bvr-body"></div>
@@ -688,6 +683,11 @@ input[type=range]::-moz-range-track{background:transparent;height:4px;border-rad
 </div>
 
 </div><!-- end view-advanced -->
+<div class="modal-bg" id="modal-bg" onclick="closeModal()"></div>
+<div class="modal" id="modal-rent" data-mod="rent">
+  <div class="modal-head"><div class="modal-title" style="display:flex;align-items:center;gap:8px"><span data-ic="trendUp" data-ic-size="20" style="color:var(--green)"></span><span>If you rent it out</span></div><button class="modal-close" onclick="closeModal()"><span data-ic="close" data-ic-size="18"></span></button></div>
+  <div id="modal-rent-body"><div id="rent-modal-slot"></div></div>
+</div>
 <script>
 /* ===== Unified line-icon system (24x24, currentColor stroke, one consistent style) ===== */
 const ICONS={
@@ -749,7 +749,7 @@ const RENTAL_YIELD = 6.5; // typical Dubai gross rental yield %
 const COOLING_PER_SQFT = 0.35; // District cooling auto estimate (AED/sqft/mo). Calibrated to a real Emaar EDC bill (Creek Harbour 1BR, ~750sqft): shoulder-season ~252 AED/mo incl VAT = ~0.335/sqft; winter ~130, summer peak ~320. 0.35 is a realistic typical-month mid. Field is editable per unit.
 let calcLivingTotal = 0;
 let rentOut = false;
-let rentYield = 7.0;
+let rentYield = 6.0;
 let rentYieldManual = false;
 let rentPeriod = 'month';
 let rentRealistic = false;
@@ -880,11 +880,23 @@ function updateAdvAllIn(){
   const mEl=document.getElementById('adv-val-mortgage');
   if(mEl)mEl.textContent=mort>0?fmt(mort*mult):'\u2014';
   const aEl=document.getElementById('adv-val-allin');
-  if(aEl){if(allin>0){aEl.textContent=fmt(allin*mult);aEl.classList.remove('num-pulse');void aEl.offsetWidth;aEl.classList.add('num-pulse');}else aEl.textContent='\u2014';}
+  const allinLbl=document.getElementById('adv-allin-lbl');
+  const allinSub=document.getElementById('adv-allin-sub');
+  const allinCard=document.getElementById('adv-allin-card');
+  if(rentOut&&window._rentArgs){
+    const r=rentMath(window._rentArgs.price,window._rentArgs.monthly,window._rentArgs.sqft);
+    if(aEl){aEl.textContent=(r.cashflow>=0?'+':'\u2212')+fmt(Math.abs(r.cashflow*mult));aEl.style.color=r.cashflow>=0?'var(--green)':'var(--red)';aEl.classList.remove('num-pulse');void aEl.offsetWidth;aEl.classList.add('num-pulse');}
+    if(allinLbl)allinLbl.textContent='Net cashflow \u203a';
+    if(allinSub)allinSub.textContent=fmtN(r.monthlyRent)+' rent \u2212 '+fmtN(r.monthlyRent-r.cashflow);
+    if(allinCard){allinCard.style.cursor='pointer';allinCard.style.pointerEvents='auto';allinCard.classList.add('rent-tap');}
+  }else{
+    if(aEl){aEl.style.color='';if(allin>0){aEl.textContent=fmt(allin*mult);aEl.classList.remove('num-pulse');void aEl.offsetWidth;aEl.classList.add('num-pulse');}else aEl.textContent='\u2014';}
+    if(allinLbl)allinLbl.textContent=advPeriod==='year'?'Total annual':'Total monthly';
+    if(allinSub)allinSub.textContent='loan + bills + everything';
+    if(allinCard){allinCard.style.cursor='default';allinCard.style.pointerEvents='none';allinCard.classList.remove('rent-tap','rent-hint');}
+  }
   const subEl=document.getElementById('adv-mortgage-sub');
   if(subEl)subEl.textContent=advPeriod==='year'?'per year':'per month';
-  const allinLbl=document.getElementById('adv-allin-lbl');
-  if(allinLbl)allinLbl.textContent=advPeriod==='year'?'Total annual':'Total monthly';
   const noteEl=document.getElementById('adv-rate-note');
   if(noteEl){
     const fp=vals.fixperiod||5;
@@ -1460,8 +1472,10 @@ function setRentOut(val){
   const ob=document.getElementById('rentout-btn-owner'),rb=document.getElementById('rentout-btn-rent');
   if(ob)ob.classList.toggle('on',!val);if(rb)rb.classList.toggle('on',val);
   ['dewa','cooling','internet','gas'].forEach(id=>{const field=document.getElementById(id)?.closest('.field');if(field)field.style.opacity=val?'0.35':'1';});
+  if(!val&&typeof openedModal!=='undefined'&&openedModal==='rent')closeModal();
   ['own-btn','rent-btn','s-own-btn','s-rent-btn'].forEach(id=>{const el=document.getElementById(id);if(!el)return;const isOwn=id.includes('own');el.classList.toggle('on',isOwn?!val:val);});
   calcLiving();simpleCalc();calc();
+  ['adv-allin-card','s-allin-card'].forEach(id=>{const c=document.getElementById(id);if(!c)return;c.classList.remove('rent-hint');if(val){void c.offsetWidth;c.classList.add('rent-hint');}});
 }
 function renderRentPanelSimple(price,monthly,sqft,el){
   if(!el)return;
@@ -1499,26 +1513,33 @@ function renderRentPanel(price,monthly,sqft,panelId){
   if(!rentOut){el.style.display='none';return;}
   el.style.display='block';if(!rentYieldManual)rentYield=6.0;el._price=price;el._monthly=monthly;el._sqft=sqft;
   if(!el.querySelector('#rent-yield-slider')){
-    el.innerHTML=`<div style="margin-top:16px;background:var(--bg);border-radius:16px;padding:16px;border:1.5px solid var(--border)"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px"><div style="font-size:13px;font-weight:700;color:var(--text);display:flex;align-items:center;gap:6px">${ic('trendUp',15)} If you rent it out</div><span id="rent-yield-tag" class="tag tag-auto" style="cursor:pointer" onclick="resetRentYield()">auto</span></div><div style="margin-bottom:16px;background:var(--card);border-radius:12px;padding:12px 13px"><div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:2px"><div><div style="font-size:12px;font-weight:600;color:var(--text)">Rental yield</div><div style="font-size:10px;color:var(--muted)">% of value earned as rent per year</div></div><span id="rent-yield-val" style="font-size:18px;font-weight:700;color:var(--text)">6.0%</span></div><input type="range" id="rent-yield-slider" min="30" max="150" step="1" value="${Math.round(rentYield*10)}" oninput="rentYield=+this.value/10;rentYieldManual=true;const e=this.closest('.rent-wrap');_updateRentNumbers(e,e._price,e._monthly,e._sqft);paintSlider(this);" style="width:100%;margin:8px 0 2px"><div style="display:flex;justify-content:space-between;font-size:10px;color:var(--muted)"><span>3%</span><span>15%</span></div></div><div class="seg seg-full" style="margin:-2px 0 12px"><button id="rent-btn-mo" class="seg-btn on" onclick="rentPeriod='month';_syncRentPeriod()">Monthly</button><button id="rent-btn-yr" class="seg-btn" onclick="rentPeriod='year';_syncRentPeriod()">Annual</button></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px"><div style="background:var(--card);border-radius:12px;padding:12px 10px"><div style="font-size:10px;color:var(--muted);margin-bottom:4px;display:flex;align-items:center;gap:5px">${ic('home',12)} Rent income</div><div id="rent-n-income" style="font-size:16px;font-weight:700;color:var(--green);direction:ltr"></div><div style="font-size:10px;color:var(--muted)" id="rent-income-sub">tenant pays /mo</div></div><div style="background:var(--card);border-radius:12px;padding:12px 10px"><div style="font-size:10px;color:var(--muted);margin-bottom:4px;display:flex;align-items:center;gap:5px">${ic('coins',12)} Cashflow</div><div id="rent-n-cf" style="font-size:16px;font-weight:700;direction:ltr"></div><div id="rent-n-cfsub" style="font-size:10px;color:var(--muted)"></div></div></div><div style="background:var(--card);border-radius:12px;padding:12px 13px;margin-bottom:8px"><div style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px">Monthly breakdown</div><div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border)"><span style="font-size:12px;color:var(--muted)">Rent income</span><span id="rent-n-r1" style="font-size:13px;font-weight:600;color:var(--green);direction:ltr"></span></div><div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border)"><span style="font-size:12px;color:var(--muted)">Mortgage</span><span id="rent-n-r2" style="font-size:13px;font-weight:600;color:var(--red);direction:ltr"></span></div><div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border)"><span style="font-size:12px;color:var(--muted)">Service charge</span><span id="rent-n-r3" style="font-size:13px;font-weight:600;color:var(--muted);direction:ltr"></span></div><div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border)"><span style="font-size:12px;color:var(--muted)">Property ins.</span><span id="rent-n-r4" style="font-size:13px;font-weight:600;color:var(--muted);direction:ltr"></span></div><div style="display:flex;justify-content:space-between;padding:5px 0"><span style="font-size:12px;color:var(--muted)">Life ins. (bank)</span><span id="rent-n-r5" style="font-size:13px;font-weight:600;color:var(--muted);direction:ltr"></span></div><div id="rent-row-vac" style="display:none;justify-content:space-between;padding:5px 0;border-top:1px solid var(--border)"><span style="font-size:12px;color:var(--muted)">Vacancy ~1mo/yr</span><span id="rent-n-r6" style="font-size:13px;font-weight:600;color:var(--muted);direction:ltr"></span></div><div id="rent-row-mgmt" style="display:none;justify-content:space-between;padding:5px 0"><span style="font-size:12px;color:var(--muted)">Management 5%</span><span id="rent-n-r7" style="font-size:13px;font-weight:600;color:var(--muted);direction:ltr"></span></div><div style="display:flex;justify-content:space-between;padding:8px 0 2px;border-top:2px solid var(--border);margin-top:4px"><span id="rent-total-lbl" style="font-size:12px;font-weight:700;color:var(--text)">= Net cashflow/mo</span><span id="rent-n-total" style="font-size:15px;font-weight:700;direction:ltr"></span></div></div><label style="display:flex;align-items:center;gap:8px;padding:10px 13px;background:var(--card);border-radius:12px;margin-bottom:8px;cursor:pointer"><input type="checkbox" id="rent-realistic-cb" style="width:16px;height:16px;accent-color:var(--green)" onchange="rentRealistic=this.checked;_syncRentPeriod()"><span style="font-size:12px;color:var(--text)">Realistic mode <span style="color:var(--muted)">\u00b7 vacancy + management 5%</span></span></label><div style="background:var(--card);border-radius:12px;padding:12px 13px"><div style="font-size:10px;color:var(--muted);margin-bottom:4px;display:flex;align-items:center;gap:5px">${ic('chartBar',12)} Annual net yield</div><div id="rent-n-yield" style="font-size:17px;font-weight:700;color:var(--text)"></div></div></div>`;
+    el.innerHTML=`<div style="margin-top:12px;background:var(--bg);border-radius:16px;padding:12px 12px 8px;border:1.5px solid var(--border)"><div style="background:var(--card);border-radius:12px;padding:11px 13px 13px"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px"><span style="font-size:12px;font-weight:600;color:var(--text)">Rental yield</span><span style="display:flex;align-items:center;gap:8px"><span id="rent-yield-tag" class="tag tag-auto" style="cursor:pointer" onclick="resetRentYield()">auto</span><span id="rent-yield-val" style="font-size:16px;font-weight:700;color:var(--text)">6.0%</span></span></div><input type="range" id="rent-yield-slider" min="30" max="150" step="1" value="${Math.round(rentYield*10)}" oninput="rentYield=+this.value/10;rentYieldManual=true;const e=this.closest('.rent-wrap');_updateRentNumbers(e,e._price,e._monthly,e._sqft);paintSlider(this);" style="width:100%;margin:6px 0 2px"><div style="display:flex;justify-content:space-between;font-size:10px;color:var(--muted)"><span>3%</span><span>15%</span></div><div style="display:flex;justify-content:space-between;align-items:center;margin-top:11px"><span style="font-size:12px;font-weight:600;color:var(--text)">Monthly rent</span><span style="display:flex;align-items:center;gap:6px"><span class="unit-badge">AED</span><input class="finput" id="rent-input" inputmode="numeric" style="width:100px" oninput="liveThousands(this);const v=parseInt(this.value.replace(/[^0-9]/g,''))||0;const e=this.closest('.rent-wrap');if(v>0&&e&&e._price){rentYield=Math.min(25,Math.max(0.5,v*12/e._price*100));rentYieldManual=true;_updateRentNumbers(e,e._price,e._monthly,e._sqft);const s=document.getElementById('rent-yield-slider');if(s){s.value=Math.max(30,Math.min(150,Math.round(rentYield*10)));paintSlider(s);}}" onblur="if(this.value)this.value=parseInt(this.value.replace(/[^0-9]/g,'')||'0').toLocaleString('en-US')"></span></div><div style="text-align:center;border-top:1px solid var(--border);margin-top:11px;padding-top:11px"><div style="font-size:11px;color:var(--muted);margin-bottom:3px">Net cashflow \u00b7 rent income <span id="rent-n-income" style="font-weight:600;color:var(--green)"></span>/mo</div><div id="rent-n-cf" style="font-size:24px;font-weight:700;direction:ltr;letter-spacing:-0.5px"></div><div id="rent-n-cfsub" style="font-size:11px;color:var(--muted);margin-top:2px"></div></div></div><button onclick="toggleRentDetails()" style="width:100%;display:flex;align-items:center;justify-content:space-between;background:none;border:none;padding:10px 2px 2px;cursor:pointer;font-family:inherit"><span style="font-size:12px;font-weight:600;color:var(--muted)">Breakdown &amp; options</span><span id="rent-det-chev" style="display:inline-flex;color:var(--muted);transition:transform .3s ease">${ic('chevron',16)}</span></button><div id="rent-details" class="collapse-wrap"><div><div style="padding-top:10px"><div style="background:var(--card);border-radius:12px;padding:12px 13px;margin-bottom:8px"><div style="font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px">Monthly breakdown</div><div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border)"><span style="font-size:12px;color:var(--muted)">Rent income</span><span id="rent-n-r1" style="font-size:13px;font-weight:600;color:var(--green);direction:ltr"></span></div><div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border)"><span style="font-size:12px;color:var(--muted)">Mortgage</span><span id="rent-n-r2" style="font-size:13px;font-weight:600;color:var(--red);direction:ltr"></span></div><div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border)"><span style="font-size:12px;color:var(--muted)">Service charge</span><span id="rent-n-r3" style="font-size:13px;font-weight:600;color:var(--muted);direction:ltr"></span></div><div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border)"><span style="font-size:12px;color:var(--muted)">Property ins.</span><span id="rent-n-r4" style="font-size:13px;font-weight:600;color:var(--muted);direction:ltr"></span></div><div style="display:flex;justify-content:space-between;padding:5px 0"><span style="font-size:12px;color:var(--muted)">Life ins. (bank)</span><span id="rent-n-r5" style="font-size:13px;font-weight:600;color:var(--muted);direction:ltr"></span></div><div id="rent-row-vac" style="display:none;justify-content:space-between;padding:5px 0;border-top:1px solid var(--border)"><span style="font-size:12px;color:var(--muted)">Vacancy ~1mo/yr</span><span id="rent-n-r6" style="font-size:13px;font-weight:600;color:var(--muted);direction:ltr"></span></div><div id="rent-row-mgmt" style="display:none;justify-content:space-between;padding:5px 0"><span style="font-size:12px;color:var(--muted)">Management 5%</span><span id="rent-n-r7" style="font-size:13px;font-weight:600;color:var(--muted);direction:ltr"></span></div><div style="display:flex;justify-content:space-between;padding:8px 0 2px;border-top:2px solid var(--border);margin-top:4px"><span id="rent-total-lbl" style="font-size:12px;font-weight:700;color:var(--text)">= Net cashflow/mo</span><span id="rent-n-total" style="font-size:15px;font-weight:700;direction:ltr"></span></div></div><label style="display:flex;align-items:center;gap:8px;padding:10px 13px;background:var(--card);border-radius:12px;margin-bottom:8px;cursor:pointer"><input type="checkbox" id="rent-realistic-cb" style="width:16px;height:16px;accent-color:var(--green)" onchange="rentRealistic=this.checked;_syncRentPeriod()"><span style="font-size:12px;color:var(--text)">Realistic mode <span style="color:var(--muted)">\u00b7 vacancy + management 5%</span></span></label><div style="background:var(--card);border-radius:12px;padding:12px 13px"><div style="font-size:10px;color:var(--muted);margin-bottom:4px;display:flex;align-items:center;gap:5px">${ic('chartBar',12)} Annual net yield</div><div id="rent-n-yield" style="font-size:17px;font-weight:700;color:var(--text)"></div></div></div></div></div></div>`;
     el.firstElementChild.classList.add('rent-wrap');el.firstElementChild._price=price;el.firstElementChild._monthly=monthly;el.firstElementChild._sqft=sqft;
     setTimeout(()=>paintSlider(el.querySelector('#rent-yield-slider')),30);
   }
   const wrap=el.querySelector('.rent-wrap');if(wrap){wrap._price=price;wrap._monthly=monthly;wrap._sqft=sqft;}
   _updateRentNumbers(el,price,monthly,sqft);
 }
-function _updateRentNumbers(el,price,monthly,sqft){
-  if(!price)return;
+function rentMath(price,monthly,sqft){
+  if(!rentYieldManual)rentYield=6.0;
   const loan=Math.min(price*(1-vals.down/100),vals.bval*(vals.price>5000000?0.70:0.80),aCap());
   const monthlyRent=Math.round(price*rentYield/100/12);
   const scRate=parseFloat((document.getElementById('sc')||{}).value)||23;
   const sc=Math.round(sqft*scRate/12);
   const lifeIns=Math.round(loan*0.000112),propIns=Math.round(price*0.001/12),ins=lifeIns+propIns;
   const vacancy=rentRealistic?Math.round(monthlyRent/12):0,mgmt=rentRealistic?Math.round(monthlyRent*0.05):0;
-  const cashflow=monthlyRent-monthly-sc-ins-vacancy-mgmt,netYield=((monthlyRent*12-sc*12-ins*12-vacancy*12-mgmt*12)/price*100).toFixed(1);
+  const cashflow=monthlyRent-monthly-sc-ins-vacancy-mgmt;
+  const netYield=((monthlyRent*12-sc*12-ins*12-vacancy*12-mgmt*12)/price*100).toFixed(1);
+  return {loan,monthlyRent,sc,lifeIns,propIns,ins,vacancy,mgmt,cashflow,netYield};
+}
+function _updateRentNumbers(el,price,monthly,sqft){
+  if(!price)return;
+  const {monthlyRent,sc,lifeIns,propIns,vacancy,mgmt,cashflow,netYield}=rentMath(price,monthly,sqft);
   const positive=cashflow>=0,m=rentPeriod==='year'?12:1,sfx=rentPeriod==='year'?'/yr':'/mo';
   const q=(id)=>el.querySelector?el.querySelector('#'+id):document.getElementById(id);
   const set=(id,v)=>{const e=q(id);if(e)e.textContent=v;};
   set('rent-yield-val',rentYield.toFixed(1)+'%');
+  const ri=q('rent-input');if(ri&&document.activeElement!==ri)ri.value=monthlyRent?fmtN(monthlyRent):'';
   const fmtC=v=>fmt(v).replace(/^AED\s?/,'');
   set('rent-n-income',fmtC(monthlyRent*m));
   const cf=q('rent-n-cf');if(cf){cf.textContent=(positive?'+':'')+fmtC(cashflow*m);cf.style.color=positive?'var(--green)':'var(--red)';}
@@ -1529,12 +1550,66 @@ function _updateRentNumbers(el,price,monthly,sqft){
   if(rentRealistic){set('rent-n-r6','\u2212 '+fmt(vacancy*m));set('rent-n-r7','\u2212 '+fmt(mgmt*m));}
   set('rent-n-total',(positive?'+':'')+fmt(cashflow*m)+sfx);const nt=q('rent-n-total');if(nt)nt.style.color=positive?'var(--green)':'var(--red)';
   set('rent-n-yield',netYield+'%');
+  if(typeof updateAdvAllIn==='function')updateAdvAllIn();
+  if(typeof _syncSimpleAmberRent==='function')_syncSimpleAmberRent();
   const bm=q('rent-btn-mo'),by=q('rent-btn-yr');if(bm)bm.classList.toggle('on',rentPeriod==='month');if(by)by.classList.toggle('on',rentPeriod==='year');
   const tag=q('rent-yield-tag');if(tag){tag.textContent=rentYieldManual?t('tag.manual'):t('tag.auto');tag.className='tag '+(rentYieldManual?'tag-manual':'tag-auto');}
   const sl=q('rent-yield-slider');if(sl&&Math.round(+sl.value/10*10)!==Math.round(rentYield*10))sl.value=Math.round(rentYield*10);
 }
+function toggleRentDetails(){const d=document.getElementById('rent-details');if(!d)return;const open=d.classList.toggle('open');const c=document.getElementById('rent-det-chev');if(c)c.style.transform=open?'rotate(180deg)':'';}
+let _rentTapX=null,_rentTapY=null,_lastRentOpen=0;
+function _rentCardAt(x,y){
+  for(const id of ['adv-allin-card','s-allin-card']){
+    const c=document.getElementById(id);if(!c)continue;
+    const r=c.getBoundingClientRect();
+    if(r.width>2&&r.height>2&&x>=r.left&&x<=r.right&&y>=r.top&&y<=r.bottom)return c;
+  }
+  return null;
+}
+document.addEventListener('touchstart',e=>{const t=e.touches&&e.touches[0];if(t){_rentTapX=t.clientX;_rentTapY=t.clientY;}},{passive:true,capture:true});
+document.addEventListener('touchend',e=>{
+  if(!rentOut)return;
+  const t=e.changedTouches&&e.changedTouches[0];
+  let hit=null;
+  if(t){
+    if(_rentTapX!==null&&(Math.abs(t.clientX-_rentTapX)>10||Math.abs(t.clientY-_rentTapY)>10))return;
+    hit=_rentCardAt(t.clientX,t.clientY);
+  }
+  if(!hit&&e.target&&e.target.closest)hit=e.target.closest('#adv-allin-card,#s-allin-card');
+  if(!hit)return;
+  if(e.cancelable)e.preventDefault();
+  openRentModal();
+},{passive:false,capture:true});
+document.addEventListener('click',e=>{
+  if(!rentOut)return;
+  const hit=_rentCardAt(e.clientX,e.clientY)||(e.target&&e.target.closest?e.target.closest('#adv-allin-card,#s-allin-card'):null);
+  if(hit)openRentModal();
+},true);
+function openRentModal(){
+  if(!rentOut||!window._rentArgs)return;
+  const _n=Date.now();if(_n-_lastRentOpen<400)return;_lastRentOpen=_n;
+  openModal('rent');
+  const a=window._rentArgs;
+  renderRentPanel(a.price,a.monthly,a.sqft,'rent-modal-slot');
+  const d=document.getElementById('rent-details');
+  if(d&&!d.classList.contains('open'))toggleRentDetails();
+}
+function _syncSimpleAmberRent(){
+  if(!rentOut||!window._rentArgs)return;
+  const va=document.getElementById('s-val-allin');if(!va)return;
+  const r=rentMath(window._rentArgs.price,window._rentArgs.monthly,window._rentArgs.sqft);
+  sAllIn=r.cashflow;
+  const mult=(typeof sPeriod!=='undefined'&&sPeriod==='year')?12:1;
+  va.textContent=(r.cashflow>=0?'+':'\u2212')+fmt(Math.abs(r.cashflow*mult));
+  va.style.color=r.cashflow>=0?'var(--green)':'var(--red)';
+  const sl=document.getElementById('s-allin-lbl');if(sl)sl.textContent='Net cashflow \u203a';
+  const ss=document.getElementById('s-allin-sub');if(ss)ss.textContent=fmtN(r.monthlyRent)+' rent \u2212 '+fmtN(r.monthlyRent-r.cashflow);
+  const sc=document.getElementById('s-allin-card');if(sc){sc.classList.add('rent-tap');sc.style.pointerEvents='auto';sc.style.cursor='pointer';}
+}
 function _syncRentPeriod(){
-  ['rent-panel','s-rent-panel'].forEach(id=>{const p=document.getElementById(id);if(!p)return;const wrap=p.querySelector('.rent-wrap')||p;const price=wrap._price??p._price;const monthly=wrap._monthly??p._monthly;const sqft=wrap._sqft??p._sqft;if(price)_updateRentNumbers(p,price,monthly,sqft);});
+  ['rent-modal-slot','rent-panel','s-rent-panel'].forEach(id=>{const p=document.getElementById(id);if(!p)return;const wrap=p.querySelector('.rent-wrap')||p;const price=wrap._price??p._price;const monthly=wrap._monthly??p._monthly;const sqft=wrap._sqft??p._sqft;if(price)_updateRentNumbers(p,price,monthly,sqft);});
+  if(typeof updateAdvAllIn==='function')updateAdvAllIn();
+  if(typeof _syncSimpleAmberRent==='function')_syncSimpleAmberRent();
 }
 
 let appMode='simple';
@@ -1576,8 +1651,10 @@ function setSPeriod(p){
   m.classList.toggle('on',p==='month');y.classList.toggle('on',p==='year');
   const mult=p==='year'?12:1;
   const vm=document.getElementById('s-val-mortgage'),va=document.getElementById('s-val-allin');
-  if(vm)vm.textContent=fmt(sMortgage*mult);if(va)va.textContent=fmt(sAllIn*mult);
-  const sl=document.getElementById('s-allin-lbl');if(sl)sl.textContent=p==='year'?'Total annual':t('row.allin.label');
+  if(vm)vm.textContent=fmt(sMortgage*mult);
+  if(rentOut){if(typeof _syncSimpleAmberRent==='function')_syncSimpleAmberRent();}
+  else{if(va){va.style.color='';va.textContent=fmt(sAllIn*mult);}
+  const sl=document.getElementById('s-allin-lbl');if(sl)sl.textContent=p==='year'?'Total annual':t('row.allin.label');}
 }
 function buildAllInSub(){return rentOut?(t('row.allin.short.rent')||'incl. service charge'):(t('row.allin.short')||'incl. living costs');}
 
@@ -1627,9 +1704,10 @@ function simpleCalc(){
   else if(!loanOk){vc='warn';em=ic('alert',22);ti='Loan may exceed approval';su=`Loan ${fmt(loan)} \u00b7 check bank approval limit`;}
   else{vc='ok';em=ic('checkCircle',22);ti=t('card.canbuy');su='Your cash covers the down payment and fees';}
   sMortgage=monthly;sAllIn=allIn;sAllInSub=allInSub;
-  document.getElementById('s-result').innerHTML=`<div class="card" style="margin-top:0"><div style="display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:12px;margin-bottom:16px;border:1px solid ${vc==='ok'?'var(--green-bd)':vc==='warn'?'var(--amber-bd)':'var(--red-bd)'};background:${vc==='ok'?'var(--green-bg)':vc==='warn'?'var(--amber-bg)':'var(--red-bg)'}"><span style="display:inline-flex;color:${vc==='ok'?'var(--green)':vc==='warn'?'var(--amber)':'var(--red)'}">${em}</span><div><div style="font-size:14px;font-weight:700;color:${vc==='ok'?'var(--green)':vc==='warn'?'var(--amber)':'var(--red)'}">${ti}</div><div style="font-size:12px;color:${vc==='ok'?'var(--green)':vc==='warn'?'var(--amber)':'var(--red)'};opacity:.8;margin-top:2px">${su}</div></div></div>${price>=2000000?`<div style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:12px;margin-bottom:16px;background:linear-gradient(135deg,#FFF8E1,#FFE9B8);border:1px solid #F0C75E"><span style="color:#B8860B;display:inline-flex">${ic('award',18)}</span><div style="font-size:12px;color:#7A5C00;line-height:1.4"><strong>${t('gv.title')}</strong><br>${t('gv.desc')}</div></div>`:''}${hasEnough?`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><span class="sec-lbl" style="margin-bottom:0">${t('sec.payment')}</span><div class="seg"><button onclick="setSPeriod('month')" id="s-btn-month" class="seg-btn on">Monthly</button><button onclick="setSPeriod('year')" id="s-btn-year" class="seg-btn">Annual</button></div></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px"><div class="metric"><div class="m-lbl">${t('row.mortgage.label')}</div><div class="m-val" style="font-size:18px" id="s-val-mortgage">${fmt(monthly)}</div><div class="m-sub" id="s-sub-mortgage">${t('sub.permonth')}</div></div><div class="metric" style="background:var(--amber-bg);border:1px solid var(--amber-bd)"><div class="m-lbl" style="color:var(--amber)" id="s-allin-lbl">${t('row.allin.label')}</div><div class="m-val ca" style="font-size:18px" id="s-val-allin">${fmt(allIn)}</div><div class="m-sub" style="color:var(--amber);opacity:.8" id="s-allin-sub">${allInSub}</div></div></div>`:''}<div class="sec-lbl">${t('sec.atclosing')}</div><div class="totals"><div class="brow"><span class="brow-lbl">${t('row.down')} (${downPct}%)</span><span class="brow-val">${fmt(downAmt)}</span></div><div class="brow"><span class="brow-lbl">${EMIRATES[currentEmirate].label} ${vals.dld}% + agency ${vals.agency}% + all fees</span><span class="brow-val">${fmt(fees)}</span></div><div class="brow" style="padding-top:12px"><span class="brow-lbl" style="font-weight:700;color:var(--text);font-size:14px">${t('row.totalneeded')}</span><span class="brow-val" style="font-size:18px;font-weight:700">${fmt(upfront)}</span></div></div></div>`;
+  document.getElementById('s-result').innerHTML=`<div class="card" style="margin-top:0"><div style="display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:12px;margin-bottom:16px;border:1px solid ${vc==='ok'?'var(--green-bd)':vc==='warn'?'var(--amber-bd)':'var(--red-bd)'};background:${vc==='ok'?'var(--green-bg)':vc==='warn'?'var(--amber-bg)':'var(--red-bg)'}"><span style="display:inline-flex;color:${vc==='ok'?'var(--green)':vc==='warn'?'var(--amber)':'var(--red)'}">${em}</span><div><div style="font-size:14px;font-weight:700;color:${vc==='ok'?'var(--green)':vc==='warn'?'var(--amber)':'var(--red)'}">${ti}</div><div style="font-size:12px;color:${vc==='ok'?'var(--green)':vc==='warn'?'var(--amber)':'var(--red)'};opacity:.8;margin-top:2px">${su}</div></div></div>${price>=2000000?`<div style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:12px;margin-bottom:16px;background:linear-gradient(135deg,#FFF8E1,#FFE9B8);border:1px solid #F0C75E"><span style="color:#B8860B;display:inline-flex">${ic('award',18)}</span><div style="font-size:12px;color:#7A5C00;line-height:1.4"><strong>${t('gv.title')}</strong><br>${t('gv.desc')}</div></div>`:''}${hasEnough?`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><span class="sec-lbl" style="margin-bottom:0">${t('sec.payment')}</span><div class="seg"><button onclick="setSPeriod('month')" id="s-btn-month" class="seg-btn on">Monthly</button><button onclick="setSPeriod('year')" id="s-btn-year" class="seg-btn">Annual</button></div></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px"><div class="metric"><div class="m-lbl">${t('row.mortgage.label')}</div><div class="m-val" style="font-size:18px" id="s-val-mortgage">${fmt(monthly)}</div><div class="m-sub" id="s-sub-mortgage">${t('sub.permonth')}</div></div><div class="metric ${rentOut?'rent-tap':''}" id="s-allin-card" onclick="openRentModal()" style="background:var(--amber-bg);border:1px solid var(--amber-bd);cursor:${rentOut?'pointer':'default'};pointer-events:${rentOut?'auto':'none'}"><div class="m-lbl" style="color:var(--amber)" id="s-allin-lbl">${t('row.allin.label')}</div><div class="m-val ca" style="font-size:18px" id="s-val-allin">${fmt(allIn)}</div><div class="m-sub" style="color:var(--amber);opacity:.8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" id="s-allin-sub">${allInSub}</div></div></div>`:''}<div class="sec-lbl">${t('sec.atclosing')}</div><div class="totals"><div class="brow"><span class="brow-lbl">${t('row.down')} (${downPct}%)</span><span class="brow-val">${fmt(downAmt)}</span></div><div class="brow"><span class="brow-lbl">${EMIRATES[currentEmirate].label} ${vals.dld}% + agency ${vals.agency}% + all fees</span><span class="brow-val">${fmt(fees)}</span></div><div class="brow" style="padding-top:12px"><span class="brow-lbl" style="font-weight:700;color:var(--text);font-size:14px">${t('row.totalneeded')}</span><span class="brow-val" style="font-size:18px;font-weight:700">${fmt(upfront)}</span></div></div></div>`;
   setSPeriod(sPeriod);
-  if(typeof renderRentPanelSimple==='function'){const sp=document.getElementById('s-rent-panel');if(sp)renderRentPanelSimple(price,sMortgage,sqft,sp);}
+  window._rentArgs={price:price,monthly:sMortgage,sqft:sqft};
+  if(typeof _syncSimpleAmberRent==='function')_syncSimpleAmberRent();
   requestAnimationFrame(paintAllSliders);
 }
 
@@ -1763,7 +1841,8 @@ function calc(){
   document.getElementById('total-cost').innerHTML=`<div style="text-align:center;padding:4px 0 12px"><div style="font-size:28px;font-weight:700;color:var(--green);letter-spacing:-0.5px">${fmt(totalWithLiving)}</div></div><div style="position:relative;margin:0 auto;width:100%;max-width:${W}px;height:${H}px;overflow:visible"><svg width="100%" height="${H}" viewBox="0 0 ${W} ${H}" style="overflow:visible;display:block"><defs>${defs.join('\n')}</defs><circle cx="${cx}" cy="${cy}" r="${(R_IN+R_OUT)/2}" fill="none" stroke="var(--border)" stroke-width="${R_OUT-R_IN}" opacity="0.35"/><g>${paths.join('\n')}</g></svg><div id="donut-center" style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none"><div id="dc-pct" style="font-size:22px;font-weight:700;letter-spacing:-0.5px;color:var(--text)">${Math.round(segPrincipal/donutTotal*100)}%</div><div id="dc-lbl" style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-top:2px">${t('donut.property')}</div></div></div><div style="margin:14px 0 12px">${legendRows}</div>`;
   window._donutSegs=segs;window._donutTotal=donutTotal;
   calcLiving();
-  if(typeof renderRentPanel==='function'){const _pf=mpay(loan,vals.fixrate,vals.years*12);renderRentPanel(vals.price,Math.round(_pf),vals.sqft,'rent-panel');}
+  {const _pf=mpay(loan,vals.fixrate,vals.years*12);window._rentArgs={price:vals.price,monthly:Math.round(_pf),sqft:vals.sqft};
+  if(rentOut&&typeof openedModal!=='undefined'&&openedModal==='rent')renderRentPanel(vals.price,Math.round(_pf),vals.sqft,'rent-modal-slot');}
   requestAnimationFrame(paintAllSliders);
 }
 let _donutActive=-1;
@@ -2204,13 +2283,11 @@ function pickEmirate(id){
 }
 function resetRentYield(){
   rentYieldManual=false;
-  rentYield=7.0;
-  const el=document.getElementById('rent-yield');
-  if(el)el.value=rentYield;
-  const tin=document.getElementById('t-rent-yield');
-  if(tin)tin.value=rentYield.toFixed(1);
+  rentYield=6.0;
+  ['rent-yield-slider','srp-slider'].forEach(id=>{const s=document.getElementById(id);if(s){s.value=Math.round(rentYield*10);paintSlider(s);}});
   const tag=document.getElementById('rent-yield-tag');
   if(tag){tag.textContent='auto';tag.className='tag tag-auto';}
+  _syncRentPeriod();
   if(typeof calcBvR==='function')calcBvR();
   scheduleSave();
 }
@@ -2291,8 +2368,7 @@ document.addEventListener('DOMContentLoaded',()=>hydrateIcons());
   <button onclick="confirmBudgetEditor()" style="width:100%;padding:14px;background:var(--text);color:var(--bg);border:none;border-radius:14px;font-size:16px;font-weight:700;cursor:pointer" id="bed-done">Done</button>
 </div>
 
-
 <div id="tooltip-sheet" onclick="hideTooltip()"></div>
-<div style="position:fixed;bottom:2px;right:4px;font-size:9px;color:rgba(128,128,128,0.4);z-index:99999;pointer-events:none">v1300</div>
+<div style="position:fixed;bottom:2px;right:4px;font-size:9px;color:rgba(128,128,128,0.4);z-index:99999;pointer-events:none">v1309</div>
 </body>
 </html>
