@@ -319,10 +319,10 @@ input[type=range]::-moz-range-track{background:transparent;height:4px;border-rad
       <div class="rlabels"><span id="rl-s-price-min">AED 500K</span><span id="rl-s-price-max">AED 20M</span></div>
     </div>
     <div class="field">
-      <div class="ftop"><span class="flabel" data-i18n="field.cash">Your cash available</span><span class="unit-badge">AED</span><input class="finput" id="s-cash" type="text" inputmode="numeric" value="420,000" oninput="simpleCalc()"></div>
-      <input type="range" id="s-cash-range" min="0" max="1000" step="1" value="327" oninput="document.getElementById('s-cash').value=fmtN(sliderToVal('s-cash-range',+this.value));simpleCalc()">
-      <div class="rlabels"><span id="rl-s-cash-min">AED 100K</span><span id="rl-s-cash-max">AED 8M</span></div>
-      <div class="fnote" id="s-cash-hint">Down payment + ownership fee + agency 2% + valuation &mdash; all from your cash</div>
+      <div class="ftop"><span class="flabel">Down payment</span><span class="unit-badge">%</span><input class="finput" id="s-down" type="text" inputmode="numeric" value="20" oninput="sDownChanged(this.value)" onblur="document.getElementById('s-down').value=vals.down"></div>
+      <input type="range" id="s-down-range" min="20" max="80" step="1" value="20" oninput="document.getElementById('s-down').value=this.value;sDownChanged(this.value)">
+      <div class="rlabels"><span>20% min</span><span>80%</span></div>
+      <div class="fnote">You pay this + fees upfront &middot; the rest is your mortgage</div>
     </div>
     <div class="field">
       <div class="ftop"><span class="flabel" data-i18n="field.sqft">Property size</span><span class="unit-badge">sqft</span><input class="finput" id="s-sqft" type="text" inputmode="numeric" value="800" oninput="simpleCalc()"></div>
@@ -368,17 +368,14 @@ input[type=range]::-moz-range-track{background:transparent;height:4px;border-rad
       <div class="ftop"><span class="lbl-group"><span class="flabel" data-i18n="field.cash">Your cash available</span><button class="tip-btn" onclick="event.stopPropagation();showTooltip('cash')" aria-label="info">i</button></span><span class="unit-badge">AED</span><input class="finput" id="t-cash" value="420,000"></div>
       <input type="range" id="cash" min="0" max="1000" step="1" value="327">
       <div class="rlabels"><span id="rl-cash-min">AED 100K</span><span id="rl-cash-max">AED 8M</span></div>
-      <div class="fnote" id="adv-cash-hint">Down payment + ownership fee + agency 2% + valuation &mdash; all from your cash</div>
     </div>
     <div class="field">
       <div class="ftop"><span class="lbl-group"><span class="flabel" data-i18n="field.sqft">Property size</span><button class="tip-btn" onclick="event.stopPropagation();showTooltip('sqft')" aria-label="info">i</button></span><span class="unit-badge">sqft</span><input class="finput" id="t-sqft" value="800"></div>
       <input type="range" id="sqft" min="0" max="1000" step="1" value="427">
       <div class="rlabels"><span>300 <span data-i18n="units.sqft">sqft</span></span><span>10,000 <span data-i18n="units.sqft">sqft</span></span></div>
-      <div class="fnote" data-i18n="field.sqft.hint">Used to estimate DEWA, cooling and service charge</div>
     </div>
     <div class="field">
       <div class="ftop"><span class="lbl-group"><span class="flabel" data-i18n="income.label">Monthly income</span><button class="tip-btn" onclick="event.stopPropagation();showTooltip('income')" aria-label="info">i</button></span><span class="unit-badge">AED</span><input class="finput" id="t-income2" value="" placeholder="&mdash;" inputmode="numeric" oninput="liveThousands(this);syncIncome(this.value)" onblur="if(this.value)this.value=parseInt(this.value.replace(/[^0-9]/g,'')||'0').toLocaleString('en-US')"></div>
-      <div class="fnote" style="display:flex;align-items:flex-start;gap:6px"><span data-ic="bulb" data-ic-size="14" style="color:var(--amber);margin-top:1px"></span><span data-i18n="income.hint">Add income to check loan approval</span></div>
     </div>
     <span id="sv-val" style="display:none"></span>
     <div id="metrics" style="display:none"></div>
@@ -399,7 +396,6 @@ input[type=range]::-moz-range-track{background:transparent;height:4px;border-rad
       </div>
       <input type="range" id="down" min="20" max="80" step="1" value="20">
       <div class="rlabels"><span data-i18n="min.20">20% min</span><span>80%</span></div>
-      <div class="fnote" data-i18n="field.down.hint">Auto-set to maximise loan within your cash &middot; tap to override</div>
     </div>
     <div class="field">
       <div class="ftop"><span class="lbl-group"><span class="flabel" data-i18n="field.loanterm">Loan term</span><button class="tip-btn" onclick="event.stopPropagation();showTooltip('years')" aria-label="info">i</button></span><span class="unit-badge">yr</span><input class="finput" id="t-years" value="25"></div>
@@ -408,10 +404,6 @@ input[type=range]::-moz-range-track{background:transparent;height:4px;border-rad
     </div>
     <div class="field">
       <div class="ftop"><span class="lbl-group"><span class="flabel" data-i18n="field.rate">Interest rate</span><button class="tip-btn" onclick="event.stopPropagation();showTooltip('rate')" aria-label="info">i</button></span><span class="unit-badge">%</span><input class="finput" id="t-fixrate" value="4.19"></div>
-      <div class="seg seg-full" style="margin-top:10px">
-        <button class="seg-btn on" id="btn-salary" onclick="setSalaryTransfer(true)" data-i18n="rate.salary">Salary transfer</button>
-        <button class="seg-btn" id="btn-nonsalary" onclick="setSalaryTransfer(false)" data-i18n="rate.nonsalary">Non-salary / self-employed</button>
-      </div>
       <div class="fnote" id="rate-typical-note">Typical bank rates: 3.99% (3yr fix) &middot; 4.19% (5yr fix)</div>
     </div>
     <div class="field">
@@ -434,7 +426,6 @@ input[type=range]::-moz-range-track{background:transparent;height:4px;border-rad
       </div>
       <input type="range" id="bval" min="0" max="1000" step="1" value="298">
       <div class="rlabels"><span id="rl-bval-min">AED 500K</span><span id="rl-bval-max">AED 20M</span></div>
-      <div class="fnote"><span data-i18n="field.bval.hint">Banks lend % of <strong>valuation</strong>, not price.</span></div>
     </div>
     <div class="field">
       <div class="ftop"><span class="lbl-group"><span class="flabel"><span data-i18n="field.eibor">Expected EIBOR</span><button class="tip-btn" onclick="event.stopPropagation();showTooltip('eibor')" aria-label="info">i</button></span></span><span class="unit-badge">%</span><input class="finput" id="t-eibor" value="3.85"></div>
@@ -542,28 +533,28 @@ input[type=range]::-moz-range-track{background:transparent;height:4px;border-rad
 <div class="card" id="card-living" style="display:none">
   <div class="card-head"><span class="ctitle">Living costs</span></div>
   <div class="card-body-wrap open"><div class="card-body-inner">
-    <div style="padding:12px 0;border-bottom:1px solid var(--border)">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><span style="display:flex;align-items:center;gap:8px;font-size:14px;color:var(--text);font-weight:500"><span style="color:var(--muted);display:inline-flex" data-ic="bolt" data-ic-size="16"></span><span data-i18n="living.dewa">DEWA</span><button class="tip-btn" onclick="event.stopPropagation();showTooltip('dewa')" aria-label="info">i</button><span id="dewa-tag" class="tag tag-auto" onclick="resetDewaAuto()" style="flex-shrink:0">auto</span></span><span id="lv-dewa" onclick="openLivingEdit('dewa')" style="font-size:14px;font-weight:600;color:var(--text);cursor:pointer;border-bottom:1px dashed var(--muted);padding-bottom:1px;white-space:nowrap">&mdash;</span><input class="finput" id="t-dewa" value="560" style="display:none"></div>
+    <div style="padding:12px 0;border-bottom:1px solid var(--border)" id="lvrow-dewa">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><span style="display:flex;align-items:center;gap:8px;font-size:14px;color:var(--text);font-weight:500"><span style="color:var(--muted);display:inline-flex" data-ic="bolt" data-ic-size="16"></span><span data-i18n="living.dewa">DEWA</span><button class="tip-btn" onclick="event.stopPropagation();showTooltip('dewa')" aria-label="info">i</button><span id="dewa-tag" class="tag tag-auto" onclick="resetDewaAuto()" style="flex-shrink:0">auto</span></span><span id="lv-dewa" onclick="openLivingEdit('dewa')" style="font-size:14px;font-weight:600;color:var(--text);cursor:pointer;white-space:nowrap">&mdash;</span><input class="finput" id="t-dewa" value="560" style="display:none"></div>
       <input type="range" id="dewa" min="0" max="8000" step="1" value="560">
     </div>
-    <div style="padding:12px 0;border-bottom:1px solid var(--border)">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><span style="display:flex;align-items:center;gap:8px;font-size:14px;color:var(--text);font-weight:500"><span style="color:var(--muted);display:inline-flex" data-ic="snowflake" data-ic-size="16"></span><span data-i18n="living.cooling">District cooling</span><button class="tip-btn" onclick="event.stopPropagation();showTooltip('cooling')" aria-label="info">i</button><span id="cooling-tag" class="tag tag-auto" onclick="resetCoolingAuto()" style="flex-shrink:0">auto</span></span><span id="lv-cooling" onclick="openLivingEdit('cooling')" style="font-size:14px;font-weight:600;color:var(--text);cursor:pointer;border-bottom:1px dashed var(--muted);padding-bottom:1px;white-space:nowrap">&mdash;</span><input class="finput" id="t-cooling" value="280" style="display:none"></div>
+    <div style="padding:12px 0;border-bottom:1px solid var(--border)" id="lvrow-cooling">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><span style="display:flex;align-items:center;gap:8px;font-size:14px;color:var(--text);font-weight:500"><span style="color:var(--muted);display:inline-flex" data-ic="snowflake" data-ic-size="16"></span><span data-i18n="living.cooling">District cooling</span><button class="tip-btn" onclick="event.stopPropagation();showTooltip('cooling')" aria-label="info">i</button><span id="cooling-tag" class="tag tag-auto" onclick="resetCoolingAuto()" style="flex-shrink:0">auto</span></span><span id="lv-cooling" onclick="openLivingEdit('cooling')" style="font-size:14px;font-weight:600;color:var(--text);cursor:pointer;white-space:nowrap">&mdash;</span><input class="finput" id="t-cooling" value="280" style="display:none"></div>
       <input type="range" id="cooling" min="0" max="3000" step="1" value="280">
     </div>
-    <div style="padding:12px 0;border-bottom:1px solid var(--border)">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><span style="display:flex;align-items:center;gap:8px;font-size:14px;color:var(--text);font-weight:500"><span style="color:var(--muted);display:inline-flex" data-ic="home" data-ic-size="16"></span><span data-i18n="living.sc">Service charge</span><button class="tip-btn" onclick="event.stopPropagation();showTooltip('sc')" aria-label="info">i</button></span><span id="lv-sc" onclick="openLivingEdit('sc')" style="font-size:14px;font-weight:600;color:var(--text);cursor:pointer;border-bottom:1px dashed var(--muted);padding-bottom:1px;white-space:nowrap">&mdash;</span><input class="finput" id="t-sc" value="23" style="display:none"></div>
+    <div style="padding:12px 0;border-bottom:1px solid var(--border)" id="lvrow-sc">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><span style="display:flex;align-items:center;gap:8px;font-size:14px;color:var(--text);font-weight:500"><span style="color:var(--muted);display:inline-flex" data-ic="home" data-ic-size="16"></span><span data-i18n="living.sc">Service charge</span><button class="tip-btn" onclick="event.stopPropagation();showTooltip('sc')" aria-label="info">i</button></span><span id="lv-sc" onclick="openLivingEdit('sc')" style="font-size:14px;font-weight:600;color:var(--text);cursor:pointer;white-space:nowrap">&mdash;</span><input class="finput" id="t-sc" value="23" style="display:none"></div>
       <input type="range" id="sc" min="0" max="60" step="1" value="23">
       <div id="sc-monthly-hint" style="font-size:11px;color:var(--muted);margin-top:3px;padding-left:24px">&mdash;</div>
     </div>
-    <div style="padding:12px 0;border-bottom:1px solid var(--border)">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><span style="display:flex;align-items:center;gap:8px;font-size:14px;color:var(--text);font-weight:500"><span style="color:var(--muted);display:inline-flex" data-ic="wifi" data-ic-size="16"></span><span data-i18n="living.internet">Internet</span><button class="tip-btn" onclick="event.stopPropagation();showTooltip('internet')" aria-label="info">i</button></span><span id="lv-internet" onclick="openLivingEdit('internet')" style="font-size:14px;font-weight:600;color:var(--text);cursor:pointer;border-bottom:1px dashed var(--muted);padding-bottom:1px;white-space:nowrap">&mdash;</span><input class="finput" id="t-internet" value="279" style="display:none"></div>
+    <div style="padding:12px 0;border-bottom:1px solid var(--border)" id="lvrow-internet">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><span style="display:flex;align-items:center;gap:8px;font-size:14px;color:var(--text);font-weight:500"><span style="color:var(--muted);display:inline-flex" data-ic="wifi" data-ic-size="16"></span><span data-i18n="living.internet">Internet</span><button class="tip-btn" onclick="event.stopPropagation();showTooltip('internet')" aria-label="info">i</button></span><span id="lv-internet" onclick="openLivingEdit('internet')" style="font-size:14px;font-weight:600;color:var(--text);cursor:pointer;white-space:nowrap">&mdash;</span><input class="finput" id="t-internet" value="279" style="display:none"></div>
       <input type="range" id="internet" min="0" max="1000" step="20" value="279">
     </div>
-    <div style="padding:12px 0;border-bottom:1px solid var(--border)">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><span style="display:flex;align-items:center;gap:8px;font-size:14px;color:var(--text);font-weight:500"><span style="color:var(--muted);display:inline-flex" data-ic="flame" data-ic-size="16"></span><span data-i18n="living.gas">Gas</span><button class="tip-btn" onclick="event.stopPropagation();showTooltip('gas')" aria-label="info">i</button></span><span id="lv-gas" onclick="openLivingEdit('gas')" style="font-size:14px;font-weight:600;color:var(--text);cursor:pointer;border-bottom:1px dashed var(--muted);padding-bottom:1px;white-space:nowrap">&mdash;</span><input class="finput" id="t-gas" value="55" style="display:none"></div>
+    <div style="padding:12px 0;border-bottom:1px solid var(--border)" id="lvrow-gas">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><span style="display:flex;align-items:center;gap:8px;font-size:14px;color:var(--text);font-weight:500"><span style="color:var(--muted);display:inline-flex" data-ic="flame" data-ic-size="16"></span><span data-i18n="living.gas">Gas</span><button class="tip-btn" onclick="event.stopPropagation();showTooltip('gas')" aria-label="info">i</button></span><span id="lv-gas" onclick="openLivingEdit('gas')" style="font-size:14px;font-weight:600;color:var(--text);cursor:pointer;white-space:nowrap">&mdash;</span><input class="finput" id="t-gas" value="55" style="display:none"></div>
       <input type="range" id="gas" min="0" max="500" step="5" value="55">
     </div>
-    <div style="background:var(--bg);border-radius:12px;padding:14px;margin-top:8px">
+    <div style="background:var(--bg);border-radius:12px;padding:14px;margin-top:8px;display:none" id="living-totals-block">
       <div id="living-breakdown"></div>
       <div style="display:flex;justify-content:space-between;padding:5px 0"><span style="font-size:13px;color:var(--muted)" id="living-mo-lbl">Everything except loan &middot; monthly</span><span style="font-size:15px;font-weight:700;color:var(--text)" id="living-total-mo">&mdash;</span></div>
       <div style="display:none;justify-content:space-between;padding:5px 0" id="living-yr-row"><span style="font-size:13px;color:var(--muted)" id="living-yr-lbl">Everything except loan &middot; annual</span><span style="font-size:14px;font-weight:600;color:var(--muted)" id="living-total-yr">&mdash;</span></div>
@@ -656,13 +647,13 @@ input[type=range]::-moz-range-track{background:transparent;height:4px;border-rad
 <div class="modal" id="modal-costs" data-mod="costs">
   <div class="modal-head"><div class="modal-title" style="display:flex;align-items:center;gap:8px"><span data-ic="chartBar" data-ic-size="20" style="color:var(--green)"></span><span>Costs</span></div><button class="modal-close" onclick="closeModal()"><span data-ic="close" data-ic-size="18"></span></button></div>
   <div id="modal-costs-body">
-    <div class="seg seg-full" style="margin-bottom:10px">
-      <button class="seg-btn on" id="tools-btn-budget" onclick="setToolsTab('costs','budget')">Budget</button>
-      <button class="seg-btn" id="tools-btn-living" onclick="setToolsTab('costs','living')">Living costs</button>
-    </div>
     <div style="display:flex;justify-content:center;margin-bottom:14px"><div class="seg" style="width:200px"><button class="seg-btn on" id="costs-per-mo" onclick="setBudgetPeriod('month')" style="flex:1">Monthly</button><button class="seg-btn" id="costs-per-yr" onclick="setBudgetPeriod('year')" style="flex:1">Annual</button></div></div>
-    <div id="pane-budget"><div id="modal-budget-body"></div></div>
-    <div id="pane-living" style="display:none"><div id="modal-living-body"></div></div>
+    <div class="sec-lbl">Home</div>
+    <div style="padding:12px 0;border-bottom:1px solid var(--border)" id="costs-mortgage-row"><div style="display:flex;justify-content:space-between;align-items:center"><span style="display:flex;align-items:center;gap:8px;font-size:14px;color:var(--text);font-weight:500"><span style="color:var(--muted);display:inline-flex" data-ic="scale" data-ic-size="16"></span><span>Mortgage</span></span><span id="costs-mortgage-val" style="font-size:14px;font-weight:600;color:var(--text);white-space:nowrap">&mdash;</span></div></div>
+    <div id="modal-living-body"></div>
+    <div style="padding:12px 0;border-bottom:1px solid var(--border)" id="costs-ins-row"><div style="display:flex;justify-content:space-between;align-items:center"><span style="display:flex;align-items:center;gap:8px;font-size:14px;color:var(--text);font-weight:500"><span style="color:var(--muted);display:inline-flex" data-ic="activity" data-ic-size="16"></span><span>Home insurance</span></span><span id="costs-ins-val" style="font-size:14px;font-weight:600;color:var(--text);white-space:nowrap">&mdash;</span></div></div>
+    <div class="sec-lbl" style="margin-top:18px">Spending</div>
+    <div id="modal-budget-body"></div>
   </div>
 </div>
 <div class="modal" id="modal-plan" data-mod="plan">
@@ -963,17 +954,14 @@ function renderBudget(){
   const n=vals.years*12,r=vals.fixrate/100/12;
   const mortgagePay=r>0?loan*r*Math.pow(1+r,n)/(Math.pow(1+r,n)-1):loan/n;
   const ins=loan*0.000112+vals.price*0.001/12;
-  budgetVals.housing=Math.round(rentOut?mortgagePay:(mortgagePay+ins+clt));
+  budgetVals.housing=Math.round(mortgagePay+ins+clt); // clt сам rentOut-aware (sc only при сдаче)
   const incomeEl=document.getElementById('t-income'),incomeVal=incomeEl?incomeEl.value:'';
   const total=Object.keys(budgetVals).reduce((a,k)=>{if(BUDGET_DEFAULTS[k]&&BUDGET_DEFAULTS[k].rentOnly&&!rentOut)return a;return a+(budgetVals[k]||0);},0);
   const BSLIDERS={housing:[0,30000,500],rent:[0,30000,500],car:[0,15000,250],groceries:[0,15000,250],dining:[0,10000,250],insurance:[0,5000,100],medical:[0,3000,100],school:[0,25000,500],clothing:[0,8000,250],domestic:[0,10000,500],flights:[0,8000,250],holidays:[0,8000,250],phone:[0,1500,50],subs:[0,2000,50],personal:[0,5000,250],gym:[0,3000,100],misc:[0,10000,250],savings:[0,20000,500]};
-  const rows=Object.keys(BUDGET_DEFAULTS).filter(k=>{if(BUDGET_DEFAULTS[k].rentOnly)return rentOut;return true;}).map(k=>{
-    const d=BUDGET_DEFAULTS[k],v=budgetVals[k],isHousing=k==='housing';
-    if(isHousing){
-      return `<div style="padding:12px 0;border-bottom:1px solid var(--border)" id="budget-row-housing"><div style="display:flex;justify-content:space-between;align-items:center"><span style="display:flex;align-items:center;gap:8px;font-size:14px;color:var(--text);font-weight:600"><span style="color:var(--muted);display:inline-flex">${ic('home',16)}</span><span>Home</span></span><span id="budget-val-housing" style="font-size:14px;font-weight:700;color:var(--text);white-space:nowrap">${v>0?budgetDisp(v):'\u2014'}</span></div><div style="font-size:11px;color:var(--muted);margin-top:3px;padding-left:24px">Mortgage + all home bills \u00b7 detailed in Living costs</div></div>`;
-    }
+  const rows=Object.keys(BUDGET_DEFAULTS).filter(k=>{if(k==='housing')return false;if(BUDGET_DEFAULTS[k].rentOnly)return rentOut;return true;}).map(k=>{
+    const d=BUDGET_DEFAULTS[k],v=budgetVals[k];
     const [smin,smax,sstep]=BSLIDERS[k]||[0,10000,250];
-    return `<div style="padding:12px 0;border-bottom:1px solid var(--border)" id="budget-row-${k}"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><span style="display:flex;align-items:center;gap:8px;font-size:14px;color:var(--text);font-weight:500"><span style="color:var(--muted);display:inline-flex">${ic(d.icon,16)}</span><span>${t(d.key)}</span></span><span id="budget-val-${k}" onclick="openBudgetEdit('${k}')" style="font-size:14px;font-weight:600;color:${v>0?'var(--text)':'var(--muted)'};cursor:pointer;border-bottom:1px dashed var(--muted);padding-bottom:1px;white-space:nowrap">${v>0?budgetDisp(v):'\u2014'}</span></div><input type="range" id="budget-slider-${k}" min="${smin}" max="${smax}" step="${sstep}" value="${v}" style="width:100%;margin:0" oninput="budgetVals['${k}']=parseInt(this.value)||0;paintSlider(this);const ve=document.getElementById('budget-val-${k}');if(ve){const vv=budgetVals['${k}'];ve.textContent=vv>0?budgetDisp(vv):'\u2014';ve.style.color=vv>0?'var(--text)':'var(--muted)';}updateBudgetSummary()"></div>`;
+    return `<div style="padding:12px 0;border-bottom:1px solid var(--border)" id="budget-row-${k}"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><span style="display:flex;align-items:center;gap:8px;font-size:14px;color:var(--text);font-weight:500"><span style="color:var(--muted);display:inline-flex">${ic(d.icon,16)}</span><span>${t(d.key)}</span></span><span id="budget-val-${k}" onclick="openBudgetEdit('${k}')" style="font-size:14px;font-weight:600;color:${v>0?'var(--text)':'var(--muted)'};cursor:pointer;white-space:nowrap">${v>0?budgetDisp(v):'\u2014'}</span></div><input type="range" id="budget-slider-${k}" min="${smin}" max="${smax}" step="${sstep}" value="${v}" style="width:100%;margin:0" oninput="budgetVals['${k}']=parseInt(this.value)||0;paintSlider(this);const ve=document.getElementById('budget-val-${k}');if(ve){const vv=budgetVals['${k}'];ve.textContent=vv>0?budgetDisp(vv):'\u2014';ve.style.color=vv>0?'var(--text)':'var(--muted)';}updateBudgetSummary()"></div>`;
   }).join('');
   body.innerHTML=`<div>${rows}</div><div style="background:var(--bg);border-radius:14px;padding:16px;margin-top:16px"><div style="display:flex;justify-content:space-between;align-items:center"><span id="budget-total-key" style="font-size:14px;font-weight:700">${t(budgetPeriod==='year'?'budget.total.yr':'budget.total')}</span><span id="budget-total-val" style="font-size:22px;font-weight:700;letter-spacing:-0.5px">${budgetDisp(total)}</span></div><div id="budget-summary" style="display:none"></div></div>`;
   paintAllSliders();
@@ -1003,11 +991,20 @@ function openLivingEdit(k){
   pe.innerHTML=d.presets.map(p=>{const pd=yr?p*12:p;const sel=Math.abs(cur-pd)<1?'sel':'';return `<button class="bud-preset ${sel}" onclick="setLvPreset(${pd})">${pd.toLocaleString('en-US')}</button>`;}).join('');
   document.getElementById('budget-editor').classList.add('show');
   document.getElementById('budget-editor-bg').classList.add('show');
-  setTimeout(()=>{inp.focus();try{inp.select();}catch(e){}},100);
+  setTimeout(()=>{inp.focus();try{const _L=inp.value.length;inp.setSelectionRange(_L,_L);}catch(e){}},100);
 }
 function setLvPreset(p){const inp=document.getElementById('bed-input');if(inp)inp.value=p.toLocaleString('en-US');document.querySelectorAll('.bud-preset').forEach(b=>{const bp=parseInt((b.getAttribute('onclick')||'').match(/\d+/)[0]);b.classList.toggle('sel',bp===p);});}
+function syncCostsFixedRows(){
+  const mv=document.getElementById('costs-mortgage-val'),iv=document.getElementById('costs-ins-val');
+  if(!mv&&!iv)return;const mult=budgetPeriod==='year'?12:1;
+  const pay=window._advMortgageOnly||0,insv=window._advIns||0;
+  if(mv)mv.textContent=pay>0?fmt(pay*mult):'\u2014';
+  if(iv)iv.textContent=insv>0?fmt(insv*mult):'\u2014';
+}
 function syncLivingRows(){
   const yr=budgetPeriod==='year';
+  ['dewa','cooling','internet','gas'].forEach(k=>{const r=document.getElementById('lvrow-'+k);if(r)r.style.display=rentOut?'none':'';});
+  syncCostsFixedRows();
   [['dewa',''],['cooling',''],['sc',' /sqft\u00b7yr'],['internet',''],['gas','']].forEach(([k,sfx])=>{
     const sl=document.getElementById(k);if(sl&&typeof paintSlider==='function')paintSlider(sl);
     const t=document.getElementById('t-'+k),s=document.getElementById('lv-'+k);
@@ -1036,7 +1033,7 @@ function openBudgetEdit(key,doOpen=true){
   presetsEl.innerHTML=presets.map(p=>{const disp=budgetPeriod==='year'?p*12:p;const inUSD=currency==='USD';const num=inUSD?Math.round(disp/3.6725):disp;const label=num>=1000?(num/1000).toFixed(num%1000===0?0:1)+'K':num;const sel=Math.abs(v-p)<50?'sel':'';return `<button class="bud-preset ${sel}" onclick="setBedPreset(${p})">${label}</button>`;}).join('');
   document.getElementById('budget-editor').classList.add('show');
   document.getElementById('budget-editor-bg').classList.add('show');
-  setTimeout(()=>{inp.focus();inp.select();},100);
+  setTimeout(()=>{inp.focus();try{const _L=inp.value.length;inp.setSelectionRange(_L,_L);}catch(e){}},100);
 }
 function onBedInput(raw){const num=parseFloat(raw.replace(/[^0-9.]/g,''))||0;
   if(_lvKey){document.querySelectorAll('.bud-preset').forEach(btn=>{const p=parseInt((btn.getAttribute('onclick')||'').match(/\d+/)[0]);btn.classList.toggle('sel',Math.abs(num-p)<1);});return;}const aed=currency==='USD'?Math.round(num*3.6725):num;const monthly=budgetPeriod==='year'?Math.round(aed/12):aed;document.querySelectorAll('.bud-preset').forEach(btn=>{const p=parseInt(btn.getAttribute('onclick').match(/\d+/)[0]);btn.classList.toggle('sel',Math.abs(monthly-p)<50);});}
@@ -1359,16 +1356,7 @@ function setSimpleRate(periodKey){
   simpleCalc();
 }
 function toggleSimpleRate(){const d=document.getElementById('s-rate-detail'),ch=document.getElementById('s-rate-chev');const open=d.classList.toggle('open');if(ch)ch.classList.toggle('open',open);const sum=document.getElementById('s-rate-summary');if(sum){sum.style.transition='opacity .2s';sum.style.opacity=open?'0':'1';}}
-function setSalaryTransfer(on){
-  salaryTransfer=on;
-  document.getElementById('btn-salary').classList.toggle('on',on);
-  document.getElementById('btn-nonsalary').classList.toggle('on',!on);
-  updateRateLabels();
-  const bucket=(vals.fixperiod<=3)?'3':'5';
-  const nr=(on?RATE_TABLE.salary:RATE_TABLE.nonsalary)[bucket];
-  vals.fixrate=nr;const tf=document.getElementById('t-fixrate');if(tf)tf.value=nr.toFixed(2);
-  calc();scheduleSave();
-}
+function setSalaryTransfer(on){salaryTransfer=on;updateRateLabels();calc();scheduleSave();}
 function fixPeriodChanged(v,fromTyping){
   v=Math.max(1,Math.min(v,10,vals.years||25));
   fixPeriodManual=true;vals.fixperiod=v;
@@ -1612,7 +1600,7 @@ function openTools(which,tab){
     if(src&&body&&!body.dataset.populated){const inner=src.querySelector('.card-body-inner');if(inner){while(inner.firstChild)body.appendChild(inner.firstChild);}body.dataset.populated='1';}
     renderBudget();if(typeof calcLiving==='function')calcLiving();
   }else{renderChecklist();renderScenarios();}
-  setToolsTab(which,tab||(which==='costs'?'budget':'checklist'));
+  if(which==='plan')setToolsTab(which,tab||'checklist');
 }
 function setToolsTab(which,tab){
   const map=which==='costs'?['budget','living']:['checklist','scenarios'];
@@ -1667,12 +1655,9 @@ function setMode(mode){
   if(mode==='advanced'){
     const mult=currency==='USD'?USD_RATE:1;
     const rawPrice=simpleParseNum(document.getElementById('s-price').value);
-    const rawCash=simpleParseNum(document.getElementById('s-cash').value);
     const price=rawPrice>0?Math.round(rawPrice*mult):0;
-    const cash=rawCash>0?Math.round(rawCash*mult):0;
     const rate=simpleParseNum(document.getElementById('s-rate').value)||4.19;
     if(price>0){vals.price=price;autoUpdateRent();document.getElementById('price').value=valToSlider('price',price);document.getElementById('t-price').value=fmtDisplay('price',price);}
-    if(cash>0){vals.cash=cash;document.getElementById('cash').value=valToSlider('cash',cash);document.getElementById('t-cash').value=fmtDisplay('cash',cash);autoDown();}
     if(rate>0){vals.fixrate=rate;document.getElementById('t-fixrate').value=rate.toFixed(2);}
     const sqft2=simpleParseNum(document.getElementById('s-sqft').value)||800;
     if(sqft2>=300&&sqft2<=10000){vals.sqft=sqft2;document.getElementById('sqft').value=valToSlider('sqft',sqft2);document.getElementById('t-sqft').value=fmtN(sqft2);autoUpdateDewa(sqft2);autoUpdateCooling(sqft2);}
@@ -1680,7 +1665,7 @@ function setMode(mode){
   }
   if(mode==='simple'){
     document.getElementById('s-price').value=fmtN(vals.price);document.getElementById('s-price-range').value=vals.price;
-    document.getElementById('s-cash').value=fmtN(vals.cash);document.getElementById('s-cash-range').value=vals.cash;
+    {const _sd=document.getElementById('s-down');if(_sd)_sd.value=String(vals.down);const _sdr=document.getElementById('s-down-range');if(_sdr)_sdr.value=vals.down;}
     document.getElementById('s-rate').value=vals.fixrate.toFixed(2);
     document.getElementById('s-sqft').value=fmtN(vals.sqft);document.getElementById('s-sqft-range').value=valToSlider('s-sqft-range',vals.sqft);
     simpleCalc();
@@ -1706,22 +1691,26 @@ function setSPeriod(p){
 }
 function buildAllInSub(){return rentOut?(t('row.allin.short.rent')||'incl. service charge'):(t('row.allin.short')||'incl. living costs');}
 
+function sDownChanged(v){
+  let p=parseInt(String(v).replace(/[^0-9]/g,''));if(isNaN(p))return;
+  p=Math.max(20,Math.min(80,p));vals.down=p;downManual=true;if(typeof setTag==='function')setTag('down-tag',true);
+  const t=document.getElementById('t-down');if(t)t.value=String(p);
+  const d=document.getElementById('down');if(d){d.value=p;if(typeof paintSlider==='function')paintSlider(d);}
+  const sr=document.getElementById('s-down-range');if(sr){sr.value=p;if(typeof paintSlider==='function')paintSlider(sr);}
+  simpleCalc();
+}
 function simpleCalc(){
   const rentOut=false; // Simple всегда режим владельца
   const mult=currency==='USD'?USD_RATE:1;
   const rawPrice=simpleParseNum(document.getElementById('s-price').value);
-  const rawCash=simpleParseNum(document.getElementById('s-cash').value);
   const price=rawPrice>0?Math.round(rawPrice*mult):0;
-  const cash=rawCash>0?Math.round(rawCash*mult):0;
   const rate=simpleParseNum(document.getElementById('s-rate').value)||4.19;
   const sqft=simpleParseNum(document.getElementById('s-sqft').value)||800;
-  const pr=document.getElementById('s-price-range'),cr=document.getElementById('s-cash-range'),sr=document.getElementById('s-sqft-range');
+  const pr=document.getElementById('s-price-range'),sr=document.getElementById('s-sqft-range');
   if(price>=500000&&price<=20000000)pr.value=valToSlider('s-price-range',price);
-  if(cash>=100000&&cash<=8000000)cr.value=valToSlider('s-cash-range',cash);
   if(sqft>=300&&sqft<=10000)sr.value=valToSlider('s-sqft-range',sqft);
   if(appMode==='simple'){
     if(price>0){vals.price=price;autoUpdateRent();document.getElementById('price').value=valToSlider('price',price);document.getElementById('t-price').value=fmtN(price);}
-    if(cash>0){vals.cash=cash;document.getElementById('cash').value=valToSlider('cash',cash);document.getElementById('t-cash').value=fmtN(cash);}
     if(rate>0){vals.fixrate=rate;document.getElementById('t-fixrate').value=rate.toFixed(2);}
     syncSimpleRateUI();
     vals.sqft=sqft;document.getElementById('sqft').value=valToSlider('sqft',sqft);document.getElementById('t-sqft').value=fmtN(sqft);
@@ -1729,10 +1718,10 @@ function simpleCalc(){
     // Reset approved to price if no income — prevents stale saved value constraining loan
     const incVal=parseFloat((document.getElementById('t-income2')||{}).value.replace(/[^0-9]/g,'')||'0')||0;
     if(!incVal&&!approvedManual){vals.approved=vals.price;const apEl=document.getElementById('approved'),tapEl=document.getElementById('t-approved');if(apEl){apEl.value=valToSlider('approved',vals.price);paintSlider(apEl);}if(tapEl)tapEl.value='';}
-    autoDown();autoUpdateDewa(sqft);autoUpdateCooling(sqft);
-    if(!price||!cash){document.getElementById('s-result').innerHTML='';return;}
+    autoUpdateDewa(sqft);autoUpdateCooling(sqft);
+    if(!price){document.getElementById('s-result').innerHTML='';return;}
     calc();
-  } else {if(!price||!cash){document.getElementById('s-result').innerHTML='';return;}}
+  } else {if(!price){document.getElementById('s-result').innerHTML='';return;}}
   // Use vals computed by calc() above — single source of truth
   const downPct=vals.down,downAmt=vals.price*downPct/100;
   const loan=Math.min(vals.price*(1-vals.down/100),vals.bval*(vals.price>5000000?0.70:0.80),aCap());
@@ -1747,13 +1736,8 @@ function simpleCalc(){
   const inetVal=rentOut?0:(parseFloat(document.getElementById('internet').value)||360);
   const gasVal=rentOut?0:(parseFloat(document.getElementById('gas').value)||55);
   const living=dewaVal+scVal2+coolVal+inetVal+gasVal,allIn=monthly+ins+living,allInSub=(t('row.allin.short')||'incl. living costs');
-  const hasEnough=vals.cash>=upfront,loanOk=loan<=vals.approved;
-  let vc,em,ti,su;
-  if(!hasEnough){vc='bad';em=ic('crossCircle',22);ti=t('card.short');su=`${t('verdict.need')} ${fmt(upfront)} ${t('verdict.toclose')} \u00b7 ${t('verdict.youhave')} ${fmt(cash)}`;}
-  else if(!loanOk){vc='warn';em=ic('alert',22);ti='Loan may exceed approval';su=`Loan ${fmt(loan)} \u00b7 check bank approval limit`;}
-  else{vc='ok';em=ic('checkCircle',22);ti=t('card.canbuy');su='Your cash covers the down payment and fees';}
   sMortgage=monthly;sAllIn=allIn;sAllInSub=allInSub;
-  document.getElementById('s-result').innerHTML=`<div class="card" style="margin-top:0"><div style="display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:12px;margin-bottom:16px;border:1px solid ${vc==='ok'?'var(--green-bd)':vc==='warn'?'var(--amber-bd)':'var(--red-bd)'};background:${vc==='ok'?'var(--green-bg)':vc==='warn'?'var(--amber-bg)':'var(--red-bg)'}"><span style="display:inline-flex;color:${vc==='ok'?'var(--green)':vc==='warn'?'var(--amber)':'var(--red)'}">${em}</span><div><div style="font-size:14px;font-weight:700;color:${vc==='ok'?'var(--green)':vc==='warn'?'var(--amber)':'var(--red)'}">${ti}</div><div style="font-size:12px;color:${vc==='ok'?'var(--green)':vc==='warn'?'var(--amber)':'var(--red)'};opacity:.8;margin-top:2px">${su}</div></div></div>${price>=2000000?`<div style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:12px;margin-bottom:16px;background:linear-gradient(135deg,#FFF8E1,#FFE9B8);border:1px solid #F0C75E"><span style="color:#B8860B;display:inline-flex">${ic('award',18)}</span><div style="font-size:12px;color:#7A5C00;line-height:1.4"><strong>${t('gv.title')}</strong><br>${t('gv.desc')}</div></div>`:''}${hasEnough?`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><span class="sec-lbl" style="margin-bottom:0">${t('sec.payment')}</span><div class="seg"><button onclick="setSPeriod('month')" id="s-btn-month" class="seg-btn on">Monthly</button><button onclick="setSPeriod('year')" id="s-btn-year" class="seg-btn">Annual</button></div></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px"><div class="metric"><div class="m-lbl">${t('row.mortgage.label')}</div><div class="m-val" style="font-size:18px" id="s-val-mortgage">${fmt(monthly)}</div><div class="m-sub" id="s-sub-mortgage">${t('sub.permonth')}</div></div><div class="metric" id="s-allin-card" style="background:var(--amber-bg);border:1px solid var(--amber-bd)"><div class="m-lbl" style="color:var(--amber)" id="s-allin-lbl">${t('row.allin.label')}</div><div class="m-val ca" style="font-size:18px" id="s-val-allin">${fmt(allIn)}</div><div class="m-sub" style="color:var(--amber);opacity:.8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" id="s-allin-sub">${allInSub}</div></div></div>`:''}<div class="sec-lbl">${t('sec.atclosing')}</div><div class="totals"><div class="brow"><span class="brow-lbl">${t('row.down')} (${downPct}%)</span><span class="brow-val">${fmt(downAmt)}</span></div><div class="brow"><span class="brow-lbl">${EMIRATES[currentEmirate].label} ${vals.dld}% + agency ${vals.agency}% + all fees</span><span class="brow-val">${fmt(fees)}</span></div><div class="brow" style="padding-top:12px"><span class="brow-lbl" style="font-weight:700;color:var(--text);font-size:14px">${t('row.totalneeded')}</span><span class="brow-val" style="font-size:18px;font-weight:700">${fmt(upfront)}</span></div></div></div>`;
+  document.getElementById('s-result').innerHTML=`<div class="card" style="margin-top:0">${price>=2000000?`<div style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:12px;margin-bottom:16px;background:linear-gradient(135deg,#FFF8E1,#FFE9B8);border:1px solid #F0C75E"><span style="color:#B8860B;display:inline-flex">${ic('award',18)}</span><div style="font-size:12px;color:#7A5C00;line-height:1.4"><strong>${t('gv.title')}</strong><br>${t('gv.desc')}</div></div>`:''}<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><span class="sec-lbl" style="margin-bottom:0">${t('sec.payment')}</span><div class="seg"><button onclick="setSPeriod('month')" id="s-btn-month" class="seg-btn on">Monthly</button><button onclick="setSPeriod('year')" id="s-btn-year" class="seg-btn">Annual</button></div></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px"><div class="metric"><div class="m-lbl">${t('row.mortgage.label')}</div><div class="m-val" style="font-size:18px" id="s-val-mortgage">${fmt(monthly)}</div><div class="m-sub" id="s-sub-mortgage">${t('sub.permonth')}</div></div><div class="metric" id="s-allin-card" style="background:var(--amber-bg);border:1px solid var(--amber-bd)"><div class="m-lbl" style="color:var(--amber)" id="s-allin-lbl">${t('row.allin.label')}</div><div class="m-val ca" style="font-size:18px" id="s-val-allin">${fmt(allIn)}</div><div class="m-sub" style="color:var(--amber);opacity:.8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" id="s-allin-sub">${allInSub}</div></div></div><div class="sec-lbl">${t('sec.atclosing')}</div><div class="totals"><div class="brow"><span class="brow-lbl">${t('row.down')} (${downPct}%)</span><span class="brow-val">${fmt(downAmt)}</span></div><div class="brow"><span class="brow-lbl">${EMIRATES[currentEmirate].label} ${vals.dld}% + agency ${vals.agency}% + all fees</span><span class="brow-val">${fmt(fees)}</span></div><div class="brow" style="padding-top:12px"><span class="brow-lbl" style="font-weight:700;color:var(--text);font-size:14px">${t('row.totalneeded')}</span><span class="brow-val" style="font-size:18px;font-weight:700">${fmt(upfront)}</span></div></div></div>`;
   setSPeriod(sPeriod);
   requestAnimationFrame(paintAllSliders);
 }
@@ -1766,6 +1750,7 @@ function refreshInputs(){
   if(scEl)scEl.value=isUSD?Math.round(vals.cash/USD_RATE).toLocaleString('en-US'):fmtN(vals.cash);
   if(sqEl)sqEl.value=fmtN(vals.sqft);
   const srEl=document.getElementById('s-rate');if(srEl)srEl.value=vals.fixrate.toFixed(2);
+  const sdEl=document.getElementById('s-down');if(sdEl)sdEl.value=String(vals.down);const sdrEl=document.getElementById('s-down-range');if(sdrEl)sdrEl.value=vals.down;
   const tdEl=document.getElementById('t-down');if(tdEl)tdEl.value=String(vals.down);
   const dEl=document.getElementById('down');if(dEl)dEl.value=vals.down;
   const tsqEl=document.getElementById('t-sqft');if(tsqEl)tsqEl.value=fmtN(vals.sqft);
@@ -2051,6 +2036,9 @@ function calcLiving(){
   updateAdvAllIn();
   // Living costs totals = everything except the loan payment (utilities + SC + insurance)
   // This equals Total all-in minus loan-to-bank, so the numbers reconcile.
+  window._advIns=Math.round(ins);
+  if(typeof budgetVals==='object'&&budgetVals)budgetVals.housing=Math.round(pf+ins+calcLivingTotal);
+  if(typeof updateBudgetSummary==='function')updateBudgetSummary();
   const livingPlusIns=calcLivingTotal+ins;
   const _lyr=budgetPeriod==='year';
   const livingMo=document.getElementById('living-total-mo');if(livingMo)livingMo.textContent=fmt(livingPlusIns*(_lyr?12:1));
@@ -2294,7 +2282,6 @@ function loadState(){
     if(s.living){Object.keys(s.living).forEach(k=>{const el=document.getElementById(k);if(el&&s.living[k]!=null)el.value=s.living[k];});}
     if(s.income){const inc=document.getElementById('t-income'),inc2=document.getElementById('t-income2');if(inc)inc.value=s.income;if(inc2)inc2.value=s.income;}
     if(s.approvedManual)approvedManual=true;
-    if(s.salaryTransfer===false)salaryTransfer=false;
     if(currency==='USD'){document.getElementById('btn-aed').classList.remove('on');document.getElementById('btn-usd').classList.add('on');}
     // Language locked to English
     if(s.mode==='advanced'){if(typeof refreshInputs==='function')refreshInputs();setMode('advanced');}
@@ -2367,7 +2354,7 @@ autoDown();autoUpdateCooling(vals.sqft);autoUpdateRent();calc();simpleCalc();set
 document.getElementById('t-income').addEventListener('input',()=>{const raw=document.getElementById('t-income').value.replace(/[^0-9.]/g,'');const v=parseFloat(raw)||0;if(v>0)document.getElementById('t-income').value=Math.round(v).toLocaleString('en-US');calc();});
 document.getElementById('t-income').addEventListener('focus',()=>{const raw=document.getElementById('t-income').value.replace(/[^0-9,]/g,'').replace(/,/g,'');document.getElementById('t-income').value=raw;});
 calcBvR();calcPP();
-(function(){document.getElementById('btn-salary').classList.toggle('on',salaryTransfer);document.getElementById('btn-nonsalary').classList.toggle('on',!salaryTransfer);updateRateLabels();})();
+(function(){updateRateLabels();})();
 
 const restored=loadState();
 if(restored){
@@ -2421,6 +2408,6 @@ document.addEventListener('DOMContentLoaded',()=>hydrateIcons());
 </div>
 
 <div id="tooltip-sheet" onclick="hideTooltip()"></div>
-<div style="position:fixed;bottom:2px;right:4px;font-size:9px;color:rgba(128,128,128,0.4);z-index:99999;pointer-events:none">v1322</div>
+<div style="position:fixed;bottom:2px;right:4px;font-size:9px;color:rgba(128,128,128,0.4);z-index:99999;pointer-events:none">v1327</div>
 </body>
 </html>
