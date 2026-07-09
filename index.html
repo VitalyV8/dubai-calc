@@ -178,7 +178,7 @@ input[type=range]::-moz-range-track{background:transparent;height:4px;border-rad
 .v-body{font-size:12px;line-height:1.55}
 .verdict.ok .v-body{color:var(--green)}.verdict.bad .v-body{color:var(--red)}
 .totals{background:var(--bg);border-radius:14px;padding:16px;margin-top:0}
-.t-lbl{font-size:var(--fs-xs);font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);margin-bottom:10px}
+.t-lbl{font-size:var(--fs-xs);font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:10px}
 .trow{display:flex;justify-content:space-between;align-items:baseline;padding:4px 0}
 .t-name{font-size:var(--fs-sm);color:var(--muted)}
 .t-val{font-size:var(--fs-md);font-weight:700;letter-spacing:-0.3px}
@@ -467,7 +467,7 @@ input[type=range]::-moz-range-track{background:transparent;height:4px;border-rad
     <!-- Monthly cost: unified Loan | All-in with Fixed/Variable rate toggle -->
     <div id="payment-block">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
-      <div style="font-size:13px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;display:flex;align-items:center;gap:4px">Monthly cost<button class="tip-btn" onclick="event.stopPropagation();showTooltip('allin')" aria-label="info">i</button></div>
+      <div class="sec-lbl" style="margin-bottom:0;display:flex;align-items:center;gap:4px">Monthly cost<button class="tip-btn" onclick="event.stopPropagation();showTooltip('allin')" aria-label="info">i</button></div>
       <div class="seg">
         <button onclick="setAdvPeriod('month')" id="adv-btn-month" class="seg-btn on">Monthly</button>
         <button onclick="setAdvPeriod('year')" id="adv-btn-year" class="seg-btn">Annual</button>
@@ -564,15 +564,6 @@ input[type=range]::-moz-range-track{background:transparent;height:4px;border-rad
   </div></div>
 </div>
 
-<div class="modal" id="modal-bvr" data-mod="bvr">
-  <div class="modal-head"><div class="modal-title" style="display:flex;align-items:center;gap:8px"><span data-ic="scale" data-ic-size="20" style="color:var(--green)"></span><span data-i18n="tool.bvr">Buy vs Rent</span></div><button class="modal-close" onclick="closeModal()"><span data-ic="close" data-ic-size="18"></span></button></div>
-  <div id="modal-bvr-body"></div>
-</div>
-<div class="modal" id="modal-prepay" data-mod="prepay">
-  <div class="modal-head"><div class="modal-title" style="display:flex;align-items:center;gap:8px"><span data-ic="forward" data-ic-size="20" style="color:var(--green)"></span><span data-i18n="tool.prepay">Early repayment</span></div><button class="modal-close" onclick="closeModal()"><span data-ic="close" data-ic-size="18"></span></button></div>
-  <div id="modal-prepay-body"></div>
-</div>
-
 <!-- BVR card -->
 <div class="card" id="card-bvr" style="display:none">
   <div class="card-head" onclick="toggleCard('bvr')">
@@ -644,6 +635,14 @@ input[type=range]::-moz-range-track{background:transparent;height:4px;border-rad
 
 </div><!-- end view-advanced -->
 <div class="modal-bg" id="modal-bg" onclick="closeModal()"></div>
+<div class="modal" id="modal-bvr" data-mod="bvr">
+  <div class="modal-head"><div class="modal-title" style="display:flex;align-items:center;gap:8px"><span data-ic="scale" data-ic-size="20" style="color:var(--green)"></span><span data-i18n="tool.bvr">Buy vs Rent</span></div><button class="modal-close" onclick="closeModal()"><span data-ic="close" data-ic-size="18"></span></button></div>
+  <div id="modal-bvr-body"></div>
+</div>
+<div class="modal" id="modal-prepay" data-mod="prepay">
+  <div class="modal-head"><div class="modal-title" style="display:flex;align-items:center;gap:8px"><span data-ic="forward" data-ic-size="20" style="color:var(--green)"></span><span data-i18n="tool.prepay">Early repayment</span></div><button class="modal-close" onclick="closeModal()"><span data-ic="close" data-ic-size="18"></span></button></div>
+  <div id="modal-prepay-body"></div>
+</div>
 <div class="modal" id="modal-costs" data-mod="costs">
   <div class="modal-head"><div class="modal-title" style="display:flex;align-items:center;gap:8px"><span data-ic="chartBar" data-ic-size="20" style="color:var(--green)"></span><span>Costs</span></div><button class="modal-close" onclick="closeModal()"><span data-ic="close" data-ic-size="18"></span></button></div>
   <div id="modal-costs-body">
@@ -651,7 +650,7 @@ input[type=range]::-moz-range-track{background:transparent;height:4px;border-rad
     <div class="sec-lbl">Home</div>
     <div style="padding:12px 0;border-bottom:1px solid var(--border)" id="costs-mortgage-row"><div style="display:flex;justify-content:space-between;align-items:center"><span style="display:flex;align-items:center;gap:8px;font-size:14px;color:var(--text);font-weight:500"><span style="color:var(--muted);display:inline-flex" data-ic="scale" data-ic-size="16"></span><span>Mortgage</span></span><span id="costs-mortgage-val" style="font-size:14px;font-weight:600;color:var(--text);white-space:nowrap">&mdash;</span></div></div>
     <div id="modal-living-body"></div>
-    <div style="padding:12px 0;border-bottom:1px solid var(--border)" id="costs-ins-row"><div style="display:flex;justify-content:space-between;align-items:center"><span style="display:flex;align-items:center;gap:8px;font-size:14px;color:var(--text);font-weight:500"><span style="color:var(--muted);display:inline-flex" data-ic="activity" data-ic-size="16"></span><span>Home insurance</span></span><span id="costs-ins-val" style="font-size:14px;font-weight:600;color:var(--text);white-space:nowrap">&mdash;</span></div></div>
+    <div style="padding:12px 0;border-bottom:1px solid var(--border)" id="costs-ins-row"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><span style="display:flex;align-items:center;gap:8px;font-size:14px;color:var(--text);font-weight:500"><span style="color:var(--muted);display:inline-flex" data-ic="activity" data-ic-size="16"></span><span>Home insurance</span><button class="tip-btn" onclick="event.stopPropagation();showTooltip('insurance')" aria-label="info">i</button><span id="insurance-tag" class="tag tag-auto" onclick="resetInsuranceAuto()" style="flex-shrink:0">auto</span></span><span id="costs-ins-val" onclick="openLivingEdit('insurance')" style="font-size:14px;font-weight:600;color:var(--text);cursor:pointer;white-space:nowrap">&mdash;</span></div><input type="range" id="ins-slider" min="0" max="1500" step="5" value="259" oninput="insEdited=true;insOverride=parseInt(this.value)||0;setTag('insurance-tag',true);paintSlider(this);calc();if(typeof syncLivingRows==='function')syncLivingRows();"></div>
     <div class="sec-lbl" style="margin-top:18px">Spending</div>
     <div id="modal-budget-body"></div>
   </div>
@@ -754,7 +753,7 @@ const EMIRATES = {
 let currentEmirate = 'dubai';
 
 let currency='AED';
-let dewaEdited=false, coolingEdited=false, downManual=false, approvedManual=false, rentManual = false;
+let dewaEdited=false, coolingEdited=false, downManual=false, approvedManual=false, rentManual = false, insEdited=false, insOverride=0;
 const vals={price:1500000,cash:420000,approved:1500000,bval:1500000,down:20,years:25,eibor:3.85,sqft:800,fixrate:4.19,fixperiod:5,dld:4,agency:2};
 function aCap(){if(aprBlank())return vals.price>0?vals.price:1e15;return vals.approved>0?vals.approved:1e15;} // approved 0 = explicit cash purchase = no loan; blank income = no known cap
 function aprBlank(){const i=document.getElementById('t-income2');const hasInc=i&&parseFloat(String(i.value).replace(/[^0-9.]/g,''))>0;return !hasInc&&!approvedManual;} // show approved field empty when income not entered
@@ -953,7 +952,7 @@ function renderBudget(){
   const loan=Math.min(vals.price*(1-vals.down/100),vals.bval*(vals.price>5000000?0.70:0.80),aCap());
   const n=vals.years*12,r=vals.fixrate/100/12;
   const mortgagePay=r>0?loan*r*Math.pow(1+r,n)/(Math.pow(1+r,n)-1):loan/n;
-  const ins=loan*0.000112+vals.price*0.001/12;
+  const ins=insEdited?insOverride:(loan*0.000112+vals.price*0.001/12);
   budgetVals.housing=Math.round(mortgagePay+ins+clt); // clt сам rentOut-aware (sc only при сдаче)
   const incomeEl=document.getElementById('t-income'),incomeVal=incomeEl?incomeEl.value:'';
   const total=Object.keys(budgetVals).reduce((a,k)=>{if(BUDGET_DEFAULTS[k]&&BUDGET_DEFAULTS[k].rentOnly&&!rentOut)return a;return a+(budgetVals[k]||0);},0);
@@ -972,13 +971,14 @@ const LIVING_EDIT={
   cooling:{title:'District cooling',hint:'Chiller / Tasleem \u00b7 monthly',unit:'AED / month',presets:[150,280,400,600],icon:'snowflake'},
   sc:{title:'Service charge',hint:'Building fees \u00b7 rate',unit:'AED / sqft / yr',presets:[15,20,23,30],icon:'home'},
   internet:{title:'Internet',hint:'Home fibre \u00b7 monthly',unit:'AED / month',presets:[279,360,400,500],icon:'wifi'},
-  gas:{title:'Gas',hint:'Cooking gas \u00b7 monthly',unit:'AED / month',presets:[30,55,80,120],icon:'flame'}
+  gas:{title:'Gas',hint:'Cooking gas \u00b7 monthly',unit:'AED / month',presets:[30,55,80,120],icon:'flame'},
+  insurance:{title:'Home insurance',hint:'Life + property \u00b7 monthly',unit:'AED / month',presets:[150,259,400,600],icon:'activity'}
 };
 let _lvKey=null;
 function openLivingEdit(k){
   const d=LIVING_EDIT[k];if(!d)return;
   _lvKey=k;_bedKey=null;
-  const raw=parseFloat(String((document.getElementById('t-'+k)||{value:'0'}).value).replace(/[^0-9.]/g,''))||0;
+  const raw=k==='insurance'?(insEdited?insOverride:Math.round((Math.min(vals.price*(1-vals.down/100),vals.bval*(vals.price>5000000?0.70:0.80),aCap()))*0.000112+vals.price*0.001/12)):parseFloat(String((document.getElementById('t-'+k)||{value:'0'}).value).replace(/[^0-9.]/g,''))||0;
   const yr=(budgetPeriod==='year'&&k!=='sc'); // sc — ставка /sqft/yr, период не масштабирует
   const cur=yr?raw*12:raw;
   const bi=document.getElementById('bed-icon');if(bi)bi.innerHTML=ic(d.icon,20);
@@ -997,9 +997,13 @@ function setLvPreset(p){const inp=document.getElementById('bed-input');if(inp)in
 function syncCostsFixedRows(){
   const mv=document.getElementById('costs-mortgage-val'),iv=document.getElementById('costs-ins-val');
   if(!mv&&!iv)return;const mult=budgetPeriod==='year'?12:1;
-  const pay=window._advMortgageOnly||0,insv=window._advIns||0;
+  const pay=window._advMortgageOnly||0;
+  const _autoIns=Math.round(Math.min(vals.price*(1-vals.down/100),vals.bval*(vals.price>5000000?0.70:0.80),aCap())*0.000112+vals.price*0.001/12);
+  const insv=insEdited?insOverride:_autoIns;
   if(mv)mv.textContent=pay>0?fmt(pay*mult):'\u2014';
   if(iv)iv.textContent=insv>0?fmt(insv*mult):'\u2014';
+  const isl=document.getElementById('ins-slider');if(isl&&document.activeElement!==isl){isl.value=Math.min(1500,Math.round(insv));if(typeof paintSlider==='function')paintSlider(isl);}
+  const it=document.getElementById('insurance-tag');if(it)it.classList.toggle('tag-auto',!insEdited);
 }
 function syncLivingRows(){
   const yr=budgetPeriod==='year';
@@ -1039,6 +1043,7 @@ function onBedInput(raw){const num=parseFloat(raw.replace(/[^0-9.]/g,''))||0;
   if(_lvKey){document.querySelectorAll('.bud-preset').forEach(btn=>{const p=parseInt((btn.getAttribute('onclick')||'').match(/\d+/)[0]);btn.classList.toggle('sel',Math.abs(num-p)<1);});return;}const aed=currency==='USD'?Math.round(num*3.6725):num;const monthly=budgetPeriod==='year'?Math.round(aed/12):aed;document.querySelectorAll('.bud-preset').forEach(btn=>{const p=parseInt(btn.getAttribute('onclick').match(/\d+/)[0]);btn.classList.toggle('sel',Math.abs(monthly-p)<50);});}
 function setBedPreset(p){const disp=budgetPeriod==='year'?p*12:p;const num=currency==='USD'?Math.round(disp/3.6725):disp;const inp=document.getElementById('bed-input');inp.value=num.toLocaleString('en-US');document.querySelectorAll('.bud-preset').forEach(btn=>{const bp=parseInt(btn.getAttribute('onclick').match(/\d+/)[0]);btn.classList.toggle('sel',bp===p);});}
 function confirmBudgetEditor(){
+  if(_lvKey==='insurance'){const raw=document.getElementById('bed-input').value;let v=Math.max(0,parseFloat(String(raw).replace(/[^0-9.]/g,''))||0);if(budgetPeriod==='year')v=Math.round(v/12);insEdited=true;insOverride=v;setTag('insurance-tag',true);calc();if(appMode==='simple')simpleCalc();syncLivingRows();closeBudgetEditor();scheduleSave();return;}
   if(_lvKey){const raw=document.getElementById('bed-input').value;let v=Math.max(0,parseFloat(String(raw).replace(/[^0-9.]/g,''))||0);if(budgetPeriod==='year'&&_lvKey!=='sc')v=Math.round(v/12);const t=document.getElementById('t-'+_lvKey);if(t){t.value=String(v);t.dispatchEvent(new Event('input'));}syncLivingRows();closeBudgetEditor();return;}
   if(!_bedKey)return;const raw=document.getElementById('bed-input').value;budgetVals[_bedKey]=budgetFromDisp(raw);const sl=document.getElementById('budget-slider-'+_bedKey);if(sl){sl.value=budgetVals[_bedKey];paintSlider(sl);}const ve=document.getElementById('budget-val-'+_bedKey);if(ve){const v=budgetVals[_bedKey];ve.textContent=v>0?budgetDisp(v):'—';ve.style.color=v>0?'var(--text)':'var(--muted)';}updateBudgetSummary();closeBudgetEditor();}
 function closeBudgetEditor(){document.getElementById('budget-editor').classList.remove('show');document.getElementById('budget-editor-bg').classList.remove('show');_bedKey=null;_lvKey=null;const inp=document.getElementById('bed-input');if(inp)inp.blur();}
@@ -1157,6 +1162,7 @@ function renderScenarios(){
 const TIPS={
   en:{
     bval:{title:'Bank Valuation',text:'The bank sends an independent surveyor to value the property. They lend a % of the valuation — not the price. If valuation < price, you pay the gap in cash on top of your down payment.'},
+    insurance:{title:'Home Insurance',text:'Two components: life/mortgage protection (\u2248 0.134%/yr on your loan balance) and property insurance (\u2248 0.1%/yr on the property price), both often required by the bank. This is a standard estimate \u2014 tap the value to enter your actual quote if you have one.'},
     eibor:{title:'EIBOR (Emirates Interbank Rate)',text:'After your fixed period ends, your rate becomes variable: 3-month EIBOR + your bank margin (1.5% with salary transfer, 1.89% without), with a 1.99% floor. EIBOR re-fixes roughly every 3 months, so the rate tracks the market. This field is your estimate of the future EIBOR level.'},
     sc:{title:'Service Charge',text:'Annual building maintenance fee paid by owners only — not tenants. Covers security, cleaning, elevators, pool. Dubai average: 12–30 AED/sqft/yr.'},
     cooling:{title:'District Cooling (Chiller)',text:'In many Dubai buildings, air conditioning is provided separately by Empower, Tabreed, or Tasleem — billed independently from DEWA. Set to 0 if your DEWA bill includes cooling already.'},
@@ -1409,6 +1415,7 @@ function resetBvalAuto(){
   setTag('bval-tag',false,'auto');calc();scheduleSave();
 }
 function resetDewaAuto(){dewaEdited=false;autoUpdateDewa(vals.sqft);setTag('dewa-tag',false);calcLiving();scheduleSave();}
+function resetInsuranceAuto(){insEdited=false;insOverride=0;setTag('insurance-tag',false);calc();if(appMode==='simple')simpleCalc();syncLivingRows();scheduleSave();}
 function liveThousands(el){
   if(!el)return;
   const start=(typeof el.selectionStart==='number')?el.selectionStart:el.value.length;
@@ -1728,7 +1735,7 @@ function simpleCalc(){
   const cc=closingCosts(vals.price,loan),fees=cc.fees,upfront=downAmt+fees;
   const n=vals.years*12,mr=vals.fixrate/100/12;
   const monthly=loan>0?loan*mr*Math.pow(1+mr,n)/(Math.pow(1+mr,n)-1):0;
-  const ins=loan*0.000112+vals.price*0.001/12;
+  const ins=insEdited?insOverride:(loan*0.000112+vals.price*0.001/12);
   // Living: read from same sliders as Advanced
   const dewaVal=rentOut?0:(parseFloat(document.getElementById('dewa').value)||0);
   const scRate=parseFloat(document.getElementById('sc').value)||23,scVal2=Math.round(vals.sqft*scRate/12);
@@ -1770,7 +1777,7 @@ function calc(){
   const loan=Math.min(price*(1-dp/100),bval*(price>5000000?0.70:0.80),approved);
   const da=price-loan,valuationGap=Math.max(0,price-bval);
   const cc=closingCosts(price,loan);
-  const ins=loan*0.000112+price*0.001/12,pf=mpay(loan,fixrate,n),pv=mpay(loan,vr,n);
+  const ins=insEdited?insOverride:(loan*0.000112+price*0.001/12),pf=mpay(loan,fixrate,n),pv=mpay(loan,vr,n);
   window._advMortgageOnly=Math.round(pf);
   const up=da+cc.fees,rem=cash-up,enough=cash>=up,ok=loan<=approved;
   // Hide monthly payment cards if buyer can't afford upfront cost
@@ -1813,7 +1820,7 @@ function calc(){
     const dbrTip=dbr<=40?'Well within bank limits':'Banks allow up to 50%';
     affEl.innerHTML=`
     <div class="sec-lbl" style="margin:18px 0 10px">Will the bank approve this?</div>
-    <div style="background:var(--bg);border-radius:16px;padding:16px;margin-bottom:10px">
+    <div style="background:var(--bg);border-radius:14px;padding:16px;margin-bottom:10px">
       <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px">
         <div>
           <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:2px">Monthly payment vs income</div>
@@ -1831,7 +1838,7 @@ function calc(){
         <span>0%</span><span style="color:var(--amber)">50% limit</span><span>100%</span>
       </div>
     </div>
-    <div style="background:var(--bg);border-radius:16px;padding:16px;margin-bottom:10px">
+    <div style="background:var(--bg);border-radius:14px;padding:16px;margin-bottom:10px">
       <div style="display:flex;justify-content:space-between;align-items:center">
         <div>
           <div style="font-size:13px;font-weight:600;color:var(--text);margin-bottom:2px">Max loan by salary</div>
@@ -1955,18 +1962,18 @@ function calcBvR(){
   const buyShow=isYr?buyAnnual:buyMo;
   const diffShow=isYr?annualDiff:moDiff;
   document.getElementById('bvr-results').innerHTML=`
-  <div style="background:var(--bg);border-radius:16px;padding:16px;margin-bottom:14px">
+  <div style="background:var(--bg);border-radius:14px;padding:16px;margin-bottom:14px">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-      <div style="font-size:13px;font-weight:700;color:var(--text)">What you pay</div>
+      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)">What you pay</div>
       <div class="seg" style="font-size:11px"><button onclick="setBvrPeriod('month')" class="seg-btn ${bvrPeriod==='month'?'on':''}">Month</button><button onclick="setBvrPeriod('year')" class="seg-btn ${bvrPeriod==='year'?'on':''}">Year</button></div>
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
-      <div style="background:var(--card);border-radius:12px;padding:12px">
+      <div style="background:var(--card);border-radius:14px;padding:12px">
         <div style="font-size:11px;color:var(--muted);margin-bottom:3px;display:flex;align-items:center;gap:5px">${ic('key',13)}Renting</div>
         <div style="font-size:20px;font-weight:700;color:var(--text)">${fmt(rentShow)}</div>
         <div style="font-size:10px;color:var(--muted);margin-top:2px">rent only</div>
       </div>
-      <div style="background:var(--card);border-radius:12px;padding:12px">
+      <div style="background:var(--card);border-radius:14px;padding:12px">
         <div style="font-size:11px;color:var(--muted);margin-bottom:3px;display:flex;align-items:center;gap:5px">${ic('home',13)}Buying</div>
         <div style="font-size:20px;font-weight:700;color:var(--text)">${fmt(buyShow)}</div>
         <div style="font-size:10px;color:var(--muted);margin-top:2px">loan + service charge</div>
@@ -1975,10 +1982,10 @@ function calcBvR(){
     <div style="font-size:12px;color:var(--muted);text-align:center;padding:6px 0">${diffShow>0?`Buying costs <b style="color:var(--text)">${fmt(diffShow)}${perLbl} more</b> &mdash; the renter invests this difference`:`Buying costs <b style="color:var(--green)">${fmt(-diffShow)}${perLbl} less</b>`}</div>
     <div style="font-size:11px;color:var(--muted);text-align:center;padding-top:8px;border-top:1px solid var(--border)">Utilities excluded &mdash; same either way</div>
   </div>
-  <div style="background:${winBg};border:1px solid ${winBd};border-radius:16px;padding:16px;margin-bottom:14px">
-    <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:${winColor};margin-bottom:8px">After ${years} years</div>
+  <div style="background:${winBg};border:1px solid ${winBd};border-radius:14px;padding:16px;margin-bottom:14px">
+    <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:${winColor};margin-bottom:8px">After ${years} years</div>
     <div style="font-size:18px;font-weight:700;color:${winColor};margin-bottom:14px">${winTitle}</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><div><div style="font-size:11px;color:${winColor};opacity:.7;margin-bottom:2px;display:flex;align-items:center;gap:5px">${ic('home',13)}If you buy</div><div style="font-size:14px;font-weight:700;color:${winColor}">${fmt(last.buyerNetWorth)}</div></div><div><div style="font-size:11px;color:${winColor};opacity:.7;margin-bottom:2px;display:flex;align-items:center;gap:5px">${ic('trendUp',13)}If you rent + invest</div><div style="font-size:14px;font-weight:700;color:${winColor}">${fmt(last.renterNetWorth)}</div></div></div>
-  <div style="font-size:11px;color:${winColor};opacity:.75;margin-top:10px;padding-top:10px;border-top:1px solid ${winColor}33">At ${propGrowth}% property growth &middot; ${invReturn}% investment return</div></div><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px"><div style="display:flex;gap:12px;font-size:12px"><span style="display:flex;align-items:center;gap:4px"><span style="display:inline-block;width:12px;height:3px;background:var(--green-bd);border-radius:2px"></span><span style="color:var(--muted)">Buyer</span></span><span style="display:flex;align-items:center;gap:4px"><span style="display:inline-block;width:12px;height:3px;background:var(--blue-bd);border-radius:2px"></span><span style="color:var(--muted)">Renter</span></span>${crossYr?`<span style="display:flex;align-items:center;gap:4px"><span style="display:inline-block;width:8px;height:8px;background:var(--text);border-radius:50%"></span><span style="color:var(--muted)">Cross yr ${Math.round(crossYr)}</span></span>`:''}</div></div><div style="background:var(--bg);border-radius:12px;padding:10px;margin-bottom:10px">${svg}</div>`;
+  <div style="font-size:11px;color:${winColor};opacity:.75;margin-top:10px;padding-top:10px;border-top:1px solid ${winColor}33">At ${propGrowth}% property growth &middot; ${invReturn}% investment return</div></div><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px"><div style="display:flex;gap:12px;font-size:12px"><span style="display:flex;align-items:center;gap:4px"><span style="display:inline-block;width:12px;height:3px;background:var(--green-bd);border-radius:2px"></span><span style="color:var(--muted)">Buyer</span></span><span style="display:flex;align-items:center;gap:4px"><span style="display:inline-block;width:12px;height:3px;background:var(--blue-bd);border-radius:2px"></span><span style="color:var(--muted)">Renter</span></span>${crossYr?`<span style="display:flex;align-items:center;gap:4px"><span style="display:inline-block;width:8px;height:8px;background:var(--text);border-radius:50%"></span><span style="color:var(--muted)">Cross yr ${Math.round(crossYr)}</span></span>`:''}</div></div><div style="background:var(--bg);border-radius:14px;padding:12px;margin-bottom:10px">${svg}</div>`;
 }
 document.getElementById('t-bvr-inv-rate').addEventListener('input',()=>{let v=parseFloat(document.getElementById('t-bvr-inv-rate').value.replace(/[^0-9.]/g,''))||5;v=Math.min(15,Math.max(1,v));document.getElementById('bvr-inv-rate').value=v;calcBvR();});
 document.getElementById('t-bvr-inv-rate').addEventListener('blur',()=>{document.getElementById('t-bvr-inv-rate').value=parseFloat(document.getElementById('bvr-inv-rate').value).toFixed(1);});
@@ -2025,7 +2032,7 @@ function calcLiving(){
     pv=bal*vrate*Math.pow(1+vrate,vm)/(Math.pow(1+vrate,vm)-1);
   }
   // Insurance — IDENTICAL formula to Simple mode (no mid-calc rounding)
-  const ins=loan*0.000112+vals.price*0.001/12;
+  const ins=insEdited?insOverride:(loan*0.000112+vals.price*0.001/12);
   // Store mortgage-only (fixed + variable) for the Loan payment metric
   window._advMortgageOnly=Math.round(pf);
   window._advMortgageVar=Math.round(pv);
@@ -2091,7 +2098,7 @@ function calcPP(){
   if(ppAmt<=0){updatePPResults(`<div style="background:var(--bg);border-radius:12px;padding:12px 14px"><div class="trow"><span class="t-name">Balance at month ${ppMonth}</span><span style="font-size:14px;font-weight:600">${fmt(balance)}</span></div><div class="trow"><span class="t-name">Penalty-free limit</span><span style="font-size:14px;font-weight:600">${ppMonth>36?fmt(balance*0.25):'\u2014'}</span></div></div>`);return;}
   const remainingMonths=totalMonths-ppMonth,newBalance=Math.max(0,balance-ppAmt);
   const penaltyColor=actualPenalty>0?'var(--amber)':'var(--green)',penaltyBg=actualPenalty>0?'var(--amber-bg)':'var(--green-bg)',penaltyBd=actualPenalty>0?'var(--amber-bd)':'var(--green-bd)';
-  let html=`<div style="background:${penaltyBg};border:1px solid ${penaltyBd};border-radius:12px;padding:12px 14px;margin-bottom:14px"><div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:${penaltyColor};margin-bottom:8px">Penalty</div><div class="trow"><span class="t-name">Balance at month ${ppMonth}</span><span style="font-size:14px;font-weight:600">${fmt(balance)}</span></div><div class="trow"><span class="t-name">Penalty-free limit</span><span style="font-size:14px;font-weight:600">${ppMonth>36?fmt(penaltyFreeLimit):'\u2014'}</span></div><div style="height:1px;background:${penaltyBd};margin:10px 0"></div><div class="trow"><span class="t-name" style="font-weight:600">Penalty</span><span style="font-size:16px;font-weight:700;color:${penaltyColor}">${actualPenalty>0?fmt(actualPenalty):'None \u2713'}</span></div></div>`;
+  let html=`<div style="background:${penaltyBg};border:1px solid ${penaltyBd};border-radius:14px;padding:14px 16px;margin-bottom:14px"><div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:${penaltyColor};margin-bottom:8px">Penalty</div><div class="trow"><span class="t-name">Balance at month ${ppMonth}</span><span style="font-size:14px;font-weight:600">${fmt(balance)}</span></div><div class="trow"><span class="t-name">Penalty-free limit</span><span style="font-size:14px;font-weight:600">${ppMonth>36?fmt(penaltyFreeLimit):'\u2014'}</span></div><div style="height:1px;background:${penaltyBd};margin:10px 0"></div><div class="trow"><span class="t-name" style="font-weight:600">Penalty</span><span style="font-size:16px;font-weight:700;color:${penaltyColor}">${actualPenalty>0?fmt(actualPenalty):'None \u2713'}</span></div></div>`;
   if(isFullSettlement){html+=`<div style="background:var(--green-bg);border:1px solid var(--green-bd);border-radius:12px;padding:12px 14px"><div style="font-size:12px;font-weight:700;color:var(--green)">Full settlement at month ${ppMonth}</div></div>`;}
   else if(ppMode==='term'){
     const newMonths=Math.max(1,Math.ceil(-Math.log(1-newBalance*monthRate/monthlyPayment)/Math.log(1+monthRate)));
@@ -2124,7 +2131,7 @@ function calcPP(){
   const stratEl=document.getElementById('pp-strategy');
   if(isFullSettlement){stratEl.innerHTML='';return;}
   const sc=betterInvest?'var(--green)':'var(--blue)',sb=betterInvest?'var(--green-bg)':'var(--blue-bg)',sd=betterInvest?'var(--green-bd)':'var(--blue-bd)';
-  stratEl.innerHTML=`<div style="background:${sb};border:1px solid ${sd};border-radius:14px;padding:14px 16px"><div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:${sc};margin-bottom:8px">PREPAY OR INVEST AT ${invRate}%?</div><div style="font-size:14px;font-weight:700;color:${sc};margin-bottom:8px">${betterInvest?'Investing':'Prepaying'} wins by ${fmt(Math.abs(investGain-interestSavedByPrepay))}</div><div class="trow"><span class="t-name">Prepay &mdash; interest saved</span><span style="font-size:13px;font-weight:600">${fmt(interestSavedByPrepay)}</span></div><div class="trow"><span class="t-name">Invest ${fmt(ppAmt)} &mdash; gain</span><span style="font-size:13px;font-weight:600">${fmt(investGain)}</span></div><div style="font-size:11px;color:${sc};opacity:.75;margin-top:10px;line-height:1.5">${betterInvest?`At ${invRate}% your money grows faster than the ${vals.fixrate}% mortgage costs. Investing wins, but it's not guaranteed &mdash; prepaying is risk-free.`:`The ${vals.fixrate}% mortgage costs more than ${invRate}% investing returns. Prepaying is the guaranteed better choice.`}</div></div>`;
+  stratEl.innerHTML=`<div style="background:${sb};border:1px solid ${sd};border-radius:14px;padding:14px 16px"><div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:${sc};margin-bottom:8px">Prepay or invest at ${invRate}%?</div><div style="font-size:14px;font-weight:700;color:${sc};margin-bottom:8px">${betterInvest?'Investing':'Prepaying'} wins by ${fmt(Math.abs(investGain-interestSavedByPrepay))}</div><div class="trow"><span class="t-name">Prepay &mdash; interest saved</span><span style="font-size:13px;font-weight:600">${fmt(interestSavedByPrepay)}</span></div><div class="trow"><span class="t-name">Invest ${fmt(ppAmt)} &mdash; gain</span><span style="font-size:13px;font-weight:600">${fmt(investGain)}</span></div><div style="font-size:11px;color:${sc};opacity:.75;margin-top:10px;line-height:1.5">${betterInvest?`At ${invRate}% your money grows faster than the ${vals.fixrate}% mortgage costs. Investing wins, but it's not guaranteed &mdash; prepaying is risk-free.`:`The ${vals.fixrate}% mortgage costs more than ${invRate}% investing returns. Prepaying is the guaranteed better choice.`}</div></div>`;
   const yr=Math.floor((ppMonth-1)/12)+1,mo=((ppMonth-1)%12)+1;
   document.getElementById('pp-month-note').textContent=`Year ${yr}, month ${mo} of loan`;
 }
@@ -2251,7 +2258,7 @@ function saveState(){
     const state={v:2,vals,currency,lang:currentLang,emirate:currentEmirate,mode:appMode,
       income:(document.getElementById('t-income2')||{}).value||'',approvedManual,salaryTransfer,
       living:{dewa:document.getElementById('dewa').value,cooling:document.getElementById('cooling').value,sc:document.getElementById('sc').value,internet:document.getElementById('internet').value,gas:document.getElementById('gas').value},coolingEdited,
-      budget:budgetVals,rentOut,rentYield,rentYieldManual,rentRealistic,rentManual,downManual,bvalManual,dewaEdited,
+      budget:budgetVals,rentOut,rentYield,rentYieldManual,rentRealistic,rentManual,downManual,bvalManual,dewaEdited,insEdited,insOverride,
       fixPeriod:(typeof currentFixPeriodKey!=='undefined'?currentFixPeriodKey:'5'),
       checklist:checklistDone,scenarios,themeMode};
     localStorage.setItem('hayyak_state',JSON.stringify(state));
@@ -2273,6 +2280,7 @@ function loadState(){
     if(s.downManual)downManual=true;
     if(s.bvalManual)bvalManual=true;
     if(s.dewaEdited)dewaEdited=true;
+    if(s.insEdited){insEdited=true;insOverride=s.insOverride||0;}
     if(s.coolingEdited)coolingEdited=true;
     if(s.fixPeriod&&typeof currentFixPeriodKey!=='undefined')currentFixPeriodKey=s.fixPeriod;
     if(s.budget)Object.assign(budgetVals,s.budget);
@@ -2408,6 +2416,6 @@ document.addEventListener('DOMContentLoaded',()=>hydrateIcons());
 </div>
 
 <div id="tooltip-sheet" onclick="hideTooltip()"></div>
-<div style="position:fixed;bottom:2px;right:4px;font-size:9px;color:rgba(128,128,128,0.4);z-index:99999;pointer-events:none">v1327</div>
+<div style="position:fixed;bottom:2px;right:4px;font-size:9px;color:rgba(128,128,128,0.4);z-index:99999;pointer-events:none">v1330</div>
 </body>
 </html>
