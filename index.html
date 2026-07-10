@@ -265,7 +265,7 @@ input[type=range]::-moz-range-track{background:transparent;height:4px;border-rad
         <div style="padding:10px 14px 6px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted)">Currency</div>
         <div style="display:flex;gap:6px;padding:0 10px 10px;border-bottom:1px solid var(--border)">
           <button onclick="setCurr('AED')" id="btn-aed" class="seg-btn on" style="flex:1">AED</button>
-          <button onclick="setCurr('USD')" id="btn-usd" class="seg-btn" style="flex:1">USD</button>
+          <button id="btn-usd" class="seg-btn" style="flex:1;opacity:.45;cursor:default" disabled aria-disabled="true">USD<span style="display:block;font-size:9px;font-weight:600;letter-spacing:.04em;opacity:.85;margin-top:1px">Coming soon</span></button>
         </div>
         <div style="padding:10px 14px 6px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted)">Language</div>
         <div id="lang-opt-en" class="settings-opt on"><span style="display:inline-flex;align-items:center;justify-content:center;min-width:26px;height:18px;padding:0 5px;border:1px solid var(--border);border-radius:5px;font-size:9px;font-weight:700;letter-spacing:.04em;color:var(--muted)">EN</span><span>English</span></div>
@@ -1247,28 +1247,22 @@ function toggleCard(id){
 }
 
 function setCurr(c){
+  if(c==='USD')return; // USD: coming soon — конвертация неполная
   const prevCurrency=currency;
   currency=c;
   document.getElementById('btn-aed').classList.toggle('on',c==='AED');
   document.getElementById('btn-usd').classList.toggle('on',c==='USD');
   closeSettings();
   const isUSD=c==='USD';
-  document.getElementById('rl-price-min').textContent=isUSD?'$136K':'AED 500K';
-  document.getElementById('rl-price-max').textContent=isUSD?'$5.45M':'AED 20M';
-  document.getElementById('rl-cash-min').textContent=isUSD?'$27K':'AED 100K';
-  document.getElementById('rl-cash-max').textContent=isUSD?'$2.18M':'AED 8M';
-  document.getElementById('rl-appr-min').textContent=isUSD?'$54K':'AED 200K';
-  document.getElementById('rl-appr-max').textContent=isUSD?'$4.90M':'AED 18M';
-  document.getElementById('rl-dewa-min').textContent=isUSD?'$0':'AED 0';
-  document.getElementById('rl-dewa-max').textContent=isUSD?'$2,179':'AED 8,000';
-  document.getElementById('rl-inet-min').textContent=isUSD?'$0':'AED 0';
-  document.getElementById('rl-inet-max').textContent=isUSD?'$272':'AED 1,000';
-  document.getElementById('rl-gas-min').textContent=isUSD?'$0':'AED 0';
-  document.getElementById('rl-gas-max').textContent=isUSD?'$136':'AED 500';
-  document.getElementById('rl-rent-min').textContent=isUSD?'$13,615':'AED 50,000';
-  document.getElementById('rl-rent-max').textContent=isUSD?'$163,385':'AED 600,000';
-  // Missing slider labels
+  // Все метки слайдеров — через guarded-паттерн (часть id могла быть удалена в редизайнах)
   const els={
+    'rl-price-min': isUSD?'$136K':'AED 500K', 'rl-price-max': isUSD?'$5.45M':'AED 20M',
+    'rl-cash-min': isUSD?'$27K':'AED 100K', 'rl-cash-max': isUSD?'$2.18M':'AED 8M',
+    'rl-appr-min': isUSD?'$54K':'AED 200K', 'rl-appr-max': isUSD?'$4.90M':'AED 18M',
+    'rl-dewa-min': isUSD?'$0':'AED 0', 'rl-dewa-max': isUSD?'$2,179':'AED 8,000',
+    'rl-inet-min': isUSD?'$0':'AED 0', 'rl-inet-max': isUSD?'$272':'AED 1,000',
+    'rl-gas-min': isUSD?'$0':'AED 0', 'rl-gas-max': isUSD?'$136':'AED 500',
+    'rl-rent-min': isUSD?'$13,615':'AED 50,000', 'rl-rent-max': isUSD?'$163,385':'AED 600,000',
     'rl-cool-min': isUSD?'$0':'AED 0', 'rl-cool-max': isUSD?'$817':'AED 3,000',
     'rl-bval-min': isUSD?'$136K':'AED 500K', 'rl-bval-max': isUSD?'$5.45M':'AED 20M',
     'pp-amt-min': isUSD?'$0':'AED 0', 'pp-amt-max': isUSD?'$1.36M':'AED 5M',
@@ -2276,7 +2270,7 @@ function loadState(){
     const s=JSON.parse(raw);
     if(s.v!==2&&Object.keys(s).length>1){localStorage.removeItem('hayyak_state');return false;}
     if(s.vals)Object.assign(vals,s.vals);
-    if(s.currency)currency=s.currency;
+    if(s.currency==='AED')currency='AED'; // USD отключён (coming soon)
     if(s.emirate)currentEmirate=s.emirate;
     if(s.rentOut!==undefined)rentOut=s.rentOut;
     if(s.rentYield)rentYield=s.rentYield;
@@ -2422,6 +2416,6 @@ document.addEventListener('DOMContentLoaded',()=>hydrateIcons());
 </div>
 
 <div id="tooltip-sheet" onclick="hideTooltip()"></div>
-<div style="position:fixed;bottom:2px;right:4px;font-size:9px;color:rgba(128,128,128,0.4);z-index:99999;pointer-events:none">v1337</div>
+<div style="position:fixed;bottom:2px;right:4px;font-size:9px;color:rgba(128,128,128,0.4);z-index:99999;pointer-events:none">v1339</div>
 </body>
 </html>
