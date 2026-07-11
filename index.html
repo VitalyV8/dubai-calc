@@ -21,6 +21,7 @@
   --blue:#1A4F8A;--blue-bg:#E8F0FB;--blue-bd:#A8C4ED;
   --amber:#8A5A00;--amber-bg:#FDF3DC;--amber-bd:#E8CC80;
   --red:#9B2A2A;--red-bg:#FCEEEE;--red-bd:#E8AAAA;
+  --brand:#13573d;--brand-soft:#E8F0EA;--brand-bd:#C9DCCF;--brand-chip:#DDEAE1;--head-bg:#13573d;--head-fg:#F7F6F2;
   --shadow:0 1px 3px rgba(0,0,0,0.05);
 }
 [data-theme=dark]{
@@ -29,6 +30,7 @@
   --blue:#5B9BD5;--blue-bg:#1A2535;--blue-bd:#2A4A70;
   --amber:#D4A017;--amber-bg:#2A2010;--amber-bd:#5A4510;
   --red:#E57373;--red-bg:#2A1515;--red-bd:#5A2A2A;
+  --brand:#7CC3A0;--brand-soft:#152119;--brand-bd:#2A4636;--brand-chip:#1B2E23;--head-bg:#183024;--head-fg:#DFF0E6;
   --shadow:0 1px 3px rgba(0,0,0,0.3);
 }
 *{box-sizing:border-box;margin:0;padding:0}
@@ -104,13 +106,14 @@ body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,s
 .module-icon .ic{width:24px;height:24px}
 .module-name{font-size:12.5px;font-weight:600;line-height:1.25;color:var(--text);letter-spacing:-0.02em;margin-top:12px}
 .module-desc{font-size:var(--fs-xs);color:var(--muted);line-height:1.3;margin-top:3px}
-.modal-bg{position:fixed;inset:0;background:var(--bg);z-index:100;opacity:0;pointer-events:none;transition:opacity .25s}
-.modal-bg.on{opacity:1;pointer-events:auto;touch-action:none}
-.modal{position:fixed;left:calc(16px + env(safe-area-inset-left,0px));right:calc(16px + env(safe-area-inset-right,0px));bottom:calc(16px + env(safe-area-inset-bottom,0px));max-width:508px;margin:0 auto;max-height:calc(100vh - 44px);max-height:calc(100dvh - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px) - 44px);background:var(--bg);border-radius:24px;border:1px solid var(--border);z-index:101;transform:translateY(calc(100% + 48px + env(safe-area-inset-bottom,0px)));visibility:hidden;transition:transform .32s cubic-bezier(.32,.72,0,1),visibility 0s .32s;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 28px 28px -8px rgba(0,0,0,.30)}
-.modal.on{transform:translateY(0);touch-action:pan-y;visibility:visible;transition:transform .32s cubic-bezier(.32,.72,0,1),visibility 0s}
+.modal-bg{position:fixed;inset:0;background:var(--bg);z-index:100;opacity:0;pointer-events:none;transition:opacity .2s ease}
+.modal-bg.on{opacity:1;pointer-events:auto;touch-action:none;transition:opacity .3s ease}
+.modal{position:fixed;left:calc(16px + env(safe-area-inset-left,0px));right:calc(16px + env(safe-area-inset-right,0px));bottom:calc(16px + env(safe-area-inset-bottom,0px));max-width:508px;margin:0 auto;max-height:calc(100vh - 44px);max-height:calc(100dvh - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px) - 44px);background:var(--card);border-radius:24px;border:1px solid var(--border);z-index:101;transform:translateY(calc(100% + 48px + env(safe-area-inset-bottom,0px)));visibility:hidden;transition:transform .26s cubic-bezier(.4,0,1,1),visibility 0s .26s;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 28px 28px -8px rgba(0,0,0,.30)}
+.modal.on{transform:translateY(0);touch-action:pan-y;visibility:visible;transition:transform .46s cubic-bezier(.22,1,.36,1),visibility 0s}
 body.modal-locked{position:fixed;left:0;right:0;width:100%;overflow:hidden}
 .modal-handle{width:36px;height:4px;background:var(--track);border-radius:2px;margin:8px auto 16px}
-.modal-head{flex:0 0 auto;display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin:0;padding:16px 16px 14px;border-bottom:1px solid var(--border);background:var(--bg)}
+.modal-head{flex:0 0 auto;display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin:0;padding:16px 16px 14px;background:var(--bg);border-bottom:1px solid var(--border);transition:box-shadow .22s ease}
+.modal-head.scrolled{box-shadow:0 8px 18px -10px rgba(0,0,0,.22)}
 .modal>div:not(.modal-head){flex:1 1 auto;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;margin:0 6px 10px 0;padding:16px 10px 12px 16px}
 .modal-title{font-size:var(--fs-md);font-weight:700;letter-spacing:-0.3px;flex:1;min-width:0}
 .modal-close{background:var(--card);border:1px solid var(--border);width:32px;height:32px;border-radius:50%;font-size:14px;color:var(--muted);cursor:pointer;display:flex;align-items:center;justify-content:center}
@@ -213,9 +216,10 @@ input[type=range]::-moz-range-track{background:transparent;height:4px;border-rad
 #tooltip-sheet{position:fixed;left:16px;right:16px;bottom:20px;background:var(--tip-bg);color:var(--tip-sub);border:1px solid rgba(255,255,255,0.12);border-radius:18px;padding:16px 18px;z-index:9999;font-size:13px;line-height:1.6;box-shadow:0 12px 40px rgba(0,0,0,0.28),0 2px 8px rgba(0,0,0,0.12);display:none;max-width:500px;margin:0 auto}
 
 #tooltip-sheet strong{display:block;font-size:15px;font-weight:700;margin-bottom:6px;color:var(--tip-text)}
-#budget-editor{position:fixed;left:0;right:0;bottom:0;background:var(--card);border-radius:20px 20px 0 0;z-index:200;padding:16px 20px 40px;transform:translateY(calc(100% + 48px));visibility:hidden;transition:transform .28s cubic-bezier(.4,0,.2,1),visibility 0s .28s;box-shadow:0 -4px 32px rgba(0,0,0,.15)}
-#budget-editor.show{transform:translateY(0);visibility:visible;transition:transform .28s cubic-bezier(.4,0,.2,1),visibility 0s}
-#budget-editor-bg{position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:199;opacity:0;pointer-events:none;transition:opacity .28s}
+#budget-editor{position:fixed;left:0;right:0;bottom:0;background:var(--card);border-radius:20px 20px 0 0;z-index:200;padding:16px 20px 40px;transform:translateY(calc(100% + 48px));visibility:hidden;transition:transform .24s cubic-bezier(.4,0,1,1),visibility 0s .24s;box-shadow:0 -4px 32px rgba(0,0,0,.15)}
+#budget-editor.show{transform:translateY(0);visibility:visible;transition:transform .4s cubic-bezier(.22,1,.36,1),visibility 0s}
+#budget-editor-bg{position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:199;opacity:0;pointer-events:none;transition:opacity .22s ease}
+#budget-editor-bg.show{transition:opacity .3s ease}
 #budget-editor-bg.show{opacity:1;pointer-events:auto}
 .bud-preset{flex:1;padding:12px 6px;border-radius:12px;border:1.5px solid var(--border);background:var(--bg);font-size:13px;font-weight:600;cursor:pointer;color:var(--text);transition:background .15s,border-color .15s;text-align:center}
 .bud-preset:active,.bud-preset.sel{background:var(--text);color:var(--bg);border-color:var(--text)}
@@ -224,6 +228,11 @@ input[type=range]::-moz-range-track{background:transparent;height:4px;border-rad
 .srow-label{font-size:14px;color:var(--muted)}
 .srow-val{font-size:14px;font-weight:500}
 .sc-chip{font-size:11px;padding:4px 10px;border-radius:14px;border:1px solid var(--border);background:var(--bg);color:var(--muted);cursor:pointer}
+@keyframes tipIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+#tooltip-sheet.show{animation:tipIn .3s cubic-bezier(.22,1,.36,1)}
+@keyframes popIn{from{opacity:0;transform:translateY(-4px) scale(.98)}to{opacity:1;transform:none}}
+#settings-panel{animation:popIn .22s cubic-bezier(.22,1,.36,1)}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
 *{scrollbar-width:thin;scrollbar-color:var(--subtle) transparent}
 ::-webkit-scrollbar{width:4px;height:4px}
 ::-webkit-scrollbar-thumb{background:var(--subtle);border-radius:99px}
@@ -2363,6 +2372,7 @@ document.getElementById('t-income').addEventListener('input',()=>{const raw=docu
 document.getElementById('t-income').addEventListener('focus',()=>{const raw=document.getElementById('t-income').value.replace(/[^0-9,]/g,'').replace(/,/g,'');document.getElementById('t-income').value=raw;});
 calcBvR();calcPP();
 (function(){updateRateLabels();})();
+(function(){document.querySelectorAll('.modal').forEach(m=>{const sc=m.querySelector(':scope > div:not(.modal-head)');const head=m.querySelector('.modal-head');if(sc&&head)sc.addEventListener('scroll',()=>head.classList.toggle('scrolled',sc.scrollTop>2),{passive:true});});})();
 
 const restored=loadState();
 if(restored){
@@ -2416,6 +2426,6 @@ document.addEventListener('DOMContentLoaded',()=>hydrateIcons());
 </div>
 
 <div id="tooltip-sheet" onclick="hideTooltip()"></div>
-<div style="position:fixed;bottom:2px;right:4px;font-size:9px;color:rgba(128,128,128,0.4);z-index:99999;pointer-events:none">v1339</div>
+<div style="position:fixed;bottom:2px;right:4px;font-size:9px;color:rgba(128,128,128,0.4);z-index:99999;pointer-events:none">v1343</div>
 </body>
 </html>
