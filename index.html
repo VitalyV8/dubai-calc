@@ -121,15 +121,15 @@ body.modal-locked{position:fixed;left:0;right:0;width:100%;overflow:hidden}
 .card>*:last-child,.card-body-inner>*:last-child{margin-bottom:0}
 .card-head{display:flex;justify-content:space-between;align-items:center;cursor:pointer;user-select:none}
 .ctitle{font-size:var(--fs-xs);font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);opacity:.7}
-.chevron{color:var(--muted);transition:transform .42s cubic-bezier(.16,1,.3,1);display:inline-flex;align-items:center;justify-content:center;transform-origin:center}
+.chevron{color:var(--muted);transition:transform .45s cubic-bezier(.22,1,.36,1);display:inline-flex;align-items:center;justify-content:center;transform-origin:center}
 .chevron.open{transform:rotate(180deg)}
 .chevron .ic{vertical-align:0}
-.card-body-wrap{display:grid;grid-template-rows:0fr;overflow:hidden;transition:grid-template-rows .42s cubic-bezier(.16,1,.3,1)}
+.card-body-wrap{display:grid;grid-template-rows:0fr;overflow:hidden;transition:grid-template-rows .45s cubic-bezier(.22,1,.36,1)}
 .card-body-wrap.open{grid-template-rows:1fr}
 .card-body-wrap.open .card-body-inner{padding-top:20px}
 .card-body-inner{overflow:hidden;padding-top:0;opacity:0;transition:padding-top .42s cubic-bezier(.16,1,.3,1),opacity .28s ease}
 .card-body-wrap.open .card-body-inner{opacity:1;transition:padding-top .42s cubic-bezier(.16,1,.3,1),opacity .32s ease .12s}
-.collapse-wrap{display:grid;grid-template-rows:0fr;overflow:hidden;transition:grid-template-rows .38s cubic-bezier(.16,1,.3,1)}
+.collapse-wrap{display:grid;grid-template-rows:0fr;overflow:hidden;transition:grid-template-rows .45s cubic-bezier(.22,1,.36,1)}
 .collapse-wrap.open{grid-template-rows:1fr}
 .collapse-wrap>div{overflow:hidden;min-height:0;opacity:0;transition:opacity .25s ease}
 .collapse-wrap.open>div{opacity:1;transition:opacity .3s ease .1s}
@@ -228,6 +228,15 @@ input[type=range]::-moz-range-track{background:transparent;height:4px;border-rad
 .srow-label{font-size:14px;color:var(--muted)}
 .srow-val{font-size:14px;font-weight:500}
 .sc-chip{font-size:11px;padding:4px 10px;border-radius:14px;border:1px solid var(--border);background:var(--bg);color:var(--muted);cursor:pointer}
+@keyframes tipOut{from{opacity:1;transform:none}to{opacity:0;transform:translateY(8px)}}
+#tooltip-sheet.hiding{animation:tipOut .18s ease forwards}
+@keyframes popOut{from{opacity:1;transform:none}to{opacity:0;transform:translateY(-4px) scale(.98)}}
+#settings-panel.hiding{animation:popOut .15s ease forwards}
+.seg,.mode-toggle{position:relative}
+.seg-ind{position:absolute;left:0;top:0;background:var(--text);z-index:0;transition:transform .32s cubic-bezier(.22,1,.36,1),width .32s cubic-bezier(.22,1,.36,1);will-change:transform;pointer-events:none}
+.seg-anim button{position:relative;z-index:1}
+.seg-anim button.on{background:transparent!important;color:var(--bg)!important;box-shadow:none!important}
+.module-card:active,.seg-btn:active,.mode-btn:active,.bud-preset:active,.modal-close:active,.settings-btn:active{transform:scale(.965)}
 @keyframes tipIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
 #tooltip-sheet.show{animation:tipIn .3s cubic-bezier(.22,1,.36,1)}
 @keyframes popIn{from{opacity:0;transform:translateY(-4px) scale(.98)}to{opacity:1;transform:none}}
@@ -1207,13 +1216,14 @@ let tooltipTimer=null;
 function showTooltip(key){
   const tips=TIPS[currentLang]||TIPS.en,tip=tips[key]||TIPS.en[key];if(!tip)return;
   const sheet=document.getElementById('tooltip-sheet');if(!sheet)return;
+  sheet.classList.remove('hiding');clearTimeout(sheet._hideT);
   sheet.innerHTML='<button onclick="hideTooltip()" style="float:right;background:none;border:none;font-size:18px;cursor:pointer;color:var(--muted);line-height:1;padding:0 0 4px 8px">&times;</button><strong>'+tip.title+'</strong>'+tip.text;
   sheet.style.display='block';
   sheet.classList.add('show');
   if(navigator.vibrate)navigator.vibrate(3);
   clearTimeout(tooltipTimer);tooltipTimer=setTimeout(hideTooltip,20000);
 }
-function hideTooltip(){const sheet=document.getElementById('tooltip-sheet');if(!sheet)return;sheet.style.display='none';sheet.classList.remove('show','fading');}
+function hideTooltip(){const sheet=document.getElementById('tooltip-sheet');if(!sheet||sheet.style.display==='none')return;sheet.classList.add('hiding');clearTimeout(sheet._hideT);sheet._hideT=setTimeout(()=>{sheet.style.display='none';sheet.classList.remove('show','hiding','fading');},180);}
 function fadeTooltip(){hideTooltip();}
 document.addEventListener('click',e=>{const sheet=document.getElementById('tooltip-sheet');if(!sheet||!sheet.classList.contains('show'))return;if(e.target.closest('.tip-btn'))return;if(e.target.closest('#tooltip-sheet'))return;hideTooltip();});
 ['scroll','touchmove'].forEach(ev=>{document.addEventListener(ev,()=>{fadeTooltip();},{passive:true,capture:true});});
@@ -1244,9 +1254,9 @@ sysDark.addEventListener('change',()=>{if(themeMode==='auto')applyTheme();});
 applyTheme();
 
 let currentLang='en';
-function toggleSettings(ev){ev.stopPropagation();const panel=document.getElementById('settings-panel');panel.style.display=panel.style.display==='block'?'none':'block';}
-function closeSettings(){const panel=document.getElementById('settings-panel');if(panel)panel.style.display='none';}
-document.addEventListener('click',(ev)=>{const panel=document.getElementById('settings-panel'),btn=document.getElementById('settings-btn');if(!panel||!btn)return;if(!panel.contains(ev.target)&&!btn.contains(ev.target))panel.style.display='none';});
+function toggleSettings(ev){ev.stopPropagation();const panel=document.getElementById('settings-panel');if(panel.style.display==='block'&&!panel.classList.contains('hiding')){closeSettings();}else{clearTimeout(panel._hideT);panel.classList.remove('hiding');panel.style.display='block';}}
+function closeSettings(){const panel=document.getElementById('settings-panel');if(!panel||panel.style.display!=='block'||panel.classList.contains('hiding'))return;panel.classList.add('hiding');clearTimeout(panel._hideT);panel._hideT=setTimeout(()=>{panel.style.display='none';panel.classList.remove('hiding');},150);}
+document.addEventListener('click',(ev)=>{const panel=document.getElementById('settings-panel'),btn=document.getElementById('settings-btn');if(!panel||!btn)return;if(!panel.contains(ev.target)&&!btn.contains(ev.target))closeSettings();});
 
 function toggleCard(id){
   const wrap=document.getElementById('body-'+id),chev=document.getElementById('chev-'+id);
@@ -2373,6 +2383,26 @@ document.getElementById('t-income').addEventListener('focus',()=>{const raw=docu
 calcBvR();calcPP();
 (function(){updateRateLabels();})();
 (function(){document.querySelectorAll('.modal').forEach(m=>{const sc=m.querySelector(':scope > div:not(.modal-head)');const head=m.querySelector('.modal-head');if(sc&&head)sc.addEventListener('scroll',()=>head.classList.toggle('scrolled',sc.scrollTop>2),{passive:true});});})();
+(function(){
+  function syncSeg(c){
+    const on=c.querySelector('button.on');
+    let ind=c.querySelector(':scope>.seg-ind');
+    if(!on){if(ind)ind.style.width='0px';return;}
+    if(!ind){ind=document.createElement('span');ind.className='seg-ind';c.prepend(ind);c.classList.add('seg-anim');}
+    const br=on.getBoundingClientRect(),cr=c.getBoundingClientRect(),cs=getComputedStyle(c);
+    const x=br.left-cr.left-parseFloat(cs.borderLeftWidth||'0'),y=br.top-cr.top-parseFloat(cs.borderTopWidth||'0');
+    ind.style.width=br.width+'px';ind.style.height=br.height+'px';
+    ind.style.transform='translate('+x+'px,'+y+'px)';
+    ind.style.borderRadius=getComputedStyle(on).borderRadius;
+  }
+  function syncAll(){document.querySelectorAll('.seg,.mode-toggle').forEach(syncSeg);}
+  window.__syncSegs=syncAll;
+  document.addEventListener('click',e=>{const b=e.target.closest('.seg button,.mode-toggle button');if(b){const c=b.closest('.seg,.mode-toggle');syncSeg(c);requestAnimationFrame(()=>syncSeg(c));}});
+  window.addEventListener('resize',()=>{syncAll();requestAnimationFrame(syncAll);});
+  ['calc','simpleCalc','setMode','openModal','setToolsTab','setBudgetPeriod','setSPeriod','setAdvRateView'].forEach(fn=>{const o=window[fn];if(typeof o==='function'){window[fn]=function(){const r=o.apply(this,arguments);syncAll();requestAnimationFrame(syncAll);return r;};}});
+  if(document.fonts&&document.fonts.ready)document.fonts.ready.then(()=>syncAll());
+  syncAll();requestAnimationFrame(syncAll);
+})();
 
 const restored=loadState();
 if(restored){
@@ -2426,6 +2456,6 @@ document.addEventListener('DOMContentLoaded',()=>hydrateIcons());
 </div>
 
 <div id="tooltip-sheet" onclick="hideTooltip()"></div>
-<div style="position:fixed;bottom:2px;right:4px;font-size:9px;color:rgba(128,128,128,0.4);z-index:99999;pointer-events:none">v1343</div>
+<div style="position:fixed;bottom:2px;right:4px;font-size:9px;color:rgba(128,128,128,0.4);z-index:99999;pointer-events:none">v1344</div>
 </body>
 </html>
