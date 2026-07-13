@@ -2384,22 +2384,25 @@ calcBvR();calcPP();
 (function(){updateRateLabels();})();
 (function(){document.querySelectorAll('.modal').forEach(m=>{const sc=m.querySelector(':scope > div:not(.modal-head)');const head=m.querySelector('.modal-head');if(sc&&head)sc.addEventListener('scroll',()=>head.classList.toggle('scrolled',sc.scrollTop>2),{passive:true});});})();
 (function(){
-  function syncSeg(c){
+  function syncSeg(c){try{
     const on=c.querySelector('button.on');
     let ind=c.querySelector(':scope>.seg-ind');
-    if(!on){if(ind)ind.style.width='0px';return;}
-    if(!ind){ind=document.createElement('span');ind.className='seg-ind';c.prepend(ind);c.classList.add('seg-anim');}
-    const br=on.getBoundingClientRect(),cr=c.getBoundingClientRect(),cs=getComputedStyle(c);
+    if(!on){if(ind)ind.style.width='0px';c.classList.remove('seg-anim');return;}
+    const br=on.getBoundingClientRect();
+    if(!br.width||!br.height){if(ind)ind.style.width='0px';c.classList.remove('seg-anim');return;}
+    if(!ind){ind=document.createElement('span');ind.className='seg-ind';c.prepend(ind);}
+    const cr=c.getBoundingClientRect(),cs=getComputedStyle(c);
     const x=br.left-cr.left-parseFloat(cs.borderLeftWidth||'0'),y=br.top-cr.top-parseFloat(cs.borderTopWidth||'0');
     ind.style.width=br.width+'px';ind.style.height=br.height+'px';
     ind.style.transform='translate('+x+'px,'+y+'px)';
     ind.style.borderRadius=getComputedStyle(on).borderRadius;
-  }
+    c.classList.add('seg-anim');
+  }catch(e){c.classList.remove('seg-anim');}}
   function syncAll(){document.querySelectorAll('.seg,.mode-toggle').forEach(syncSeg);}
   window.__syncSegs=syncAll;
-  document.addEventListener('click',e=>{const b=e.target.closest('.seg button,.mode-toggle button');if(b){const c=b.closest('.seg,.mode-toggle');syncSeg(c);requestAnimationFrame(()=>syncSeg(c));}});
+  document.addEventListener('click',e=>{const b=e.target.closest('.seg button,.mode-toggle button');if(b){const c=b.closest('.seg,.mode-toggle');syncSeg(c);requestAnimationFrame(()=>syncSeg(c));setTimeout(()=>syncSeg(c),80);}});
   window.addEventListener('resize',()=>{syncAll();requestAnimationFrame(syncAll);});
-  ['calc','simpleCalc','setMode','openModal','setToolsTab','setBudgetPeriod','setSPeriod','setAdvRateView'].forEach(fn=>{const o=window[fn];if(typeof o==='function'){window[fn]=function(){const r=o.apply(this,arguments);syncAll();requestAnimationFrame(syncAll);return r;};}});
+  ['calc','simpleCalc','setMode','openModal','setToolsTab','setBudgetPeriod','setSPeriod','setAdvRateView'].forEach(fn=>{const o=window[fn];if(typeof o==='function'){window[fn]=function(){const r=o.apply(this,arguments);syncAll();requestAnimationFrame(syncAll);setTimeout(syncAll,80);setTimeout(syncAll,420);return r;};}});
   if(document.fonts&&document.fonts.ready)document.fonts.ready.then(()=>syncAll());
   syncAll();requestAnimationFrame(syncAll);
 })();
@@ -2456,6 +2459,6 @@ document.addEventListener('DOMContentLoaded',()=>hydrateIcons());
 </div>
 
 <div id="tooltip-sheet" onclick="hideTooltip()"></div>
-<div style="position:fixed;bottom:2px;right:4px;font-size:9px;color:rgba(128,128,128,0.4);z-index:99999;pointer-events:none">v1344</div>
+<div style="position:fixed;bottom:2px;right:4px;font-size:9px;color:rgba(128,128,128,0.4);z-index:99999;pointer-events:none">v1345</div>
 </body>
 </html>
