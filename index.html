@@ -248,7 +248,7 @@ input[type=range]::-moz-range-track{background:transparent;height:4px;border-rad
 .module-card:active,.seg-btn:active,.mode-btn:active,.bud-preset:active,.modal-close:active,.settings-btn:active{transform:scale(.975);transition-duration:.07s;transition-timing-function:ease}
 @keyframes iosReveal{0%{opacity:0;transform:translateY(8px) scale(.993)}100%{opacity:1;transform:none}}
 .motion-enter{animation:iosReveal .42s cubic-bezier(.22,1,.36,1) both;animation-delay:var(--motion-delay,0ms);will-change:transform,opacity}
-body.is-scrubbing .m-val,body.is-scrubbing .metric,body.is-scrubbing .num-pulse,body.is-scrubbing .motion-enter{animation:none!important;transition:none!important}
+body.is-scrubbing .m-val,body.is-scrubbing .metric,body.is-scrubbing .num-pulse{animation:none!important;transition:none!important}
 body.is-scrubbing{overflow-anchor:none}
 #s-result,#verdict,#gv-badge-adv,#affordability,#bvr-results,#pp-results,#pp-strategy,#breakdown,#total-cost{overflow-anchor:none}
 .gv-chip{display:inline-flex;align-items:center;gap:4px;border:1px solid #F0C75E;border-radius:999px;background:linear-gradient(135deg,#FFF8E1,#FFE9B8);color:#7A5C00;padding:4px 8px;font-size:10px;font-weight:700;line-height:1;white-space:nowrap;flex-shrink:0}
@@ -848,6 +848,7 @@ function runEntranceMotion(root){
   const items=Array.from(root.querySelectorAll(':scope > .card,:scope > .modules-strip,.card:not([style*="display:none"])')).filter(el=>el.offsetParent!==null).slice(0,6);
   items.forEach((el,i)=>{el.classList.remove('motion-enter');el.style.setProperty('--motion-delay',(i*24)+'ms');});
   requestAnimationFrame(()=>items.forEach(el=>el.classList.add('motion-enter')));
+  setTimeout(()=>items.forEach(el=>{el.classList.remove('motion-enter');el.style.removeProperty('--motion-delay');}),700);
 }
 function dismissSplash(){if(splashDismissed)return;splashDismissed=true;const s=document.getElementById('splash');if(s){s.classList.add('hide');setTimeout(()=>{document.documentElement.classList.remove('splash-loading');if(typeof applyTheme==='function')applyTheme();if(s)s.remove();const active=document.getElementById(appMode==='advanced'?'view-advanced':'view-simple');runEntranceMotion(active);},400);}else{document.documentElement.classList.remove('splash-loading');if(typeof applyTheme==='function')applyTheme();}}
 setTimeout(dismissSplash,1400);
@@ -1373,7 +1374,7 @@ function endScrubbing(){
 document.addEventListener('input',e=>{
   if(e.target&&e.target.type==='range'){
     document.body.classList.add('is-scrubbing');
-    clearTimeout(_scrubTimer);_scrubTimer=setTimeout(endScrubbing,120);
+    clearTimeout(_scrubTimer);_scrubTimer=setTimeout(endScrubbing,260);
   }
 },true);
 ['pointerup','pointercancel','touchend'].forEach(type=>document.addEventListener(type,endScrubbing,{passive:true}));
@@ -2593,6 +2594,6 @@ document.addEventListener('DOMContentLoaded',()=>hydrateIcons());
 </div>
 
 <div id="tooltip-sheet"></div>
-<div style="position:fixed;bottom:2px;right:4px;font-size:9px;color:rgba(128,128,128,0.4);z-index:99999;pointer-events:none">v1361</div>
+<div style="position:fixed;bottom:2px;right:4px;font-size:9px;color:rgba(128,128,128,0.4);z-index:99999;pointer-events:none">v1362</div>
 </body>
 </html>
