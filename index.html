@@ -256,7 +256,7 @@ input[type=range]::-moz-range-track{background:transparent;height:4px;border-rad
 body.is-scrubbing .m-val,body.is-scrubbing .metric,body.is-scrubbing .num-pulse{animation:none!important;transition:none!important}
 body.is-scrubbing{overflow-anchor:none}
 #s-result,#verdict,#affordability,#bvr-results,#pp-results,#pp-strategy,#breakdown,#total-cost{overflow-anchor:none}
-.gv-status{display:inline-flex;align-items:center;gap:7px;max-width:100%;height:24px;margin-top:8px;padding:0 10px;border:1px solid var(--border);border-radius:999px;background:var(--bg);color:var(--muted);font-family:inherit;font-size:10px;font-weight:700;line-height:1;white-space:nowrap;overflow:hidden;cursor:pointer;box-shadow:none}
+.gv-status{display:inline-flex;align-items:center;gap:7px;max-width:100%;height:24px;margin:0 0 12px;padding:0 10px;border:1px solid var(--border);border-radius:999px;background:var(--bg);color:var(--muted);font-family:inherit;font-size:10px;font-weight:700;line-height:1;white-space:nowrap;overflow:hidden;cursor:pointer;box-shadow:none}
 .gv-status::before{content:"";width:6px;height:6px;border-radius:50%;background:#C79A2D;opacity:.55;flex:0 0 auto;transition:opacity .2s,box-shadow .2s}
 .gv-status-label{overflow:hidden;text-overflow:ellipsis}
 .gv-status.qualified{border-color:#E5C45E;background:linear-gradient(135deg,#FFF8E1,#FFE9B8);color:#765800}
@@ -386,9 +386,9 @@ body.is-scrubbing{overflow-anchor:none}
   <div class="card" id="card-simple">
     <div class="field">
       <div class="ftop"><span class="flabel" data-i18n="field.price">Property price</span><span class="unit-badge">AED</span><input class="finput" id="s-price" type="text" inputmode="numeric" value="1,500,000" oninput="simpleCalc()"></div>
+      <button type="button" id="s-gv-status" class="gv-status" onclick="event.stopPropagation();showTooltip('gv')"><span class="gv-status-label">Golden Visa threshold &middot; AED 2M</span></button>
       <input type="range" id="s-price-range" min="0" max="1000" step="1" value="298" oninput="document.getElementById('s-price').value=fmtN(sliderToVal('s-price-range',+this.value));simpleCalc()">
       <div class="rlabels"><span id="rl-s-price-min">AED 500K</span><span id="rl-s-price-max">AED 20M</span></div>
-      <button type="button" id="s-gv-status" class="gv-status" onclick="showTooltip('gv')"><span class="gv-status-label">Golden Visa threshold &middot; AED 2M</span></button>
     </div>
     <div class="field">
       <div class="ftop"><span class="flabel">Down payment</span><span class="unit-badge">%</span><input class="finput" id="s-down" type="text" inputmode="numeric" value="20" oninput="sDownChanged(this.value)" onblur="document.getElementById('s-down').value=vals.down"></div>
@@ -433,9 +433,9 @@ body.is-scrubbing{overflow-anchor:none}
   <div class="card-body-wrap open" id="body-property"><div class="card-body-inner">
     <div class="field">
       <div class="ftop"><span class="lbl-group"><span class="flabel" data-i18n="field.price">Property price</span><button class="tip-btn" onclick="event.stopPropagation();showTooltip('price')" aria-label="info">i</button></span><span class="unit-badge">AED</span><input class="finput" id="t-price" value="1,500,000"></div>
+      <button type="button" id="gv-status-adv" class="gv-status" onclick="event.stopPropagation();showTooltip('gv')"><span class="gv-status-label">Golden Visa threshold &middot; AED 2M</span></button>
       <input type="range" id="price" min="0" max="1000" step="1" value="298">
       <div class="rlabels"><span id="rl-price-min">AED 500K</span><span id="rl-price-max">AED 20M</span></div>
-      <button type="button" id="gv-status-adv" class="gv-status" onclick="showTooltip('gv')"><span class="gv-status-label">Golden Visa threshold &middot; AED 2M</span></button>
     </div>
     <div class="field">
       <div class="ftop"><span class="lbl-group"><span class="flabel" data-i18n="field.cash">Your cash available</span><button class="tip-btn" onclick="event.stopPropagation();showTooltip('cash')" aria-label="info">i</button></span><span class="unit-badge">AED</span><input class="finput" id="t-cash" value="420,000"></div>
@@ -1307,7 +1307,12 @@ function showTooltip(key){
 }
 function hideTooltip(){const sheet=document.getElementById('tooltip-sheet');if(!sheet||sheet.style.display==='none'||sheet.classList.contains('hiding'))return;clearTimeout(tooltipTimer);sheet.classList.add('hiding');clearTimeout(sheet._hideT);sheet._hideT=setTimeout(()=>{sheet.style.display='none';sheet.classList.remove('show','hiding','fading');},220);}
 function fadeTooltip(){const s=document.getElementById('tooltip-sheet');if(s&&s._openAt&&Date.now()-s._openAt<420)return;hideTooltip();}
-document.addEventListener('click',e=>{const sheet=document.getElementById('tooltip-sheet');if(!sheet||!sheet.classList.contains('show'))return;if(e.target.closest('.tip-btn'))return;hideTooltip();});
+document.addEventListener('click',e=>{
+  const sheet=document.getElementById('tooltip-sheet');if(!sheet||!sheet.classList.contains('show'))return;
+  if(e.target.closest('.tip-btn,.gv-status'))return;
+  if(sheet.contains(e.target)){if(e.target.closest('button[aria-label="close"]'))hideTooltip();return;}
+  hideTooltip();
+});
 document.addEventListener('scroll',()=>{fadeTooltip();},{passive:true,capture:true});
 
 const sysDark=window.matchMedia('(prefers-color-scheme: dark)');
@@ -1394,9 +1399,15 @@ function clamp(v,mn,mx){return Math.min(mx,Math.max(mn,v));}
 function fmtN(n){return Math.round(n).toLocaleString('en-US');}
 function setLiveText(el,value){if(el&&el.textContent!==String(value))el.textContent=String(value);}
 const GOLDEN_VISA_THRESHOLD=2000000;
+function fmtGoldenVisaGap(aedValue){
+  const v=toDisp(aedValue),prefix=currency==='USD'?'$':'AED ';
+  if(v>=1000000)return prefix+(v/1000000).toFixed(v%1000000?1:0)+'M';
+  if(v>=1000)return prefix+Math.ceil(v/1000)+'K';
+  return prefix+Math.round(v).toLocaleString('en-US');
+}
 function updateGoldenVisaStatus(price){
   const amount=Number(price)||0,qualified=amount>=GOLDEN_VISA_THRESHOLD;
-  const label=!amount?'Golden Visa threshold · AED 2M':qualified?'Golden Visa property threshold reached':`${fmt(GOLDEN_VISA_THRESHOLD-amount)} to Golden Visa threshold`;
+  const label=!amount?'Golden Visa threshold · AED 2M':qualified?'Golden Visa property threshold reached':`${fmtGoldenVisaGap(GOLDEN_VISA_THRESHOLD-amount)} to Golden Visa threshold`;
   ['s-gv-status','gv-status-adv'].forEach(id=>{
     const el=document.getElementById(id);if(!el)return;
     el.classList.toggle('qualified',qualified);
@@ -2649,6 +2660,6 @@ document.addEventListener('DOMContentLoaded',()=>hydrateIcons());
 </div>
 
 <div id="tooltip-sheet"></div>
-<div style="position:fixed;bottom:2px;right:4px;font-size:9px;color:rgba(128,128,128,0.4);z-index:99999;pointer-events:none">v1365</div>
+<div style="position:fixed;bottom:2px;right:4px;font-size:9px;color:rgba(128,128,128,0.4);z-index:99999;pointer-events:none">v1366</div>
 </body>
 </html>
