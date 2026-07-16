@@ -255,11 +255,13 @@ input[type=range]::-moz-range-track{background:transparent;height:4px;border-rad
 .motion-enter{animation:iosReveal .42s cubic-bezier(.22,1,.36,1) both;animation-delay:var(--motion-delay,0ms);will-change:transform,opacity}
 body.is-scrubbing .m-val,body.is-scrubbing .metric,body.is-scrubbing .num-pulse{animation:none!important;transition:none!important}
 body.is-scrubbing{overflow-anchor:none}
-#s-result,#verdict,#gv-badge-adv,#affordability,#bvr-results,#pp-results,#pp-strategy,#breakdown,#total-cost{overflow-anchor:none}
-.gv-chip{display:inline-flex;align-items:center;gap:4px;border:1px solid #F0C75E;border-radius:999px;background:linear-gradient(135deg,#FFF8E1,#FFE9B8);color:#7A5C00;padding:4px 8px;font-size:10px;font-weight:700;line-height:1;white-space:nowrap;flex-shrink:0}
-.card-head .gv-chip{position:absolute;right:24px;top:50%;transform:translateY(-50%)}
-.simple-result-card{position:relative}
-.simple-gv-chip{position:absolute;top:-9px;right:16px;z-index:1;box-shadow:0 2px 8px rgba(122,92,0,.12)}
+#s-result,#verdict,#affordability,#bvr-results,#pp-results,#pp-strategy,#breakdown,#total-cost{overflow-anchor:none}
+.gv-status{display:inline-flex;align-items:center;gap:7px;max-width:100%;height:24px;margin-top:8px;padding:0 10px;border:1px solid var(--border);border-radius:999px;background:var(--bg);color:var(--muted);font-family:inherit;font-size:10px;font-weight:700;line-height:1;white-space:nowrap;overflow:hidden;cursor:pointer;box-shadow:none}
+.gv-status::before{content:"";width:6px;height:6px;border-radius:50%;background:#C79A2D;opacity:.55;flex:0 0 auto;transition:opacity .2s,box-shadow .2s}
+.gv-status-label{overflow:hidden;text-overflow:ellipsis}
+.gv-status.qualified{border-color:#E5C45E;background:linear-gradient(135deg,#FFF8E1,#FFE9B8);color:#765800}
+.gv-status.qualified::before{opacity:1;box-shadow:0 0 0 3px rgba(199,154,45,.16)}
+[data-theme=dark] .gv-status.qualified{border-color:rgba(231,196,94,.46);background:linear-gradient(135deg,rgba(111,83,14,.42),rgba(88,63,8,.64));color:#F0D47E}
 .simple-gap-note{display:block;height:15px;font-size:10px;line-height:15px;color:var(--red);visibility:hidden;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .simple-gap-note.show{visibility:visible}
 #closing-summary{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -386,6 +388,7 @@ body.is-scrubbing{overflow-anchor:none}
       <div class="ftop"><span class="flabel" data-i18n="field.price">Property price</span><span class="unit-badge">AED</span><input class="finput" id="s-price" type="text" inputmode="numeric" value="1,500,000" oninput="simpleCalc()"></div>
       <input type="range" id="s-price-range" min="0" max="1000" step="1" value="298" oninput="document.getElementById('s-price').value=fmtN(sliderToVal('s-price-range',+this.value));simpleCalc()">
       <div class="rlabels"><span id="rl-s-price-min">AED 500K</span><span id="rl-s-price-max">AED 20M</span></div>
+      <button type="button" id="s-gv-status" class="gv-status" onclick="showTooltip('gv')"><span class="gv-status-label">Golden Visa threshold &middot; AED 2M</span></button>
     </div>
     <div class="field">
       <div class="ftop"><span class="flabel">Down payment</span><span class="unit-badge">%</span><input class="finput" id="s-down" type="text" inputmode="numeric" value="20" oninput="sDownChanged(this.value)" onblur="document.getElementById('s-down').value=vals.down"></div>
@@ -432,6 +435,7 @@ body.is-scrubbing{overflow-anchor:none}
       <div class="ftop"><span class="lbl-group"><span class="flabel" data-i18n="field.price">Property price</span><button class="tip-btn" onclick="event.stopPropagation();showTooltip('price')" aria-label="info">i</button></span><span class="unit-badge">AED</span><input class="finput" id="t-price" value="1,500,000"></div>
       <input type="range" id="price" min="0" max="1000" step="1" value="298">
       <div class="rlabels"><span id="rl-price-min">AED 500K</span><span id="rl-price-max">AED 20M</span></div>
+      <button type="button" id="gv-status-adv" class="gv-status" onclick="showTooltip('gv')"><span class="gv-status-label">Golden Visa threshold &middot; AED 2M</span></button>
     </div>
     <div class="field">
       <div class="ftop"><span class="lbl-group"><span class="flabel" data-i18n="field.cash">Your cash available</span><button class="tip-btn" onclick="event.stopPropagation();showTooltip('cash')" aria-label="info">i</button></span><span class="unit-badge">AED</span><input class="finput" id="t-cash" value="420,000"></div>
@@ -508,7 +512,6 @@ body.is-scrubbing{overflow-anchor:none}
 <div class="card" id="card-results">
   <div class="card-head" onclick="toggleCard('results')">
     <span class="ctitle" data-i18n="sec.results">Results</span>
-    <span id="gv-badge-adv" class="gv-chip" style="display:none">Golden Visa &#10003;</span>
     <span class="chevron open" id="chev-results" data-ic="chevron" data-ic-size="16"></span>
   </div>
   <div class="card-body-wrap open" id="body-results"><div class="card-body-inner">
@@ -1281,7 +1284,7 @@ const TIPS={
     gas:{title:'Gas (LPG)',text:'Lootah BCGas — billed quarterly. Estimated monthly average shown. Many buildings use electric cooking so gas cost may be zero.'},
     income:{title:'Monthly Income',text:'Your gross monthly salary. UAE banks limit mortgage payments to 50% of income (DBR) and approve loans up to ~7× annual salary.'},
     rent:{title:'Annual Rent',text:'What you currently pay per year renting. Used to compare renting vs buying over time.'},
-    gv:{title:'UAE Golden Visa (10 years)',text:'Properties valued at AED 2M or more qualify for a 10-year UAE residence visa — for you, your spouse, and children. No sponsor needed. Ready property only. Renewable indefinitely. Apply through ICP.'},
+    gv:{title:'Golden Visa property threshold',text:'Property valued at AED 2M or more may meet the real-estate investment threshold. Hayyak uses the entered purchase price as an estimate; final eligibility depends on official ownership or valuation documents and approval by the relevant UAE authority.'},
     rate:{title:'Fixed Interest Rate',text:'The interest rate locked for the fixed period (3 or 5 years). After it ends, the rate switches to variable (EIBOR + bank margin). Salary transfer to the bank usually gets a lower rate.'},
     ppmonth:{title:'Prepayment Month',text:'When you make the extra payment, counted from loan start. Month 1 = right after closing. The UAE regulatory maximum for an early or partial home-loan settlement fee is 1% of the outstanding balance or AED 10,000, whichever is lower; your bank may charge less or waive it.'},
     ppamt:{title:'Prepayment Amount',text:'Extra lump sum you pay toward the principal. This reduces either your loan term or your monthly payment, saving you interest over time.'},
@@ -1390,6 +1393,17 @@ function fmt(aedVal){const v=toDisp(aedVal);const sym=currency==='USD'?'$':'AED 
 function clamp(v,mn,mx){return Math.min(mx,Math.max(mn,v));}
 function fmtN(n){return Math.round(n).toLocaleString('en-US');}
 function setLiveText(el,value){if(el&&el.textContent!==String(value))el.textContent=String(value);}
+const GOLDEN_VISA_THRESHOLD=2000000;
+function updateGoldenVisaStatus(price){
+  const amount=Number(price)||0,qualified=amount>=GOLDEN_VISA_THRESHOLD;
+  const label=!amount?'Golden Visa threshold · AED 2M':qualified?'Golden Visa property threshold reached':`${fmt(GOLDEN_VISA_THRESHOLD-amount)} to Golden Visa threshold`;
+  ['s-gv-status','gv-status-adv'].forEach(id=>{
+    const el=document.getElementById(id);if(!el)return;
+    el.classList.toggle('qualified',qualified);
+    el.setAttribute('aria-label',label+'. Tap for requirements');
+    setLiveText(el.querySelector('.gv-status-label'),label);
+  });
+}
 
 const SLIDER_RANGE={'s-price-range':{min:500000,max:20000000},'price':{min:500000,max:20000000},'bval':{min:500000,max:20000000},'s-cash-range':{min:100000,max:8000000},'cash':{min:100000,max:8000000},'approved':{min:200000,max:18000000},'s-sqft-range':{min:300,max:10000},'sqft':{min:300,max:10000}};
 function sliderToVal(id,pos){
@@ -1856,6 +1870,7 @@ function simpleCalc(){
   const mult=currency==='USD'?USD_RATE:1;
   const rawPrice=simpleParseNum(document.getElementById('s-price').value);
   const price=rawPrice>0?Math.round(rawPrice*mult):0;
+  updateGoldenVisaStatus(price);
   const rate=simpleParseNum(document.getElementById('s-rate').value)||4.19;
   const sqft=simpleParseNum(document.getElementById('s-sqft').value)||800;
   const pr=document.getElementById('s-price-range'),sr=document.getElementById('s-sqft-range');
@@ -1893,9 +1908,8 @@ function simpleCalc(){
   const layoutKey=[currentEmirate,currency].join('|');
   if(result.dataset.layoutKey!==layoutKey){
     result.dataset.layoutKey=layoutKey;
-    result.innerHTML=`<div class="card simple-result-card" style="margin-top:0"><span id="s-gv-chip" class="gv-chip simple-gv-chip" style="display:none">Golden Visa &#10003;</span><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><span class="sec-lbl" style="margin-bottom:0">${t('sec.payment')}</span><div class="seg"><button onclick="setSPeriod('month')" id="s-btn-month" class="seg-btn on">Monthly</button><button onclick="setSPeriod('year')" id="s-btn-year" class="seg-btn">Annual</button></div></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px"><div class="metric"><div class="m-lbl">${t('row.mortgage.label')}</div><div class="m-val" style="font-size:18px" id="s-val-mortgage"></div><div class="m-sub" id="s-sub-mortgage">${t('sub.permonth')}</div></div><div class="metric" id="s-allin-card" style="background:var(--amber-bg);border:1px solid var(--amber-bd)"><div class="m-lbl" style="color:var(--amber)" id="s-allin-lbl"></div><div class="m-val ca" style="font-size:18px" id="s-val-allin"></div><div class="m-sub" style="color:var(--amber);opacity:.8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" id="s-allin-sub"></div></div></div><div class="sec-lbl">${t('sec.atclosing')}</div><div class="totals"><div class="brow"><span class="brow-lbl"><span id="s-down-row-label"></span><span id="s-gap-note" class="simple-gap-note"></span></span><span class="brow-val" id="s-down-row-value"></span></div><div class="brow"><span class="brow-lbl" id="s-fees-row-label"></span><span class="brow-val" id="s-fees-row-value"></span></div><div class="brow" style="padding-top:12px"><span class="brow-lbl" style="font-weight:700;color:var(--text);font-size:14px">${t('row.totalneeded')}</span><span class="brow-val" id="s-upfront-value" style="font-size:18px;font-weight:700"></span></div></div></div>`;
+    result.innerHTML=`<div class="card simple-result-card" style="margin-top:0"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><span class="sec-lbl" style="margin-bottom:0">${t('sec.payment')}</span><div class="seg"><button onclick="setSPeriod('month')" id="s-btn-month" class="seg-btn on">Monthly</button><button onclick="setSPeriod('year')" id="s-btn-year" class="seg-btn">Annual</button></div></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px"><div class="metric"><div class="m-lbl">${t('row.mortgage.label')}</div><div class="m-val" style="font-size:18px" id="s-val-mortgage"></div><div class="m-sub" id="s-sub-mortgage">${t('sub.permonth')}</div></div><div class="metric" id="s-allin-card" style="background:var(--amber-bg);border:1px solid var(--amber-bd)"><div class="m-lbl" style="color:var(--amber)" id="s-allin-lbl"></div><div class="m-val ca" style="font-size:18px" id="s-val-allin"></div><div class="m-sub" style="color:var(--amber);opacity:.8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" id="s-allin-sub"></div></div></div><div class="sec-lbl">${t('sec.atclosing')}</div><div class="totals"><div class="brow"><span class="brow-lbl"><span id="s-down-row-label"></span><span id="s-gap-note" class="simple-gap-note"></span></span><span class="brow-val" id="s-down-row-value"></span></div><div class="brow"><span class="brow-lbl" id="s-fees-row-label"></span><span class="brow-val" id="s-fees-row-value"></span></div><div class="brow" style="padding-top:12px"><span class="brow-lbl" style="font-weight:700;color:var(--text);font-size:14px">${t('row.totalneeded')}</span><span class="brow-val" id="s-upfront-value" style="font-size:18px;font-weight:700"></span></div></div></div>`;
   }
-  const sGvChip=document.getElementById('s-gv-chip');if(sGvChip)sGvChip.style.display=price>=2000000?'inline-flex':'none';
   const sGapNote=document.getElementById('s-gap-note');
   if(sGapNote){setLiveText(sGapNote,financingGap>0?`+ ${fmt(financingGap)} financing gap`:'\u00a0');sGapNote.classList.toggle('show',financingGap>0);}
   setLiveText(document.getElementById('s-allin-sub'),allInSub);
@@ -1937,6 +1951,7 @@ function refreshInputs(){
 function calc(){
   if(aprBlank())vals.approved=vals.price; // no income & not manual: approved shows "—", must not cap the loan with a stale value
   const{price,cash,approved,bval,down:dp,years,eibor,fixrate}=vals;
+  updateGoldenVisaStatus(price);
   const vr=variableRate(eibor),n=years*12;
   const loan=Math.min(price*(1-dp/100),bval*(price>5000000?0.70:0.80),approved);
   const da=price-loan,contractDown=price*dp/100,financingGap=Math.max(0,da-contractDown),valuationGap=Math.max(0,price-bval);
@@ -1970,8 +1985,6 @@ function calc(){
     setLiveText(sm,fmtCard(Math.round(pf+ins)));setLiveText(su,fmtCard(up));setLiveText(sl,fmtCard(loan));
     if(su)su.style.color=enough?'var(--text)':'var(--red)';if(sl)sl.style.color=ok?'var(--text)':'var(--red)';
   }
-  const gvAdv=document.getElementById('gv-badge-adv');
-  if(gvAdv)gvAdv.style.display=vals.price>=2000000?'inline-flex':'none';
   const csum=document.getElementById('closing-summary');if(csum)csum.textContent=fmt(up)+' total \u00b7 tap for breakdown';
   const breakdownEl=document.getElementById('breakdown'),closingOpen=document.getElementById('closing-body')?.classList.contains('open');
   if(closingOpen&&!liveScrub){
@@ -2380,7 +2393,7 @@ const I18N={
     'card.loanhigh':'Loan exceeds approved amount',
     'card.monthly':'Monthly','card.closing':'At closing','card.loan':'Loan',
     'verdict.need':'Need','verdict.toclose':'to close','verdict.youhave':'you have','verdict.vsapproved':'vs approved',
-    'gv.title':'Eligible for Golden Visa','gv.desc':'Properties from AED 2M are eligible for a 10-year Golden Visa for you and your family',
+    'gv.title':'Golden Visa property threshold','gv.desc':'AED 2M may meet the property-value threshold; final eligibility requires official documents and authority approval',
     'sub.permonth':'principal + interest','sub.peryear':'per year',
     'sub.allin.full':'mortgage + DEWA + cooling + service charge + internet + gas',
     'field.approved':'Max loan','field.bval':'Bank valuation',
@@ -2636,6 +2649,6 @@ document.addEventListener('DOMContentLoaded',()=>hydrateIcons());
 </div>
 
 <div id="tooltip-sheet"></div>
-<div style="position:fixed;bottom:2px;right:4px;font-size:9px;color:rgba(128,128,128,0.4);z-index:99999;pointer-events:none">v1364</div>
+<div style="position:fixed;bottom:2px;right:4px;font-size:9px;color:rgba(128,128,128,0.4);z-index:99999;pointer-events:none">v1365</div>
 </body>
 </html>
