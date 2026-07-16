@@ -261,7 +261,7 @@ body.is-scrubbing{overflow-anchor:none}
 .simple-gap-note{display:block;height:15px;font-size:10px;line-height:15px;color:var(--red);visibility:hidden;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .simple-gap-note.show{visibility:visible}
 #closing-summary{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-#modal-rent-body{margin:0!important;padding:16px!important}
+#modal-rent-body{margin:0!important;padding:18px 16px calc(16px + env(safe-area-inset-bottom,0px))!important}
 .rent-wrap{display:grid;gap:10px;min-width:0;margin:0!important;padding:0!important;background:transparent!important;border:0!important;border-radius:0!important}
 .rent-wrap>div:first-child{padding:16px!important;background:var(--bg)!important;border:1px solid var(--border);border-radius:22px!important}
 .rent-wrap>button{width:100%!important;display:flex!important;align-items:center!important;justify-content:space-between!important;padding:12px 14px!important;background:var(--bg)!important;border:1px solid var(--border)!important;border-radius:18px!important;color:var(--muted);font-family:inherit;font-size:12px;font-weight:650}
@@ -378,13 +378,15 @@ input[type=range]::-moz-range-progress{height:5px;border:0;border-radius:999px;b
 [data-theme=dark] .gv-status.qualified{background:linear-gradient(135deg,rgba(111,83,14,.42),rgba(88,63,8,.64));box-shadow:inset 0 0 0 1px rgba(231,196,94,.46)}
 .modal-bg{background:var(--scrim);-webkit-backdrop-filter:blur(11px) saturate(1.05);backdrop-filter:blur(11px) saturate(1.05);transition:opacity .22s ease}
 .modal-bg.closing{opacity:0;pointer-events:auto;touch-action:none}
-.modal{left:calc(12px + env(safe-area-inset-left,0px));right:calc(12px + env(safe-area-inset-right,0px));bottom:calc(12px + env(safe-area-inset-bottom,0px));border-radius:var(--radius-sheet);border-color:var(--glass-border);box-shadow:0 30px 70px -24px rgba(0,0,0,.48),inset 0 1px 0 var(--glass-border);will-change:auto;transition:transform .24s var(--ease-ui),visibility 0s .24s}
-.modal.on{will-change:transform;transition:transform .36s var(--ease-sheet),visibility 0s}
+.modal{left:calc(16px + env(safe-area-inset-left,0px));right:calc(16px + env(safe-area-inset-right,0px));bottom:calc(12px + env(safe-area-inset-bottom,0px));border-radius:var(--radius-sheet);border-color:var(--glass-border);box-shadow:0 30px 70px -24px rgba(0,0,0,.48),inset 0 1px 0 var(--glass-border);will-change:auto;transform:translate3d(0,calc(100% + 40px + env(safe-area-inset-bottom,0px)),0) scale(.992);transform-origin:50% 100%;backface-visibility:hidden;transition:transform .26s var(--ease-ui),visibility 0s .26s}
+.modal.on{will-change:transform;transform:translate3d(0,0,0) scale(1);transition:transform .4s var(--ease-sheet),visibility 0s}
 .modal-head{padding:18px;background:var(--glass-strong);-webkit-backdrop-filter:blur(16px) saturate(1.15);backdrop-filter:blur(16px) saturate(1.15)}
 .modal>div:not(.modal-head){margin:0;padding:18px 16px calc(16px + env(safe-area-inset-bottom,0px))}
 .modal-title{font-size:17px;font-weight:680}
 .modal-close{width:44px;height:44px;position:relative;z-index:2;flex:0 0 auto;touch-action:manipulation;background:var(--surface-soft);-webkit-backdrop-filter:none;backdrop-filter:none;box-shadow:inset 0 0 0 1px var(--border)}
-#tooltip-sheet{left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom,0px));padding:18px 20px;border-radius:var(--radius-card);box-shadow:0 24px 64px -22px rgba(0,0,0,.58);font-size:13px}
+#modal-rent{top:calc(32px + env(safe-area-inset-top,0px));bottom:auto;max-height:calc(100vh - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px) - 44px);max-height:calc(100dvh - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px) - 44px);opacity:0;transform:translate3d(0,-14px,0) scale(.992);transform-origin:50% 0;transition:transform .22s var(--ease-ui),opacity .16s ease,visibility 0s .22s}
+#modal-rent.on{opacity:1;transform:translate3d(0,0,0) scale(1);will-change:transform,opacity;transition:transform .36s var(--ease-sheet),opacity .22s ease,visibility 0s}
+#tooltip-sheet{left:calc(16px + env(safe-area-inset-left,0px));right:calc(16px + env(safe-area-inset-right,0px));bottom:calc(16px + env(safe-area-inset-bottom,0px));max-width:508px;padding:18px 20px;border-radius:var(--radius-card);box-shadow:0 24px 64px -22px rgba(0,0,0,.58);font-size:13px}
 #tooltip-sheet>strong{min-height:32px;padding-right:42px;margin-bottom:4px;display:flex;align-items:center}
 #tooltip-sheet .tooltip-close{position:absolute;top:12px;right:12px;float:none;width:36px;height:36px;margin:0;padding:0;border:0;border-radius:50%;background:rgba(255,255,255,.08)!important;color:var(--tip-sub);display:grid;place-items:center;line-height:0}
 #tooltip-sheet .tooltip-close .ic{display:block;vertical-align:0}
@@ -407,6 +409,7 @@ input[type=range]::-moz-range-progress{height:5px;border:0;border-radius:999px;b
 @media (max-width:380px){
   body{padding-left:calc(12px + env(safe-area-inset-left));padding-right:calc(12px + env(safe-area-inset-right))}
   .card{padding:20px 18px 17px}.mode-toggle{margin-bottom:18px}.mode-btn{padding:9px 8px}.seg-btn{padding:7px 9px;font-size:11.5px}.finput{width:108px;padding-left:9px;padding-right:9px}.module-card{padding:15px;min-height:108px}
+  .modal,#tooltip-sheet{left:calc(12px + env(safe-area-inset-left,0px));right:calc(12px + env(safe-area-inset-right,0px))}
   #emi-rate{display:block;max-width:145px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 }
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
@@ -1296,6 +1299,7 @@ function unlockScroll(){
   html.style.scrollBehavior=prevSB;
 }
 function openModal(mod){
+  if(openedModal)return;
   hideTooltip();
   if(mod==='budget')renderBudget();
   if(mod==='checklist')renderChecklist();
@@ -1311,14 +1315,21 @@ function openModal(mod){
     const headExtras=src.querySelector('.card-head > div');
     if(headExtras&&mod==='living'){const chev=headExtras.querySelector('.chevron');if(chev)chev.style.display='none';headExtras.style.marginBottom='16px';headExtras.style.justifyContent='center';body.insertBefore(headExtras,body.firstChild);}
   }
-  _modalCloseToken++;
-  lockScroll();
-  const modalBg=document.getElementById('modal-bg');
-  modalBg.classList.remove('closing');modalBg.classList.add('on');
-  modal.classList.add('on');openedModal=mod;
   if(mod==='bvr'&&typeof calcBvR==='function')calcBvR();
   if(mod==='prepay'&&typeof calcPP==='function')calcPP();
   if(mod==='living'&&typeof calcLiving==='function')calcLiving();
+  _modalCloseToken++;
+  lockScroll();
+  const modalBg=document.getElementById('modal-bg');
+  const scrollBody=modal.querySelector(':scope > div:not(.modal-head)');
+  if(scrollBody)scrollBody.scrollTop=0;
+  const modalHead=modal.querySelector('.modal-head');
+  if(modalHead)modalHead.classList.remove('scrolled');
+  // Commit the fully prepared, top-of-content geometry before starting motion.
+  // This prevents the first frame from using a stale or empty modal height.
+  void modal.offsetHeight;
+  modalBg.classList.remove('closing');modalBg.classList.add('on');
+  openedModal=mod;modal.classList.add('on');
   if(navigator.vibrate)navigator.vibrate(3);
 }
 function closeModal(){
@@ -1426,12 +1437,11 @@ let tooltipTimer=null;
 function showTooltip(key){
   const tips=TIPS[currentLang]||TIPS.en,tip=tips[key]||TIPS.en[key];if(!tip)return;
   const sheet=document.getElementById('tooltip-sheet');if(!sheet)return;
+  const wasOpen=sheet.classList.contains('show')&&!sheet.classList.contains('hiding')&&sheet.style.display!=='none';
   sheet.classList.remove('hiding');clearTimeout(sheet._hideT);
   sheet.innerHTML='<button type="button" class="tooltip-close" aria-label="Close">'+ic('close',16)+'</button><strong>'+tip.title+'</strong>'+tip.text;
-  sheet.classList.remove('show');
   sheet.style.display='block';
-  void sheet.offsetWidth;
-  sheet.classList.add('show');
+  if(!wasOpen){sheet.classList.remove('show');void sheet.offsetWidth;sheet.classList.add('show');}
   if(navigator.vibrate)navigator.vibrate(3);
   sheet._openAt=Date.now();
   sheet.dataset.tipKey=key;
@@ -1439,7 +1449,7 @@ function showTooltip(key){
   clearTimeout(tooltipTimer);if(key!=='gv')tooltipTimer=setTimeout(hideTooltip,20000);
 }
 function hideTooltip(){const sheet=document.getElementById('tooltip-sheet');if(!sheet||!sheet.classList.contains('show')||sheet.classList.contains('hiding'))return;clearTimeout(tooltipTimer);sheet.classList.add('hiding');clearTimeout(sheet._hideT);sheet._hideT=setTimeout(()=>{sheet.style.display='none';sheet.classList.remove('show','hiding','fading');delete sheet.dataset.tipKey;},220);}
-function fadeTooltip(){const s=document.getElementById('tooltip-sheet');if(!s?.classList.contains('show')||(s._openAt&&Date.now()-s._openAt<420))return;hideTooltip();}
+function fadeTooltip(){const s=document.getElementById('tooltip-sheet');if(!s?.classList.contains('show'))return;hideTooltip();}
 document.addEventListener('click',e=>{
   const sheet=document.getElementById('tooltip-sheet');if(!sheet||!sheet.classList.contains('show'))return;
   if(e.target.closest('.tip-btn,.gv-status'))return;
@@ -1887,7 +1897,7 @@ function _updateRentNumbers(el,price,monthly,sqft){
 function toggleBankDetails(){const d=document.getElementById('bank-details');if(!d)return;const open=d.classList.toggle('open');const c=document.getElementById('bank-det-chev');if(c)c.style.transform=open?'rotate(180deg)':'';}
 function toggleRentDetails(){const d=document.getElementById('rent-details');if(!d)return;const open=d.classList.toggle('open');const c=document.getElementById('rent-det-chev'),b=d.previousElementSibling;if(c)c.style.transform=open?'rotate(180deg)':'';if(b)b.setAttribute('aria-expanded',open?'true':'false');}
 function openTools(which,tab){
-  openModal(which);
+  if(openedModal)return;
   if(which==='costs'){
     const body=document.getElementById('modal-living-body');
     const src=document.getElementById('card-living');
@@ -1895,6 +1905,7 @@ function openTools(which,tab){
     renderBudget();if(typeof calcLiving==='function')calcLiving();
   }else{renderChecklist();renderScenarios();}
   if(which==='plan')setToolsTab(which,tab||'checklist');
+  openModal(which);
 }
 function setToolsTab(which,tab){
   const map=which==='costs'?['budget','living']:['checklist','scenarios'];
@@ -1902,13 +1913,16 @@ function setToolsTab(which,tab){
 }
 function openRentModal(){
   if(openedModal||!rentOut||!window._rentArgs||appMode!=='advanced')return;
-  openModal('rent');
   const a=window._rentArgs;
   const mo=(appMode==='advanced'&&advRateView==='variable'&&window._advMortgageVar)?window._advMortgageVar:a.monthly;
   renderRentPanel(a.price,mo,a.sqft,'rent-modal-slot');
   const d=document.getElementById('rent-details');
-  if(d&&d.classList.contains('open'))toggleRentDetails();
-  if(d&&d.previousElementSibling)d.previousElementSibling.setAttribute('aria-expanded','false');
+  if(d){
+    d.classList.remove('open');
+    const c=document.getElementById('rent-det-chev');if(c)c.style.transform='';
+    if(d.previousElementSibling)d.previousElementSibling.setAttribute('aria-expanded','false');
+  }
+  openModal('rent');
 }
 function _syncRentPeriod(){
   ['rent-modal-slot','rent-panel','s-rent-panel'].forEach(id=>{const p=document.getElementById(id);if(!p)return;const wrap=p.querySelector('.rent-wrap')||p;const price=wrap._price??p._price;const monthly=wrap._monthly??p._monthly;const sqft=wrap._sqft??p._sqft;if(price)_updateRentNumbers(p,price,monthly,sqft);});
@@ -2762,6 +2776,6 @@ document.addEventListener('DOMContentLoaded',()=>hydrateIcons());
 </div>
 
 <div id="tooltip-sheet"></div>
-<div style="position:fixed;bottom:2px;right:4px;font-size:9px;color:rgba(128,128,128,0.4);z-index:99999;pointer-events:none">v1370</div>
+<div style="position:fixed;bottom:2px;right:4px;font-size:9px;color:rgba(128,128,128,0.4);z-index:99999;pointer-events:none">v1371</div>
 </body>
 </html>
