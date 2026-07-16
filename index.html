@@ -305,6 +305,7 @@ button{transition:transform .16s var(--ease-ui),background-color .2s var(--ease-
 button:active,.seg-btn:active,.mode-btn:active,.bud-preset:active,.modal-close:active,.settings-btn:active{transform:scale(.985)!important;transition-duration:.07s!important}
 [onclick]:not(button):not(.module-card):active{opacity:1}
 .module-card:active,.rent-tap:active{transform:scale(.985)}
+.rent-tap{touch-action:manipulation}
 .hdr{align-items:center;margin-bottom:22px}
 .hdr-left h1{font-size:28px;font-weight:680;letter-spacing:-1.1px}
 .hdr-left p{font-size:12px;margin-top:5px;letter-spacing:0}
@@ -314,12 +315,16 @@ button:active,.seg-btn:active,.mode-btn:active,.bud-preset:active,.modal-close:a
 #emirate-display{min-height:48px;padding:12px 16px!important;border-radius:var(--radius-panel)!important;background:var(--card)!important;border-color:var(--border)!important;box-shadow:var(--shadow)!important}
 #emirate-list{top:calc(100% + 8px)!important;max-height:min(62dvh,430px);overflow-y:auto;overscroll-behavior:contain;padding:6px;border-radius:var(--radius-card)!important;border-color:var(--border)!important;box-shadow:0 18px 48px -24px rgba(0,0,0,.34)!important}
 .emi-opt{min-height:44px;padding:11px 12px;border-radius:14px;border-bottom:0;transition:background-color .16s var(--ease-ui)}
-.mode-toggle{min-height:52px;padding:4px;border:1px solid var(--border)!important;border-radius:var(--radius-panel)!important;background:var(--surface-soft)!important;-webkit-backdrop-filter:none;backdrop-filter:none;box-shadow:inset 0 1px 0 rgba(255,255,255,.45),0 1px 2px rgba(0,0,0,.035)!important;gap:0;margin-bottom:22px}
-.mode-btn{min-height:44px;padding:10px 12px;border-radius:calc(var(--radius-panel) - 4px);font-size:14px;font-weight:620;transition:color .2s var(--ease-ui),transform .16s var(--ease-ui)}
+.mode-toggle{height:54px;min-height:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));padding:4px;border:1px solid var(--border)!important;border-radius:999px!important;overflow:hidden;background:var(--surface-soft)!important;-webkit-backdrop-filter:none;backdrop-filter:none;box-shadow:inset 0 1px 0 rgba(255,255,255,.45),0 1px 2px rgba(0,0,0,.035)!important;gap:0;margin-bottom:22px}
+.mode-btn{min-width:0;min-height:44px;padding:10px 12px;border-radius:999px;font-size:14px;font-weight:620;position:relative;z-index:1;transition:color .2s var(--ease-ui)}
+.mode-toggle .mode-btn.on{background:transparent!important;color:var(--bg)!important;box-shadow:none!important}
+.mode-toggle .mode-btn{touch-action:manipulation}
+.mode-toggle .mode-btn:active{transform:none!important}
 .seg{padding:3px;border:1px solid var(--border)!important;border-radius:var(--radius-control);background:var(--surface-soft)!important;-webkit-backdrop-filter:none;backdrop-filter:none;box-shadow:inset 0 1px 0 rgba(255,255,255,.32)!important}
 .seg-btn{min-width:0;min-height:34px;padding:7px 12px;border-radius:var(--radius-inner);font-weight:560;overflow:hidden;text-overflow:ellipsis;transition:color .18s var(--ease-ui),transform .16s var(--ease-ui)}
 .seg-ind{background:var(--text);box-shadow:0 1px 2px rgba(0,0,0,.14);transition:transform .24s var(--ease-ui),width .24s var(--ease-ui),height .24s var(--ease-ui)}
-.mode-toggle .seg-ind{border-radius:calc(var(--radius-panel) - 4px)}
+.mode-toggle .seg-ind{left:4px;top:4px;bottom:4px;width:calc((100% - 8px)/2);height:auto!important;border-radius:999px;box-shadow:none;transform:translate3d(0,0,0);transition:transform .26s var(--ease-ui);will-change:transform}
+.mode-toggle[data-mode=advanced] .seg-ind{transform:translate3d(100%,0,0)}
 .seg-ind::after{display:none}
 .modules-strip{gap:12px;margin-bottom:12px}
 .module-card{min-height:112px;padding:16px;border-radius:var(--radius-panel);border-color:var(--border);box-shadow:var(--shadow);transition:transform .18s var(--ease-ui),box-shadow .2s var(--ease-ui),background-color .2s var(--ease-ui)}
@@ -370,12 +375,13 @@ input[type=range]::-moz-range-thumb{width:24px;height:24px;border:1px solid rgba
 .gv-status.qualified{border:0;background:linear-gradient(135deg,#FFF8DE,#FFE9AD);box-shadow:inset 0 0 0 1px #E7C65E;color:#765800}
 [data-theme=dark] .gv-status.qualified{background:linear-gradient(135deg,rgba(111,83,14,.42),rgba(88,63,8,.64));box-shadow:inset 0 0 0 1px rgba(231,196,94,.46)}
 .modal-bg{background:var(--scrim);-webkit-backdrop-filter:blur(11px) saturate(1.05);backdrop-filter:blur(11px) saturate(1.05);transition:opacity .22s ease}
+.modal-bg.closing{opacity:0;pointer-events:auto;touch-action:none}
 .modal{left:calc(12px + env(safe-area-inset-left,0px));right:calc(12px + env(safe-area-inset-right,0px));bottom:calc(12px + env(safe-area-inset-bottom,0px));border-radius:var(--radius-sheet);border-color:var(--glass-border);box-shadow:0 30px 70px -24px rgba(0,0,0,.48),inset 0 1px 0 var(--glass-border);will-change:auto;transition:transform .24s var(--ease-ui),visibility 0s .24s}
 .modal.on{will-change:transform;transition:transform .36s var(--ease-sheet),visibility 0s}
 .modal-head{padding:18px;background:var(--glass-strong);-webkit-backdrop-filter:blur(16px) saturate(1.15);backdrop-filter:blur(16px) saturate(1.15)}
 .modal>div:not(.modal-head){margin:0;padding:18px 16px calc(16px + env(safe-area-inset-bottom,0px))}
 .modal-title{font-size:17px;font-weight:680}
-.modal-close{width:38px;height:38px;background:var(--surface-soft);-webkit-backdrop-filter:none;backdrop-filter:none;box-shadow:inset 0 0 0 1px var(--border)}
+.modal-close{width:44px;height:44px;position:relative;z-index:2;flex:0 0 auto;touch-action:manipulation;background:var(--surface-soft);-webkit-backdrop-filter:none;backdrop-filter:none;box-shadow:inset 0 0 0 1px var(--border)}
 #tooltip-sheet{left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom,0px));padding:18px 20px;border-radius:var(--radius-card);box-shadow:0 24px 64px -22px rgba(0,0,0,.58);font-size:13px}
 #tooltip-sheet>strong{min-height:32px;padding-right:42px;margin-bottom:4px;display:flex;align-items:center}
 #tooltip-sheet .tooltip-close{position:absolute;top:12px;right:12px;float:none;width:36px;height:36px;margin:0;padding:0;border:0;border-radius:50%;background:rgba(255,255,255,.08)!important;color:var(--tip-sub);display:grid;place-items:center;line-height:0}
@@ -489,7 +495,8 @@ input[type=range]::-moz-range-thumb{width:24px;height:24px;border:1px solid rgba
 </div>
 
 <!-- Mode toggle -->
-<div class="mode-toggle">
+<div class="mode-toggle" data-mode="simple">
+  <span class="seg-ind" aria-hidden="true"></span>
   <button class="mode-btn on" id="mode-simple" onclick="setMode('simple')"><span data-ic="bolt" data-ic-size="16"></span><span data-i18n="mode.simple">Simple</span></button>
   <button class="mode-btn" id="mode-advanced" onclick="setMode('advanced')"><span data-ic="flask" data-ic-size="16"></span><span data-i18n="mode.advanced">Advanced</span></button>
 </div>
@@ -823,15 +830,15 @@ input[type=range]::-moz-range-thumb{width:24px;height:24px;border:1px solid rgba
 <!-- end view-advanced -->
 <div class="modal-bg" id="modal-bg" onclick="closeModal()"></div>
 <div class="modal" id="modal-bvr" data-mod="bvr">
-  <div class="modal-head"><div class="modal-title" style="display:flex;align-items:center;gap:8px"><span data-ic="scale" data-ic-size="20" style="color:var(--green)"></span><span data-i18n="tool.bvr">Buy vs Rent</span></div><button class="modal-close" onclick="closeModal()"><span data-ic="close" data-ic-size="18"></span></button></div>
+  <div class="modal-head"><div class="modal-title" style="display:flex;align-items:center;gap:8px"><span data-ic="scale" data-ic-size="20" style="color:var(--green)"></span><span data-i18n="tool.bvr">Buy vs Rent</span></div><button type="button" class="modal-close" aria-label="Close" onclick="event.stopPropagation();closeModal()"><span data-ic="close" data-ic-size="18"></span></button></div>
   <div id="modal-bvr-body"></div>
 </div>
 <div class="modal" id="modal-prepay" data-mod="prepay">
-  <div class="modal-head"><div class="modal-title" style="display:flex;align-items:center;gap:8px"><span data-ic="forward" data-ic-size="20" style="color:var(--green)"></span><span data-i18n="tool.prepay">Early repayment</span></div><button class="modal-close" onclick="closeModal()"><span data-ic="close" data-ic-size="18"></span></button></div>
+  <div class="modal-head"><div class="modal-title" style="display:flex;align-items:center;gap:8px"><span data-ic="forward" data-ic-size="20" style="color:var(--green)"></span><span data-i18n="tool.prepay">Early repayment</span></div><button type="button" class="modal-close" aria-label="Close" onclick="event.stopPropagation();closeModal()"><span data-ic="close" data-ic-size="18"></span></button></div>
   <div id="modal-prepay-body"></div>
 </div>
 <div class="modal" id="modal-costs" data-mod="costs">
-  <div class="modal-head"><div class="modal-title" style="display:flex;align-items:center;gap:8px"><span data-ic="chartBar" data-ic-size="20" style="color:var(--green)"></span><span>Costs</span></div><button class="modal-close" onclick="closeModal()"><span data-ic="close" data-ic-size="18"></span></button></div>
+  <div class="modal-head"><div class="modal-title" style="display:flex;align-items:center;gap:8px"><span data-ic="chartBar" data-ic-size="20" style="color:var(--green)"></span><span>Costs</span></div><button type="button" class="modal-close" aria-label="Close" onclick="event.stopPropagation();closeModal()"><span data-ic="close" data-ic-size="18"></span></button></div>
   <div id="modal-costs-body">
     <div style="display:flex;justify-content:center;margin-bottom:14px"><div class="seg" style="width:200px"><button class="seg-btn on" id="costs-per-mo" onclick="setBudgetPeriod('month')" style="flex:1">Monthly</button><button class="seg-btn" id="costs-per-yr" onclick="setBudgetPeriod('year')" style="flex:1">Annual</button></div></div>
     <div class="sec-lbl">Home</div>
@@ -843,7 +850,7 @@ input[type=range]::-moz-range-thumb{width:24px;height:24px;border:1px solid rgba
   </div>
 </div>
 <div class="modal" id="modal-plan" data-mod="plan">
-  <div class="modal-head"><div class="modal-title" style="display:flex;align-items:center;gap:8px"><span data-ic="clipboard" data-ic-size="20" style="color:var(--green)"></span><span>Plan</span></div><button class="modal-close" onclick="closeModal()"><span data-ic="close" data-ic-size="18"></span></button></div>
+  <div class="modal-head"><div class="modal-title" style="display:flex;align-items:center;gap:8px"><span data-ic="clipboard" data-ic-size="20" style="color:var(--green)"></span><span>Plan</span></div><button type="button" class="modal-close" aria-label="Close" onclick="event.stopPropagation();closeModal()"><span data-ic="close" data-ic-size="18"></span></button></div>
   <div id="modal-plan-body">
     <div class="seg seg-full" style="margin-bottom:14px">
       <button class="seg-btn on" id="tools-btn-checklist" onclick="setToolsTab('plan','checklist')">Bank checklist</button>
@@ -854,7 +861,7 @@ input[type=range]::-moz-range-thumb{width:24px;height:24px;border:1px solid rgba
   </div>
 </div>
 <div class="modal" id="modal-rent" data-mod="rent">
-  <div class="modal-head"><div class="modal-title" style="display:flex;align-items:center;gap:8px"><span data-ic="trendUp" data-ic-size="20" style="color:var(--green)"></span><span>If you rent it out</span></div><button class="modal-close" onclick="closeModal()"><span data-ic="close" data-ic-size="18"></span></button></div>
+  <div class="modal-head"><div class="modal-title" style="display:flex;align-items:center;gap:8px"><span data-ic="trendUp" data-ic-size="20" style="color:var(--green)"></span><span>If you rent it out</span></div><button type="button" class="modal-close" aria-label="Close" onclick="event.stopPropagation();closeModal()"><span data-ic="close" data-ic-size="18"></span></button></div>
   <div id="modal-rent-body"><div id="rent-modal-slot"></div></div>
 </div>
 <script>
@@ -1264,7 +1271,7 @@ function confirmBudgetEditor(){
   if(!_bedKey)return;const raw=document.getElementById('bed-input').value;budgetVals[_bedKey]=budgetFromDisp(raw);const sl=document.getElementById('budget-slider-'+_bedKey);if(sl){sl.value=budgetVals[_bedKey];paintSlider(sl);}const ve=document.getElementById('budget-val-'+_bedKey);if(ve){const v=budgetVals[_bedKey];ve.textContent=v>0?budgetDisp(v):'—';ve.style.color=v>0?'var(--text)':'var(--muted)';}updateBudgetSummary();closeBudgetEditor();}
 function closeBudgetEditor(){document.getElementById('budget-editor').classList.remove('show');document.getElementById('budget-editor-bg').classList.remove('show');_bedKey=null;_lvKey=null;const inp=document.getElementById('bed-input');if(inp)inp.blur();}
 
-let openedModal=null;
+let openedModal=null,_modalCloseToken=0;
 let _scrollLockY=0,_scrollLocked=false;
 function lockScroll(){
   if(_scrollLocked)return;
@@ -1302,8 +1309,10 @@ function openModal(mod){
     const headExtras=src.querySelector('.card-head > div');
     if(headExtras&&mod==='living'){const chev=headExtras.querySelector('.chevron');if(chev)chev.style.display='none';headExtras.style.marginBottom='16px';headExtras.style.justifyContent='center';body.insertBefore(headExtras,body.firstChild);}
   }
+  _modalCloseToken++;
   lockScroll();
-  document.getElementById('modal-bg').classList.add('on');
+  const modalBg=document.getElementById('modal-bg');
+  modalBg.classList.remove('closing');modalBg.classList.add('on');
   modal.classList.add('on');openedModal=mod;
   if(mod==='bvr'&&typeof calcBvR==='function')calcBvR();
   if(mod==='prepay'&&typeof calcPP==='function')calcPP();
@@ -1313,11 +1322,12 @@ function openModal(mod){
 function closeModal(){
   if(!openedModal)return;
   const modal=document.getElementById('modal-'+openedModal);
-  document.getElementById('modal-bg').classList.remove('on');
+  const modalBg=document.getElementById('modal-bg'),closeToken=++_modalCloseToken;
+  modalBg.classList.remove('on');modalBg.classList.add('closing');
   modal.classList.remove('on');
   openedModal=null;
   let finished=false;
-  const finish=()=>{if(finished)return;finished=true;modal.removeEventListener('transitionend',onEnd);if(!openedModal)unlockScroll();};
+  const finish=()=>{if(finished)return;finished=true;modal.removeEventListener('transitionend',onEnd);if(closeToken!==_modalCloseToken)return;modalBg.classList.remove('closing');if(!openedModal&&!document.querySelector('.modal.on'))unlockScroll();};
   const onEnd=e=>{if(e.target===modal&&e.propertyName==='transform')finish();};
   modal.addEventListener('transitionend',onEnd);
   setTimeout(finish,420);
@@ -1888,37 +1898,8 @@ function setToolsTab(which,tab){
   const map=which==='costs'?['budget','living']:['checklist','scenarios'];
   map.forEach(m=>{const p=document.getElementById('pane-'+m);if(p)p.style.display=(m===tab)?'block':'none';const b=document.getElementById('tools-btn-'+m);if(b)b.classList.toggle('on',m===tab);});
 }
-let _rentTapX=null,_rentTapY=null,_lastRentOpen=0;
-function _rentCardAt(x,y){
-  for(const id of ['adv-allin-card']){
-    const c=document.getElementById(id);if(!c)continue;
-    const r=c.getBoundingClientRect();
-    if(r.width>2&&r.height>2&&x>=r.left&&x<=r.right&&y>=r.top&&y<=r.bottom)return c;
-  }
-  return null;
-}
-document.addEventListener('touchstart',e=>{const t=e.touches&&e.touches[0];if(t){_rentTapX=t.clientX;_rentTapY=t.clientY;}},{passive:true,capture:true});
-document.addEventListener('touchend',e=>{
-  if(!rentOut)return;
-  const t=e.changedTouches&&e.changedTouches[0];
-  let hit=null;
-  if(t){
-    if(_rentTapX!==null&&(Math.abs(t.clientX-_rentTapX)>10||Math.abs(t.clientY-_rentTapY)>10))return;
-    hit=_rentCardAt(t.clientX,t.clientY);
-  }
-  if(!hit&&e.target&&e.target.closest)hit=e.target.closest('#adv-allin-card');
-  if(!hit)return;
-  if(e.cancelable)e.preventDefault();
-  openRentModal();
-},{passive:false,capture:true});
-document.addEventListener('click',e=>{
-  if(!rentOut)return;
-  const hit=_rentCardAt(e.clientX,e.clientY)||(e.target&&e.target.closest?e.target.closest('#adv-allin-card'):null);
-  if(hit)openRentModal();
-},true);
 function openRentModal(){
-  if(!rentOut||!window._rentArgs||appMode!=='advanced')return;
-  const _n=Date.now();if(_n-_lastRentOpen<400)return;_lastRentOpen=_n;
+  if(openedModal||!rentOut||!window._rentArgs||appMode!=='advanced')return;
   openModal('rent');
   const a=window._rentArgs;
   const mo=(appMode==='advanced'&&advRateView==='variable'&&window._advMortgageVar)?window._advMortgageVar:a.monthly;
@@ -1938,7 +1919,9 @@ function setMode(mode){
   const showEl=document.getElementById(mode==='simple'?'view-simple':'view-advanced');
   const hideEl=document.getElementById(mode==='simple'?'view-advanced':'view-simple');
   const stack=document.getElementById('view-stack');
+  const modeToggle=document.querySelector('.mode-toggle');
   if(!showEl||!hideEl)return;
+  if(modeToggle)modeToggle.dataset.mode=mode;
   if(appMode===mode&&showEl.style.display!=='none')return;
   hideTooltip();
   clearTimeout(window._modeT);window._modeT=0;
@@ -2713,12 +2696,12 @@ calcBvR();calcPP();
     if(ind._key!==key){ind._key=key;ind.style.width=br.width+'px';ind.style.height=br.height+'px';ind.style.transform='translate('+x+'px,'+y+'px)';}
     c.classList.add('seg-anim');
   }catch(e){c.classList.remove('seg-anim');}}
-  function syncAll(){document.querySelectorAll('.seg,.mode-toggle').forEach(syncSeg);}
+  function syncAll(){document.querySelectorAll('.seg').forEach(syncSeg);}
   let _sq=false;
   function scheduleSync(){if(_sq)return;_sq=true;const run=()=>{if(!_sq)return;_sq=false;syncAll();};requestAnimationFrame(run);setTimeout(run,32);}
   window.__syncSegs=syncAll;
-  document.addEventListener('click',e=>{const b=e.target.closest('.seg button,.mode-toggle button');if(b){const c=b.closest('.seg,.mode-toggle');syncSeg(c);scheduleSync();}});
-  window.addEventListener('resize',()=>{document.querySelectorAll('.seg,.mode-toggle').forEach(c=>{c._bl=undefined;});scheduleSync();},{passive:true});
+  document.addEventListener('click',e=>{const b=e.target.closest('.seg button');if(b){const c=b.closest('.seg');syncSeg(c);scheduleSync();}});
+  window.addEventListener('resize',()=>{document.querySelectorAll('.seg').forEach(c=>{c._bl=undefined;});scheduleSync();},{passive:true});
   const SLOW={openModal:1,setToolsTab:1};
   ['openModal','setToolsTab','setBudgetPeriod','setSPeriod','setAdvRateView'].forEach(fn=>{const o=window[fn];if(typeof o==='function'){window[fn]=function(){const r=o.apply(this,arguments);scheduleSync();if(SLOW[fn]){setTimeout(scheduleSync,90);setTimeout(scheduleSync,460);}return r;};}});
   if(document.fonts&&document.fonts.ready)document.fonts.ready.then(()=>syncAll());
@@ -2777,6 +2760,6 @@ document.addEventListener('DOMContentLoaded',()=>hydrateIcons());
 </div>
 
 <div id="tooltip-sheet"></div>
-<div style="position:fixed;bottom:2px;right:4px;font-size:9px;color:rgba(128,128,128,0.4);z-index:99999;pointer-events:none">v1368</div>
+<div style="position:fixed;bottom:2px;right:4px;font-size:9px;color:rgba(128,128,128,0.4);z-index:99999;pointer-events:none">v1369</div>
 </body>
 </html>
