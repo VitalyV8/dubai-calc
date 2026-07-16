@@ -348,11 +348,13 @@ button:active,.seg-btn:active,.mode-btn:active,.bud-preset:active,.modal-close:a
 .unit-badge{font-size:11px;color:var(--muted);margin-right:4px}
 .finput{min-height:40px;width:116px;padding:8px 12px;border:0;border-radius:var(--radius-field);background:var(--surface-soft);font-size:16px;font-weight:620;box-shadow:inset 0 0 0 1px var(--border);transition:box-shadow .18s var(--ease-ui),background-color .18s var(--ease-ui),transform .16s var(--ease-ui)}
 .finput:focus{background:var(--surface-raised);box-shadow:inset 0 0 0 1.5px var(--brand),0 0 0 3px color-mix(in srgb,var(--brand) 12%,transparent)}
-input[type=range]{height:36px;margin:-8px 0 -2px;border-radius:999px;background-size:100% 5px!important;background-repeat:no-repeat!important;background-position:center!important}
-input[type=range]::-webkit-slider-runnable-track{height:5px;border-radius:999px;background:transparent}
+input[type=range]{--range-progress:0%;height:36px;margin:-8px 0 -2px;padding:0;border:0;border-radius:999px;background:transparent!important}
+input[type=range]::-webkit-slider-runnable-track{width:100%;height:5px;border:0;border-radius:999px;background:linear-gradient(to right,var(--brand) 0%,var(--brand) var(--range-progress),var(--track) var(--range-progress),var(--track) 100%)}
 input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:24px;height:24px;margin-top:-9.5px;border:1px solid rgba(0,0,0,.08);background:#FFF;box-shadow:0 2px 7px rgba(0,0,0,.2),0 0 0 .5px rgba(0,0,0,.08);transition:transform .12s var(--ease-ui),box-shadow .15s var(--ease-ui)}
 input[type=range]:active::-webkit-slider-thumb{transform:scale(1.035);box-shadow:0 3px 10px rgba(0,0,0,.23),0 0 0 4px color-mix(in srgb,var(--brand) 12%,transparent)}
 input[type=range]::-moz-range-thumb{width:24px;height:24px;border:1px solid rgba(0,0,0,.08);background:#FFF;box-shadow:0 2px 7px rgba(0,0,0,.2)}
+input[type=range]::-moz-range-track{height:5px;border:0;border-radius:999px;background:var(--track)}
+input[type=range]::-moz-range-progress{height:5px;border:0;border-radius:999px;background:var(--brand)}
 .rlabels{font-size:11px;color:var(--muted);opacity:.72}
 .fnote{font-size:12px;line-height:1.5;margin-top:7px}
 .tag{padding:3px 8px;border-radius:999px;transition:background-color .18s var(--ease-ui),color .18s var(--ease-ui),opacity .15s ease}
@@ -1559,7 +1561,7 @@ function sliderToVal(id,pos){
   return Math.round(v/step)*step;
 }
 function valToSlider(id,val){const r=SLIDER_RANGE[id];if(!r)return val;const v=Math.max(r.min,Math.min(r.max,val));const t2=Math.log(v/r.min)/Math.log(r.max/r.min);return Math.round(t2*1000);}
-function paintSlider(el){if(!el)return;const min=+el.min,max=+el.max,val=+el.value;const pct=max>min?(val-min)/(max-min)*100:0;el.style.background=`linear-gradient(to right, var(--brand) 0%, var(--brand) ${pct}%, var(--track) ${pct}%, var(--track) 100%)`;}
+function paintSlider(el){if(!el)return;const min=+el.min,max=+el.max,val=+el.value;const pct=Math.max(0,Math.min(100,max>min?(val-min)/(max-min)*100:0));el.style.removeProperty('background');el.style.setProperty('--range-progress',pct+'%');}
 function paintAllSliders(){document.querySelectorAll('input[type=range]').forEach(paintSlider);}
 let _scrubTimer=0,_scrubPointerActive=false;
 function beginScrubbing(pointerActive=false){
@@ -2760,6 +2762,6 @@ document.addEventListener('DOMContentLoaded',()=>hydrateIcons());
 </div>
 
 <div id="tooltip-sheet"></div>
-<div style="position:fixed;bottom:2px;right:4px;font-size:9px;color:rgba(128,128,128,0.4);z-index:99999;pointer-events:none">v1369</div>
+<div style="position:fixed;bottom:2px;right:4px;font-size:9px;color:rgba(128,128,128,0.4);z-index:99999;pointer-events:none">v1370</div>
 </body>
 </html>
