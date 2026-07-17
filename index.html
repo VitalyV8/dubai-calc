@@ -264,7 +264,7 @@ body.is-scrubbing{overflow-anchor:none}
 #modal-rent-body{margin:0!important;padding:18px 16px calc(16px + env(safe-area-inset-bottom,0px))!important}
 .rent-wrap{display:grid;gap:10px;min-width:0;margin:0!important;padding:0!important;background:transparent!important;border:0!important;border-radius:0!important}
 .rent-wrap>div:first-child{padding:16px!important;background:var(--bg)!important;border:1px solid var(--border);border-radius:22px!important}
-.rent-wrap>button{width:100%!important;display:flex!important;align-items:center!important;justify-content:space-between!important;padding:12px 14px!important;background:var(--bg)!important;border:1px solid var(--border)!important;border-radius:18px!important;color:var(--muted);font-family:inherit;font-size:12px;font-weight:650}
+.rent-wrap>button{width:100%!important;display:flex!important;align-items:center!important;justify-content:space-between!important;padding:12px 14px!important;background:var(--bg)!important;border:1px solid var(--border)!important;border-radius:18px!important;color:var(--muted);font-family:inherit;font-size:12px;font-weight:600;line-height:16px}
 .rent-wrap>#rent-details>div>div{display:grid;gap:10px;padding-top:0!important}
 .rent-wrap>#rent-details>div>div>div:first-child{padding:14px 16px!important;margin:0!important;background:var(--bg)!important;border:1px solid var(--border);border-radius:22px!important}
 .rent-wrap>#rent-details label{padding:13px 15px!important;margin:0!important;background:var(--bg)!important;border:1px solid var(--border);border-radius:20px!important}
@@ -292,6 +292,8 @@ body.is-scrubbing{overflow-anchor:none}
   --surface-soft:#EFEFEC;--surface-raised:#FFF;--ease-ui:cubic-bezier(.2,.75,.25,1);--ease-sheet:cubic-bezier(.2,.82,.24,1);
   --glass:rgba(255,255,255,.86);--glass-strong:rgba(255,255,255,.92);--glass-border:rgba(17,17,17,.07);--glass-shadow:0 12px 36px -22px rgba(0,0,0,.25),inset 0 1px 0 rgba(255,255,255,.8);
   --scrim:rgba(0,0,0,.22);
+  --type-caption:11px;--type-meta:12px;--type-section:13px;--type-body:14px;--type-input:16px;--type-title:17px;--type-value:18px;--type-display:24px;
+  --lh-caption:14px;--lh-meta:16px;--lh-body:19px;--lh-input:20px;--lh-title:22px;--lh-value:22px;--lh-display:29px;
 }
 [data-theme=dark]{
   --bg:#0F0F0F;--card:rgba(29,29,29,.97);--border:rgba(255,255,255,.085);--text:#F3F3F1;--muted:#A09F9A;--subtle:#66645F;--track:#373735;
@@ -299,7 +301,7 @@ body.is-scrubbing{overflow-anchor:none}
   --glass:rgba(31,31,30,.86);--glass-strong:rgba(31,31,30,.94);--glass-border:rgba(255,255,255,.09);--glass-shadow:0 14px 40px -20px rgba(0,0,0,.72),inset 0 1px 0 rgba(255,255,255,.08);--scrim:rgba(0,0,0,.48);
 }
 html{scroll-behavior:smooth;transition:background-color .26s var(--ease-ui)}
-body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","SF Pro Display","Inter","Segoe UI",system-ui,sans-serif;letter-spacing:-.006em;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;padding-top:calc(24px + env(safe-area-inset-top));transition:background-color .26s var(--ease-ui),color .22s var(--ease-ui)}
+body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","SF Pro Display","Inter","Segoe UI",system-ui,sans-serif;font-size:var(--type-body);line-height:var(--lh-body);letter-spacing:0;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;padding-top:calc(24px + env(safe-area-inset-top));transition:background-color .26s var(--ease-ui),color .22s var(--ease-ui)}
 button,input{font-family:inherit}
 button{transition:transform .16s var(--ease-ui),background-color .2s var(--ease-ui),color .18s var(--ease-ui),border-color .2s var(--ease-ui),box-shadow .2s var(--ease-ui)}
 button:active,.seg-btn:active,.mode-btn:active,.bud-preset:active,.modal-close:active,.settings-btn:active{transform:scale(.985)!important;transition-duration:.07s!important}
@@ -307,21 +309,22 @@ button:active,.seg-btn:active,.mode-btn:active,.bud-preset:active,.modal-close:a
 .module-card:active,.rent-tap:active{transform:scale(.985)}
 .rent-tap{touch-action:manipulation}
 .hdr{align-items:center;margin-bottom:22px}
-.hdr-left h1{font-size:28px;font-weight:680;letter-spacing:-1.1px}
-.hdr-left p{font-size:12px;margin-top:5px;letter-spacing:0}
+.hdr-left h1{font-size:28px;font-weight:700;line-height:29px;letter-spacing:-.035em}
+.hdr-left p{font-size:var(--type-meta);line-height:var(--lh-meta);margin-top:5px;letter-spacing:0}
 .settings-btn{width:42px;height:42px;border-radius:var(--radius-control)!important;background:var(--card)!important;border:1px solid var(--border)!important;-webkit-backdrop-filter:none;backdrop-filter:none;box-shadow:var(--shadow)!important}
 #settings-panel{width:min(280px,calc(100vw - 32px));max-height:min(70dvh,440px);overflow-y:auto;border-radius:24px!important;padding:7px 0!important;background:var(--glass-strong)!important;-webkit-backdrop-filter:blur(16px) saturate(1.15);backdrop-filter:blur(16px) saturate(1.15);box-shadow:0 18px 50px -20px rgba(0,0,0,.35),inset 0 1px 0 var(--glass-border)!important}
-.settings-opt{min-height:44px;padding:11px 16px;transition:background-color .18s var(--ease-ui),color .18s var(--ease-ui)}
+.settings-opt{min-height:44px;padding:11px 16px;font-size:var(--type-body);font-weight:500;line-height:var(--lh-body);transition:background-color .18s var(--ease-ui),color .18s var(--ease-ui)}
+.settings-opt.on{font-weight:600}
 #emirate-display{min-height:48px;padding:12px 16px!important;border-radius:var(--radius-panel)!important;background:var(--card)!important;border-color:var(--border)!important;box-shadow:var(--shadow)!important}
 #emirate-list{top:calc(100% + 8px)!important;max-height:min(62dvh,430px);overflow-y:auto;overscroll-behavior:contain;padding:6px;border-radius:var(--radius-card)!important;border-color:var(--border)!important;box-shadow:0 18px 48px -24px rgba(0,0,0,.34)!important}
 .emi-opt{min-height:44px;padding:11px 12px;border-radius:14px;border-bottom:0;transition:background-color .16s var(--ease-ui)}
 .mode-toggle{height:54px;min-height:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));padding:4px;border:1px solid var(--border)!important;border-radius:999px!important;overflow:hidden;background:var(--surface-soft)!important;-webkit-backdrop-filter:none;backdrop-filter:none;box-shadow:inset 0 1px 0 rgba(255,255,255,.45),0 1px 2px rgba(0,0,0,.035)!important;gap:0;margin-bottom:22px}
-.mode-btn{min-width:0;min-height:44px;padding:10px 12px;border-radius:999px;font-size:14px;font-weight:620;position:relative;z-index:1;transition:color .2s var(--ease-ui)}
+.mode-btn{min-width:0;min-height:44px;padding:10px 12px;border-radius:999px;font-size:var(--type-body);font-weight:600;line-height:20px;position:relative;z-index:1;transition:color .2s var(--ease-ui)}
 .mode-toggle .mode-btn.on{background:transparent!important;color:var(--bg)!important;box-shadow:none!important}
 .mode-toggle .mode-btn{touch-action:manipulation}
 .mode-toggle .mode-btn:active{transform:none!important}
 .seg{padding:3px;border:1px solid var(--border)!important;border-radius:var(--radius-control);background:var(--surface-soft)!important;-webkit-backdrop-filter:none;backdrop-filter:none;box-shadow:inset 0 1px 0 rgba(255,255,255,.32)!important}
-.seg-btn{min-width:0;min-height:34px;padding:7px 12px;border-radius:var(--radius-inner);font-weight:560;overflow:hidden;text-overflow:ellipsis;transition:color .18s var(--ease-ui),transform .16s var(--ease-ui)}
+.seg-btn,.seg-btn.on{min-width:0;min-height:34px;padding:7px 12px;border-radius:var(--radius-inner);font-size:var(--type-meta);font-weight:600;line-height:16px;overflow:hidden;text-overflow:ellipsis;transition:color .18s var(--ease-ui),transform .16s var(--ease-ui)}
 .seg-ind{background:var(--text);box-shadow:0 1px 2px rgba(0,0,0,.14);transition:transform .24s var(--ease-ui),width .24s var(--ease-ui),height .24s var(--ease-ui)}
 .mode-toggle .seg-ind{left:4px;top:4px;bottom:4px;width:calc((100% - 8px)/2);height:auto!important;border-radius:999px;box-shadow:none;transform:translate3d(0,0,0);transition:transform .26s var(--ease-ui);will-change:transform}
 .mode-toggle[data-mode=advanced] .seg-ind{transform:translate3d(100%,0,0)}
@@ -330,11 +333,11 @@ button:active,.seg-btn:active,.mode-btn:active,.bud-preset:active,.modal-close:a
 .module-card{min-height:112px;padding:16px;border-radius:var(--radius-panel);border-color:var(--border);box-shadow:var(--shadow);transition:transform .18s var(--ease-ui),box-shadow .2s var(--ease-ui),background-color .2s var(--ease-ui)}
 .module-icon{width:38px;height:38px;border-radius:13px;background:var(--brand-soft);display:flex;align-items:center;justify-content:center}
 .module-icon .ic{width:21px;height:21px}
-.module-name{font-size:13px;font-weight:650;margin-top:13px}
-.module-desc{font-size:11.5px;margin-top:4px}
+.module-name{font-size:var(--type-section);font-weight:600;line-height:16px;margin-top:13px;letter-spacing:-.01em}
+.module-desc{font-size:var(--type-meta);line-height:16px;margin-top:4px}
 .card{padding:22px 20px 18px;margin-bottom:12px;border-radius:var(--radius-card);border-color:var(--border);box-shadow:var(--shadow);transition:background-color .24s var(--ease-ui),border-color .24s var(--ease-ui),box-shadow .24s var(--ease-ui)}
 .card-head{min-height:44px;margin:-8px -8px 0;padding:8px;border-radius:var(--radius-control)}
-.ctitle{font-size:13px;font-weight:630;text-transform:none;letter-spacing:-.01em;color:var(--text);opacity:1}
+.ctitle{font-size:var(--type-section);font-weight:600;line-height:17px;text-transform:none;letter-spacing:-.01em;color:var(--text);opacity:1}
 .chevron{transition:transform .28s var(--ease-ui)}
 .card-body-wrap,.collapse-wrap{transition:grid-template-rows .3s var(--ease-ui)}
 .card-body-wrap.open .card-body-inner{padding-top:16px}
@@ -344,9 +347,9 @@ button:active,.seg-btn:active,.mode-btn:active,.bud-preset:active,.modal-close:a
 .collapse-wrap.open>div{transition:opacity .18s ease .04s}
 .field{margin-bottom:28px}
 .ftop{margin-bottom:11px;gap:8px}
-.flabel{font-size:14px;font-weight:520}
-.unit-badge{font-size:11px;color:var(--muted);margin-right:4px}
-.finput{min-height:40px;width:116px;padding:8px 12px;border:0;border-radius:var(--radius-field);background:var(--surface-soft);font-size:16px;font-weight:620;box-shadow:inset 0 0 0 1px var(--border);transition:box-shadow .18s var(--ease-ui),background-color .18s var(--ease-ui),transform .16s var(--ease-ui)}
+.flabel{font-size:var(--type-body);font-weight:500;line-height:18px}
+.unit-badge{font-size:var(--type-caption);font-weight:600;line-height:var(--lh-caption);color:var(--muted);margin-right:4px}
+.finput{min-height:40px;width:116px;padding:8px 12px;border:0;border-radius:var(--radius-field);background:var(--surface-soft);font-size:var(--type-input);font-weight:600;line-height:var(--lh-input);font-variant-numeric:tabular-nums lining-nums;box-shadow:inset 0 0 0 1px var(--border);transition:box-shadow .18s var(--ease-ui),background-color .18s var(--ease-ui),transform .16s var(--ease-ui)}
 .finput:focus{background:var(--surface-raised);box-shadow:inset 0 0 0 1.5px var(--brand),0 0 0 3px color-mix(in srgb,var(--brand) 12%,transparent)}
 input[type=range]{--range-progress:0%;height:36px;margin:-8px 0 -2px;padding:0;border:0;border-radius:999px;background:transparent!important}
 input[type=range]::-webkit-slider-runnable-track{width:100%;height:5px;border:0;border-radius:999px;background:linear-gradient(to right,var(--brand) 0%,var(--brand) var(--range-progress),var(--track) var(--range-progress),var(--track) 100%)}
@@ -355,23 +358,26 @@ input[type=range]:active::-webkit-slider-thumb{transform:scale(1.035);box-shadow
 input[type=range]::-moz-range-thumb{width:24px;height:24px;border:1px solid rgba(0,0,0,.08);background:#FFF;box-shadow:0 2px 7px rgba(0,0,0,.2)}
 input[type=range]::-moz-range-track{height:5px;border:0;border-radius:999px;background:var(--track)}
 input[type=range]::-moz-range-progress{height:5px;border:0;border-radius:999px;background:var(--brand)}
-.rlabels{font-size:11px;color:var(--muted);opacity:.72}
-.fnote{font-size:12px;line-height:1.5;margin-top:7px}
-.tag{padding:3px 8px;border-radius:999px;transition:background-color .18s var(--ease-ui),color .18s var(--ease-ui),opacity .15s ease}
+.rlabels{font-size:var(--type-caption);line-height:var(--lh-caption);color:var(--muted);opacity:.72}
+.fnote{font-size:var(--type-meta);line-height:18px;margin-top:7px}
+.bank-details-toggle{font-size:var(--type-meta);font-weight:600;line-height:var(--lh-meta)}
+.tag{font-size:var(--type-caption);font-weight:600;line-height:var(--lh-caption);padding:3px 8px;border-radius:999px;transition:background-color .18s var(--ease-ui),color .18s var(--ease-ui),opacity .15s ease}
 .tip-btn{position:relative;width:20px;height:20px;margin-left:1px;border:0;background:var(--surface-soft);color:var(--muted);font-size:10px;transition:background-color .16s var(--ease-ui),color .16s var(--ease-ui),transform .16s var(--ease-ui)}
 .tip-btn::after{content:"";position:absolute;inset:-8px}
 .metrics{gap:10px;margin-bottom:18px}
 .metric{padding:15px 16px;border-radius:20px;background:var(--surface-soft);transition:background-color .2s var(--ease-ui)}
-.m-lbl{font-size:11.5px;margin-bottom:5px}
-.m-val{font-size:18px;font-weight:700;letter-spacing:-.45px}
-.m-sub{font-size:11.5px;margin-top:3px}
+.m-lbl{min-height:var(--lh-caption);font-size:var(--type-meta);line-height:var(--lh-caption);margin-bottom:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.m-val{min-height:var(--lh-value);font-size:var(--type-value);font-weight:700;line-height:var(--lh-value);letter-spacing:-.02em;font-variant-numeric:tabular-nums lining-nums;font-feature-settings:"tnum" 1,"lnum" 1}
+.m-sub{min-height:var(--lh-caption);font-size:var(--type-meta);line-height:var(--lh-caption);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .totals{padding:18px;border-radius:22px;background:var(--surface-soft)}
 .verdict{height:88px;padding:16px 17px;border-radius:22px}
 .rc{padding:15px;border-radius:20px}
-.brow{padding:10px 0}
-.sec-lbl{font-size:11.5px;font-weight:650;letter-spacing:.045em;opacity:.82}
+.brow{align-items:baseline;padding:10px 0}
+.brow-lbl{font-size:var(--type-meta);line-height:17px}
+.brow-val{font-size:var(--type-body);font-weight:600;line-height:18px}
+.sec-lbl{font-size:var(--type-meta);font-weight:600;line-height:15px;letter-spacing:.04em;opacity:.82}
 .num-pulse{animation:none}
-.gv-status{display:flex;width:100%;min-height:44px;height:auto;margin:10px 0 0;padding:10px 13px;border:0;border-radius:var(--radius-control);background:var(--surface-soft);color:var(--muted);font-size:11.5px;font-weight:620;text-align:left;box-shadow:inset 0 0 0 1px var(--border);transition:transform .16s var(--ease-ui),background-color .2s var(--ease-ui),color .2s var(--ease-ui),box-shadow .2s var(--ease-ui)}
+.gv-status{display:flex;width:100%;min-height:44px;height:auto;margin:10px 0 0;padding:10px 13px;border:0;border-radius:var(--radius-control);background:var(--surface-soft);color:var(--muted);font-size:var(--type-meta);font-weight:600;line-height:var(--lh-meta);text-align:left;box-shadow:inset 0 0 0 1px var(--border);transition:transform .16s var(--ease-ui),background-color .2s var(--ease-ui),color .2s var(--ease-ui),box-shadow .2s var(--ease-ui)}
 .gv-status::before{width:8px;height:8px}
 .gv-status::after{content:"›";margin-left:auto;font-size:19px;font-weight:400;line-height:1;opacity:.48}
 .gv-status.qualified{border:0;background:linear-gradient(135deg,#FFF8DE,#FFE9AD);box-shadow:inset 0 0 0 1px #E7C65E;color:#765800}
@@ -382,7 +388,7 @@ input[type=range]::-moz-range-progress{height:5px;border:0;border-radius:999px;b
 .modal.on{will-change:transform;transform:translate3d(0,0,0) scale(1);transition:transform .4s var(--ease-sheet),visibility 0s}
 .modal-head{padding:18px;background:var(--glass-strong);-webkit-backdrop-filter:blur(16px) saturate(1.15);backdrop-filter:blur(16px) saturate(1.15)}
 .modal>div:not(.modal-head){margin:0;padding:18px 16px calc(16px + env(safe-area-inset-bottom,0px))}
-.modal-title{font-size:17px;font-weight:680}
+.modal-title{font-size:var(--type-title);font-weight:700;line-height:var(--lh-title);letter-spacing:-.015em}
 .modal-close{width:44px;height:44px;position:relative;z-index:2;flex:0 0 auto;touch-action:manipulation;background:var(--surface-soft);-webkit-backdrop-filter:none;backdrop-filter:none;box-shadow:inset 0 0 0 1px var(--border)}
 #modal-rent{top:calc(32px + env(safe-area-inset-top,0px));bottom:auto;max-height:calc(100vh - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px) - 44px);max-height:calc(100dvh - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px) - 44px);opacity:0;transform:translate3d(0,-14px,0) scale(.992);transform-origin:50% 0;transition:transform .22s var(--ease-ui),opacity .16s ease,visibility 0s .22s}
 #modal-rent.on{opacity:1;transform:translate3d(0,0,0) scale(1);will-change:transform,opacity;transition:transform .36s var(--ease-sheet),opacity .22s ease,visibility 0s}
@@ -399,6 +405,33 @@ input[type=range]::-moz-range-progress{height:5px;border:0;border-radius:999px;b
 .card [style*="border-radius:14px"],.modal [style*="border-radius:14px"],#budget-editor [style*="border-radius:14px"]{border-radius:20px!important}
 .card [style*="border-radius:12px"],.modal [style*="border-radius:12px"],#budget-editor [style*="border-radius:12px"]{border-radius:18px!important}
 #s-rate-field>div:first-child{min-height:44px;padding:8px 0!important}
+.finput,.m-val,.brow-val,.t-val,.rc-val,[id^="lv-"],[id^="budget-val-"],[id^="rent-n-"],#budget-total-val,#living-total-mo,#living-total-yr,#srp-cf,#srp-yield-val,#bvr-pay-rent,#bvr-pay-buy,#bvr-pay-diff-value,#summary-monthly,#summary-closing,#summary-loan{font-variant-numeric:tabular-nums lining-nums;font-feature-settings:"tnum" 1,"lnum" 1}
+.t-name{font-size:var(--type-meta);line-height:17px}.t-val{font-size:var(--type-input);font-weight:700;line-height:var(--lh-value)}
+.rc-lbl{font-size:var(--type-caption);font-weight:500;line-height:15px}.rc-val{font-size:var(--type-body);font-weight:700;line-height:18px}
+.card [style*="font-size:11px"],.modal [style*="font-size:11px"]{line-height:14px}
+.card [style*="font-size:12px"],.modal [style*="font-size:12px"]{line-height:16px}
+.card [style*="font-size:13px"],.modal [style*="font-size:13px"]{line-height:17px}
+.card [style*="font-size:14px"],.modal [style*="font-size:14px"]{line-height:18px}
+.card [style*="font-size:15px"],.modal [style*="font-size:15px"]{line-height:19px}
+.card [style*="font-size:16px"],.modal [style*="font-size:16px"]{line-height:20px}
+.card [style*="font-size:17px"],.modal [style*="font-size:17px"]{line-height:22px}
+.card [style*="font-size:18px"],.modal [style*="font-size:18px"]{line-height:22px}
+.card [style*="font-size:20px"],.modal [style*="font-size:20px"]{line-height:24px}
+.card [style*="font-size:22px"],.modal [style*="font-size:22px"]{line-height:26px}
+.card [style*="font-size:24px"],.modal [style*="font-size:24px"]{line-height:29px}
+.card [style*="font-size:26px"],.modal [style*="font-size:26px"]{line-height:31px}
+.card [style*="font-size:28px"],.modal [style*="font-size:28px"]{line-height:34px}
+.bvr-pay-kicker{font-size:var(--type-caption);font-weight:700;line-height:var(--lh-caption);text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.bvr-pay-label{display:flex;align-items:center;gap:5px;margin-bottom:3px;font-size:var(--type-caption);line-height:var(--lh-caption);color:var(--muted)}
+.bvr-pay-value{min-height:24px;font-size:20px;font-weight:700;line-height:24px;letter-spacing:-.02em;color:var(--text)}
+.bvr-pay-note{min-height:var(--lh-caption);margin-top:2px;font-size:var(--type-caption);line-height:var(--lh-caption);color:var(--muted)}
+.bvr-pay-diff{min-height:46px;padding:6px 0;font-size:var(--type-meta);line-height:17px;color:var(--muted);text-align:center}
+.bvr-pay-diff strong{font-weight:700}
+.budget-summary-vs{font-size:var(--type-meta);line-height:var(--lh-meta);color:var(--muted)}
+.budget-summary-left{font-size:var(--type-body);font-weight:700;line-height:18px}
+.budget-summary-value{font-size:20px;font-weight:700;line-height:24px;letter-spacing:-.02em}
+@keyframes periodValueSwap{from{opacity:.28}to{opacity:1}}
+.period-value-swap{animation:periodValueSwap .16s var(--ease-ui)}
 @keyframes iosReveal{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
 .motion-enter{animation-duration:.3s;animation-timing-function:var(--ease-ui)}
 @keyframes softSurfaceIn{from{opacity:0;transform:translateY(6px) scale(.992)}to{opacity:1;transform:none}}
@@ -609,7 +642,7 @@ input[type=range]::-moz-range-progress{height:5px;border:0;border-radius:999px;b
       <div class="ftop"><span class="lbl-group"><span class="flabel">Fixed period</span><button class="tip-btn" onclick="event.stopPropagation();showTooltip('fixperiod')" aria-label="info">i</button></span><span class="unit-badge">yr</span><input class="finput" id="t-fixperiod" value="5" inputmode="numeric"></div>
       <div class="fnote" id="fixperiod-note">Then the rate becomes variable &mdash; EIBOR + 1.5% bank margin</div>
     </div>
-    <button onclick="toggleBankDetails()" style="width:100%;display:flex;align-items:center;justify-content:space-between;background:none;border:none;border-top:1px solid var(--border);padding:14px 2px 4px;margin-top:2px;cursor:pointer;font-family:inherit"><span style="font-size:12px;font-weight:600;color:var(--muted)">Bank details</span><span id="bank-det-chev" data-ic="chevron" data-ic-size="16" style="display:inline-flex;color:var(--muted);transition:transform .3s ease"></span></button>
+    <button class="bank-details-toggle" onclick="toggleBankDetails()" style="width:100%;display:flex;align-items:center;justify-content:space-between;background:none;border:none;border-top:1px solid var(--border);padding:14px 2px 4px;margin-top:2px;cursor:pointer;font-family:inherit"><span style="font-size:12px;font-weight:600;color:var(--muted)">Bank details</span><span id="bank-det-chev" data-ic="chevron" data-ic-size="16" style="display:inline-flex;color:var(--muted);transition:transform .3s ease"></span></button>
     <div id="bank-details" class="collapse-wrap"><div><div style="padding-top:14px">
     <div class="field">
       <div class="ftop"><span class="lbl-group"><span class="flabel" data-i18n="field.approved">Max loan</span><button class="tip-btn" onclick="event.stopPropagation();showTooltip('approved')" aria-label="info">i</button></span><span id="approved-tag" class="tag tag-auto" style="display:none;margin:0 4px 0 0" onclick="resetApprovedAuto()"></span><span class="unit-badge">AED</span><input class="finput" id="t-approved" value="" placeholder="&mdash;"></div>
@@ -1058,7 +1091,34 @@ function finishOnboarding(){
 }
 
 let advPeriod='month', advRateView='fixed', advGrand3=0, advGrandVar=0;
-let bvrPeriod='month';
+let bvrPeriod='month',bvrDisplayData=null,_periodMotionRAF=0;
+
+function animatePeriodValues(selector){
+  if(!selector||window.matchMedia?.('(prefers-reduced-motion: reduce)').matches)return;
+  const els=Array.from(document.querySelectorAll(selector)).filter(el=>el.offsetParent!==null);
+  if(!els.length)return;
+  els.forEach(el=>el.classList.remove('period-value-swap'));
+  if(_periodMotionRAF)cancelAnimationFrame(_periodMotionRAF);
+  _periodMotionRAF=requestAnimationFrame(()=>{_periodMotionRAF=0;els.forEach(el=>el.classList.add('period-value-swap'));});
+}
+
+function renderBvrPeriodValues(animate){
+  const d=bvrDisplayData,root=document.getElementById('bvr-results');
+  if(!d||!root||!document.getElementById('bvr-pay-rent'))return false;
+  const isYr=bvrPeriod==='year',diff=isYr?d.annualDiff:d.moDiff,perLbl=isYr?'/yr':'/mo';
+  setLiveText(document.getElementById('bvr-pay-rent'),fmt(isYr?d.rentAnnual:d.rentMo));
+  setLiveText(document.getElementById('bvr-pay-buy'),fmt(isYr?d.buyAnnual:d.buyMo));
+  setLiveText(document.getElementById('bvr-pay-diff-prefix'),'Buying costs ');
+  const diffValue=document.getElementById('bvr-pay-diff-value');
+  setLiveText(diffValue,fmt(Math.abs(diff))+perLbl+(diff>0?' more':' less'));
+  if(diffValue)diffValue.style.color=diff>0?'var(--text)':'var(--green)';
+  setLiveText(document.getElementById('bvr-pay-diff-suffix'),diff>0?' — the renter invests this difference':'');
+  const bm=document.getElementById('bvr-period-month'),by=document.getElementById('bvr-period-year');
+  if(bm)bm.classList.toggle('on',!isYr);if(by)by.classList.toggle('on',isYr);
+  if(animate)animatePeriodValues('#bvr-pay-rent,#bvr-pay-buy,#bvr-pay-diff');
+  if(window.__syncSegs)requestAnimationFrame(()=>window.__syncSegs());
+  return true;
+}
 
 function autoUpdateRent(){
   if(rentManual)return;
@@ -1072,7 +1132,11 @@ function resetRentAuto(){
   const tag=document.getElementById('rent-auto-tag');if(tag){tag.textContent='auto';tag.className='tag tag-auto';}
   calcBvR();scheduleSave();
 }
-function setBvrPeriod(p){bvrPeriod=p;calcBvR();}
+function setBvrPeriod(p){
+  if(p!=='month'&&p!=='year')return;
+  const changed=bvrPeriod!==p;bvrPeriod=p;
+  if(!renderBvrPeriodValues(changed))calcBvR();
+}
 function toggleClosing(){
   const b=document.getElementById('closing-body'),c=document.getElementById('closing-chev');
   const open=b.classList.toggle('open');
@@ -1103,7 +1167,7 @@ function updateAdvAllIn(){
     const r=rentMath(window._rentArgs.price,(isVar&&window._advMortgageVar)?window._advMortgageVar:window._rentArgs.monthly,window._rentArgs.sqft);
     if(aEl){setLiveText(aEl,(r.cashflow>=0?'+':'\u2212')+fmt(Math.abs(r.cashflow*mult)));aEl.style.color=r.cashflow>=0?'var(--green)':'var(--red)';}
     if(allinLbl)allinLbl.textContent='Net cashflow \u203a';
-    if(allinSub)allinSub.textContent=fmtN(r.monthlyRent)+' rent \u2212 '+fmtN(r.monthlyRent-r.cashflow);
+    if(allinSub)allinSub.textContent=fmtN(r.monthlyRent*mult)+' rent \u2212 '+fmtN((r.monthlyRent-r.cashflow)*mult);
     if(allinCard){allinCard.style.cursor='pointer';allinCard.style.pointerEvents='auto';allinCard.classList.add('rent-tap');}
   }else{
     if(aEl){aEl.style.color='';setLiveText(aEl,allin>0?fmt(allin*mult):'\u2014');}
@@ -1158,14 +1222,22 @@ function updateBudgetSummary(){
   if(incomeDisp>0){
     const left=incomeDisp-totalDisp,pct=Math.round(totalDisp/incomeDisp*100);
     const lc=left>=0?'var(--green)':'var(--red)',bc=pct>90?'var(--red)':pct>70?'var(--amber)':'var(--green)';
+    if(!summaryEl.dataset.ready){
+      summaryEl.innerHTML='<div style="height:1px;background:var(--border);margin:12px 0"></div><div style="display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:8px"><span id="budget-summary-vs" class="budget-summary-vs"></span><div style="height:5px;width:100px;flex:0 0 100px;background:var(--border);border-radius:999px;overflow:hidden"><div id="budget-summary-bar" style="height:100%;width:0;background:var(--green);border-radius:999px;transition:width .28s var(--ease-ui),background-color .2s var(--ease-ui)"></div></div></div><div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px"><span class="budget-summary-left" id="budget-summary-left-label"></span><span class="budget-summary-value" id="budget-summary-left"></span></div>';
+      summaryEl.dataset.ready='1';
+    }
     summaryEl.style.display='block';
-    summaryEl.innerHTML=`<div style="height:1px;background:var(--border);margin:12px 0"></div><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><span style="font-size:12px;color:var(--muted)">${t('budget.vs')} ${fmt(incomeDisp)} \u00b7 ${pct}%</span><div style="height:5px;width:100px;background:var(--border);border-radius:3px;overflow:hidden"><div style="height:100%;width:${Math.min(pct,100)}%;background:${bc};border-radius:3px;transition:width .4s"></div></div></div><div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:14px;font-weight:700">${t('budget.left')}</span><span style="font-size:20px;font-weight:700;color:${lc}">${fmt(left)}</span></div>`;
-  } else {summaryEl.style.display='none';summaryEl.innerHTML='';}
+    setLiveText(document.getElementById('budget-summary-vs'),t('budget.vs')+' '+fmt(incomeDisp)+' \u00b7 '+pct+'%');
+    setLiveText(document.getElementById('budget-summary-left-label'),t('budget.left'));
+    const leftEl=document.getElementById('budget-summary-left');setLiveText(leftEl,fmt(left));if(leftEl)leftEl.style.color=lc;
+    const bar=document.getElementById('budget-summary-bar');if(bar){bar.style.width=Math.min(pct,100)+'%';bar.style.background=bc;}
+  } else {summaryEl.style.display='none';}
 }
 function budgetDisp(aedVal){const v=budgetPeriod==='year'?aedVal*12:aedVal;return fmt(v);}
 function budgetFromDisp(dispVal){const raw=parseFloat(String(dispVal).replace(/[^0-9.]/g,''))||0;const aed=currency==='USD'?Math.round(raw*3.6725):raw;return budgetPeriod==='year'?Math.round(aed/12):aed;}
 function setBudgetPeriod(p){
-  budgetPeriod=p;
+  if(p!=='month'&&p!=='year')return;
+  const changed=budgetPeriod!==p;budgetPeriod=p;
   const bm=document.getElementById('costs-per-mo'),by=document.getElementById('costs-per-yr');
   if(bm)bm.classList.toggle('on',p==='month');if(by)by.classList.toggle('on',p==='year');
   Object.keys(BUDGET_DEFAULTS).forEach(k=>{const ve=document.getElementById('budget-val-'+k);if(!ve)return;const v=budgetVals[k];ve.textContent=v>0?budgetDisp(v):'—';ve.style.color=v>0?'var(--text)':'var(--muted)';});
@@ -1173,6 +1245,7 @@ function setBudgetPeriod(p){
   updateBudgetSummary();
   if(typeof calcLiving==='function')calcLiving();
   if(typeof syncLivingRows==='function')syncLivingRows();
+  if(changed)animatePeriodValues('#budget-total-val,[id^="budget-val-"],#budget-summary-vs,#budget-summary-left,#living-total-mo,#living-total-yr');
 }
 function renderBudget(){
   const body=document.getElementById('modal-budget-body');if(!body)return;
@@ -1976,13 +2049,16 @@ function setMode(mode){
 function simpleParseNum(str){return parseFloat(String(str).replace(/[^0-9.]/g,''))||0;}
 let sPeriod='month',sMortgage=0,sAllIn=0,sAllInSub='mortgage + DEWA + SC';
 function setSPeriod(p){
-  sPeriod=p;const m=document.getElementById('s-btn-month'),y=document.getElementById('s-btn-year');if(!m||!y)return;
+  if(p!=='month'&&p!=='year')return;
+  const changed=sPeriod!==p;sPeriod=p;const m=document.getElementById('s-btn-month'),y=document.getElementById('s-btn-year');if(!m||!y)return;
   m.classList.toggle('on',p==='month');y.classList.toggle('on',p==='year');
   const mult=p==='year'?12:1;
   const vm=document.getElementById('s-val-mortgage'),va=document.getElementById('s-val-allin');
   if(vm)vm.textContent=fmt(sMortgage*mult);
   if(va){va.style.color='';va.textContent=fmt(sAllIn*mult);}
   const sl=document.getElementById('s-allin-lbl');if(sl)sl.textContent=p==='year'?'Total annual':t('row.allin.label');
+  const sm=document.getElementById('s-sub-mortgage');if(sm)sm.textContent=t(p==='year'?'sub.peryear':'sub.permonth');
+  if(changed)animatePeriodValues('#s-val-mortgage,#s-val-allin,#s-sub-mortgage,#s-allin-lbl');
 }
 function buildAllInSub(){return rentOut?(t('row.allin.short.rent')||'incl. service charge'):(t('row.allin.short')||'incl. living costs');}
 
@@ -2239,6 +2315,7 @@ function calcBvR(){
   const scRate=parseFloat(document.getElementById('sc').value)||23,scAnn=vals.sqft*scRate;
   const cash=vals.cash,upfront=(price-loan)+closingCosts(price,loan).fees;
   if(cash<upfront){
+    bvrDisplayData=null;
     document.getElementById('bvr-results').innerHTML=`<div style="background:var(--red-bg);border:1px solid var(--red-bd);border-radius:14px;padding:16px"><div style="font-size:14px;font-weight:700;color:var(--red);margin-bottom:6px">Not enough cash to buy this property</div><div style="font-size:12px;color:var(--red);line-height:1.5">You need ${fmt(upfront)} at closing but have ${fmt(cash)}. Shortfall: <b>${fmt(upfront-cash)}</b>. Increase cash, lower the price, or adjust the bank valuation before comparing.</div></div>`;
     return;
   }
@@ -2289,6 +2366,7 @@ function calcBvR(){
   const buyMo=Math.round(mortgageMo+scAnn/12);
   const moDiff=buyMo-rentMo;
   const annualDiff=buyAnnual-rentAnnual;
+  bvrDisplayData={rentMo,rentAnnual,buyMo,buyAnnual,moDiff,annualDiff};
   const isYr=bvrPeriod==='year';const perLbl=isYr?'/yr':'/mo';
   const rentShow=isYr?rentAnnual:rentMo;
   const buyShow=isYr?buyAnnual:buyMo;
@@ -2296,28 +2374,29 @@ function calcBvR(){
   document.getElementById('bvr-results').innerHTML=`
   <div style="background:var(--bg);border-radius:14px;padding:16px;margin-bottom:14px">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)">What you pay</div>
-      <div class="seg" style="font-size:11px"><button onclick="setBvrPeriod('month')" class="seg-btn ${bvrPeriod==='month'?'on':''}">Month</button><button onclick="setBvrPeriod('year')" class="seg-btn ${bvrPeriod==='year'?'on':''}">Year</button></div>
+      <div class="bvr-pay-kicker">What you pay</div>
+      <div class="seg" id="bvr-period-seg"><button id="bvr-period-month" onclick="setBvrPeriod('month')" class="seg-btn ${bvrPeriod==='month'?'on':''}">Month</button><button id="bvr-period-year" onclick="setBvrPeriod('year')" class="seg-btn ${bvrPeriod==='year'?'on':''}">Year</button></div>
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
       <div style="background:var(--card);border-radius:14px;padding:12px">
-        <div style="font-size:11px;color:var(--muted);margin-bottom:3px;display:flex;align-items:center;gap:5px">${ic('key',13)}Renting</div>
-        <div style="font-size:20px;font-weight:700;color:var(--text)">${fmt(rentShow)}</div>
-        <div style="font-size:10px;color:var(--muted);margin-top:2px">rent only</div>
+        <div class="bvr-pay-label">${ic('key',13)}Renting</div>
+        <div class="bvr-pay-value" id="bvr-pay-rent">${fmt(rentShow)}</div>
+        <div class="bvr-pay-note">rent only</div>
       </div>
       <div style="background:var(--card);border-radius:14px;padding:12px">
-        <div style="font-size:11px;color:var(--muted);margin-bottom:3px;display:flex;align-items:center;gap:5px">${ic('home',13)}Buying</div>
-        <div style="font-size:20px;font-weight:700;color:var(--text)">${fmt(buyShow)}</div>
-        <div style="font-size:10px;color:var(--muted);margin-top:2px">loan + service charge</div>
+        <div class="bvr-pay-label">${ic('home',13)}Buying</div>
+        <div class="bvr-pay-value" id="bvr-pay-buy">${fmt(buyShow)}</div>
+        <div class="bvr-pay-note">loan + service charge</div>
       </div>
     </div>
-    <div style="font-size:12px;color:var(--muted);text-align:center;padding:6px 0">${diffShow>0?`Buying costs <b style="color:var(--text)">${fmt(diffShow)}${perLbl} more</b> &mdash; the renter invests this difference`:`Buying costs <b style="color:var(--green)">${fmt(-diffShow)}${perLbl} less</b>`}</div>
+    <div class="bvr-pay-diff" id="bvr-pay-diff"><span id="bvr-pay-diff-prefix">Buying costs </span><strong id="bvr-pay-diff-value" style="color:${diffShow>0?'var(--text)':'var(--green)'}">${fmt(Math.abs(diffShow))}${perLbl}${diffShow>0?' more':' less'}</strong><span id="bvr-pay-diff-suffix">${diffShow>0?' &mdash; the renter invests this difference':''}</span></div>
     <div style="font-size:11px;color:var(--muted);text-align:center;padding-top:8px;border-top:1px solid var(--border)">Utilities excluded &mdash; same either way</div>
   </div>
   <div style="background:${winBg};border:1px solid ${winBd};border-radius:14px;padding:16px;margin-bottom:14px">
     <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:${winColor};margin-bottom:8px">After ${years} years</div>
     <div style="font-size:18px;font-weight:700;color:${winColor};margin-bottom:14px">${winTitle}</div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><div><div style="font-size:11px;color:${winColor};opacity:.7;margin-bottom:2px;display:flex;align-items:center;gap:5px">${ic('home',13)}If you buy</div><div style="font-size:14px;font-weight:700;color:${winColor}">${fmt(last.buyerNetWorth)}</div></div><div><div style="font-size:11px;color:${winColor};opacity:.7;margin-bottom:2px;display:flex;align-items:center;gap:5px">${ic('trendUp',13)}If you rent + invest</div><div style="font-size:14px;font-weight:700;color:${winColor}">${fmt(last.renterNetWorth)}</div></div></div>
   <div style="font-size:11px;color:${winColor};opacity:.75;margin-top:10px;padding-top:10px;border-top:1px solid ${winColor}33">At ${propGrowth}% property growth &middot; ${invReturn}% investment return</div></div><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px"><div style="display:flex;gap:12px;font-size:12px"><span style="display:flex;align-items:center;gap:4px"><span style="display:inline-block;width:12px;height:3px;background:var(--green-bd);border-radius:2px"></span><span style="color:var(--muted)">Buyer</span></span><span style="display:flex;align-items:center;gap:4px"><span style="display:inline-block;width:12px;height:3px;background:var(--blue-bd);border-radius:2px"></span><span style="color:var(--muted)">Renter</span></span>${crossYr?`<span style="display:flex;align-items:center;gap:4px"><span style="display:inline-block;width:8px;height:8px;background:var(--text);border-radius:50%"></span><span style="color:var(--muted)">Cross yr ${Math.round(crossYr)}</span></span>`:''}</div></div><div style="background:var(--bg);border-radius:14px;padding:12px;margin-bottom:10px">${svg}</div>`;
+  renderBvrPeriodValues(false);
 }
 document.getElementById('t-bvr-inv-rate').addEventListener('input',()=>{let v=parseFloat(document.getElementById('t-bvr-inv-rate').value.replace(/[^0-9.]/g,''))||5;v=Math.min(15,Math.max(1,v));document.getElementById('bvr-inv-rate').value=v;calcBvR();});
 document.getElementById('t-bvr-inv-rate').addEventListener('blur',()=>{document.getElementById('t-bvr-inv-rate').value=parseFloat(document.getElementById('bvr-inv-rate').value).toFixed(1);});
@@ -2521,7 +2600,7 @@ const I18N={
     'card.monthly':'Monthly','card.closing':'At closing','card.loan':'Loan',
     'verdict.need':'Need','verdict.toclose':'to close','verdict.youhave':'you have','verdict.vsapproved':'vs approved',
     'gv.title':'Golden Visa property threshold','gv.desc':'AED 2M may meet the property-value threshold; final eligibility requires official documents and authority approval',
-    'sub.permonth':'principal + interest','sub.peryear':'per year',
+    'sub.permonth':'per month','sub.peryear':'per year',
     'sub.allin.full':'mortgage + DEWA + cooling + service charge + internet + gas',
     'field.approved':'Max loan','field.bval':'Bank valuation',
     'field.bval.hint':'Banks lend against valuation, not purchase price. Gap paid from your cash.',
@@ -2675,8 +2754,10 @@ function resetRentYield(){
   scheduleSave();
 }
 function setAdvPeriod(p){
-  advPeriod=p;
+  if(p!=='month'&&p!=='year')return;
+  const changed=advPeriod!==p;advPeriod=p;
   updateAdvAllIn();
+  if(changed)animatePeriodValues('#adv-val-mortgage,#adv-val-allin,#adv-mortgage-sub,#adv-allin-lbl,#adv-allin-sub');
   scheduleSave();
 }
 function setAdvRateView(r){
@@ -2723,7 +2804,7 @@ calcBvR();calcPP();
   document.addEventListener('click',e=>{const b=e.target.closest('.seg button');if(b){const c=b.closest('.seg');syncSeg(c);scheduleSync();}});
   window.addEventListener('resize',()=>{document.querySelectorAll('.seg').forEach(c=>{c._bl=undefined;});scheduleSync();},{passive:true});
   const SLOW={openModal:1,setToolsTab:1};
-  ['openModal','setToolsTab','setBudgetPeriod','setSPeriod','setAdvRateView'].forEach(fn=>{const o=window[fn];if(typeof o==='function'){window[fn]=function(){const r=o.apply(this,arguments);scheduleSync();if(SLOW[fn]){setTimeout(scheduleSync,90);setTimeout(scheduleSync,460);}return r;};}});
+  ['openModal','setToolsTab','setBudgetPeriod','setSPeriod','setAdvPeriod','setBvrPeriod','setAdvRateView'].forEach(fn=>{const o=window[fn];if(typeof o==='function'){window[fn]=function(){const r=o.apply(this,arguments);scheduleSync();if(SLOW[fn]){setTimeout(scheduleSync,90);setTimeout(scheduleSync,460);}return r;};}});
   if(document.fonts&&document.fonts.ready)document.fonts.ready.then(()=>syncAll());
   syncAll();requestAnimationFrame(syncAll);
 })();
@@ -2780,6 +2861,6 @@ document.addEventListener('DOMContentLoaded',()=>hydrateIcons());
 </div>
 
 <div id="tooltip-sheet"></div>
-<div style="position:fixed;bottom:2px;right:4px;font-size:9px;color:rgba(128,128,128,0.4);z-index:99999;pointer-events:none">v1372</div>
+<div style="position:fixed;bottom:2px;right:4px;font-size:9px;color:rgba(128,128,128,0.4);z-index:99999;pointer-events:none">v1373</div>
 </body>
 </html>
