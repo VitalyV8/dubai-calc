@@ -1456,7 +1456,7 @@ document.addEventListener('click',e=>{
   if(sheet.contains(e.target)){if(e.target.closest('.tooltip-close'))hideTooltip();return;}
   hideTooltip();
 });
-document.addEventListener('scroll',()=>{fadeTooltip();},{passive:true,capture:true});
+document.addEventListener('scroll',()=>{fadeTooltip();closeSettings();closeEmiratePicker();},{passive:true,capture:true});
 document.addEventListener('touchmove',hideTooltip,{passive:true,capture:true});
 document.addEventListener('wheel',hideTooltip,{passive:true,capture:true});
 window.visualViewport?.addEventListener('scroll',fadeTooltip,{passive:true});
@@ -2649,12 +2649,16 @@ function toggleEmiratePicker(){
   const chev=document.getElementById('emi-arrow');
   if(chev)chev.classList.toggle('open',!open);
 }
-function pickEmirate(id){
-  setEmirate(id);
+function closeEmiratePicker(){
   const opts=document.getElementById('emirate-list');
-  if(opts)opts.style.display='none';
+  if(!opts||opts.style.display==='none')return;
+  opts.style.display='none';
   const chev=document.getElementById('emi-arrow');
   if(chev)chev.classList.remove('open');
+}
+function pickEmirate(id){
+  setEmirate(id);
+  closeEmiratePicker();
   const disp=document.getElementById('emi-name');
   if(disp&&EMIRATES[id])disp.textContent=EMIRATES[id].name;
   const re=document.getElementById('emi-rate');
@@ -2776,6 +2780,6 @@ document.addEventListener('DOMContentLoaded',()=>hydrateIcons());
 </div>
 
 <div id="tooltip-sheet"></div>
-<div style="position:fixed;bottom:2px;right:4px;font-size:9px;color:rgba(128,128,128,0.4);z-index:99999;pointer-events:none">v1371</div>
+<div style="position:fixed;bottom:2px;right:4px;font-size:9px;color:rgba(128,128,128,0.4);z-index:99999;pointer-events:none">v1372</div>
 </body>
 </html>
