@@ -653,7 +653,7 @@ input[type=range]::-moz-range-progress{height:5px;border:0;border-radius:999px;b
     <div class="field">
       <div class="ftop"><span class="lbl-group"><span class="flabel" data-i18n="field.approved">Max loan</span><button class="tip-btn" onclick="event.stopPropagation();showTooltip('approved')" aria-label="info">i</button></span><span id="approved-tag" class="tag tag-auto" style="display:none;margin:0 4px 0 0" onclick="resetApprovedAuto()"></span><span class="unit-badge">AED</span><input class="finput" id="t-approved" value="" placeholder="&mdash;"></div>
       <input type="range" id="approved" min="0" max="1000" step="1" value="448">
-      <div class="rlabels"><span id="rl-appr-min">AED 0</span><span id="rl-appr-max">AED 15M</span></div>
+      <div class="rlabels"><span id="rl-appr-min">AED 0</span><span id="rl-appr-max">AED 18M</span></div>
       <div class="fnote" id="approved-warn" style="display:none;color:var(--amber)"></div>
     </div>
     <div class="field">
@@ -1589,7 +1589,7 @@ function setCurr(c){
   const els={
     'rl-price-min': isUSD?'$136K':'AED 500K', 'rl-price-max': isUSD?'$5.45M':'AED 20M',
     'rl-cash-min': isUSD?'$27K':'AED 100K', 'rl-cash-max': isUSD?'$2.18M':'AED 8M',
-    'rl-appr-min': isUSD?'$54K':'AED 200K', 'rl-appr-max': isUSD?'$4.90M':'AED 18M',
+    'rl-appr-min': isUSD?'$0':'AED 0', 'rl-appr-max': isUSD?'$4.90M':'AED 18M',
     'rl-dewa-min': isUSD?'$0':'AED 0', 'rl-dewa-max': isUSD?'$2,179':'AED 8,000',
     'rl-inet-min': isUSD?'$0':'AED 0', 'rl-inet-max': isUSD?'$272':'AED 1,000',
     'rl-gas-min': isUSD?'$0':'AED 0', 'rl-gas-max': isUSD?'$136':'AED 500',
@@ -1642,14 +1642,38 @@ function updateGoldenVisaStatus(price){
 }
 
 const SLIDER_RANGE={'s-price-range':{min:500000,max:20000000},'price':{min:500000,max:20000000},'bval':{min:500000,max:20000000},'s-cash-range':{min:100000,max:8000000},'cash':{min:100000,max:8000000},'approved':{min:200000,max:18000000},'s-sqft-range':{min:300,max:10000},'sqft':{min:300,max:10000}};
-function sliderToVal(id,pos){
-  const r=SLIDER_RANGE[id];if(!r)return pos;
-  if(id==='approved'&&pos<=0)return 0;
-  const t2=pos/1000,v=r.min*Math.pow(r.max/r.min,t2);
-  let step;if(id==='s-sqft-range'||id==='sqft'){step=v<1000?25:v<2500?50:v<5000?100:250;}else{step=v<1000000?10000:v<3000000?25000:v<6000000?50000:100000;}
-  return Math.round(v/step)*step;
+function sliderValueStep(id,value){
+  if(id==='s-sqft-range'||id==='sqft')return value<1000?25:value<2500?50:value<5000?100:250;
+  return value<1000000?10000:value<3000000?25000:value<6000000?50000:100000;
 }
-function valToSlider(id,val){const r=SLIDER_RANGE[id];if(!r)return val;const v=Math.max(r.min,Math.min(r.max,val));const t2=Math.log(v/r.min)/Math.log(r.max/r.min);return Math.round(t2*1000);}
+function buildSliderValues(id){
+  const r=SLIDER_RANGE[id],values=id==='approved'?[0]:[];
+  let value=r.min;
+  while(value<=r.max){
+    values.push(value);
+    if(value===r.max)break;
+    value=Math.min(r.max,value+sliderValueStep(id,value));
+  }
+  return values;
+}
+const SLIDER_VALUES=Object.fromEntries(Object.keys(SLIDER_RANGE).map(id=>[id,buildSliderValues(id)]));
+function sliderToVal(id,pos){
+  const values=SLIDER_VALUES[id];if(!values)return pos;
+  return values[Math.max(0,Math.min(values.length-1,Math.round(pos)))] ?? values[0];
+}
+function valToSlider(id,val){
+  const values=SLIDER_VALUES[id];if(!values)return val;
+  const target=Number(val)||0,last=values.length-1;
+  if(target<=values[0])return 0;if(target>=values[last])return last;
+  let lo=0,hi=last;
+  while(lo<=hi){const mid=(lo+hi)>>1;if(values[mid]<target)lo=mid+1;else hi=mid-1;}
+  return target-values[lo-1]<=values[lo]-target?lo-1:lo;
+}
+const SLIDER_VALUE_KEYS={'s-price-range':'price','price':'price','bval':'bval','s-cash-range':'cash','cash':'cash','approved':'approved','s-sqft-range':'sqft','sqft':'sqft'};
+Object.entries(SLIDER_VALUES).forEach(([id,values])=>{
+  const el=document.getElementById(id);if(!el)return;
+  el.min=0;el.max=values.length-1;el.step=1;el.value=valToSlider(id,vals[SLIDER_VALUE_KEYS[id]]);
+});
 function paintSlider(el){if(!el)return;const min=+el.min,max=+el.max,val=+el.value;const pct=Math.max(0,Math.min(100,max>min?(val-min)/(max-min)*100:0));el.style.removeProperty('background');el.style.setProperty('--range-progress',pct+'%');}
 function paintAllSliders(){document.querySelectorAll('input[type=range]').forEach(paintSlider);}
 let _scrubTimer=0,_scrubPointerActive=false;
@@ -2861,6 +2885,6 @@ document.addEventListener('DOMContentLoaded',()=>hydrateIcons());
 </div>
 
 <div id="tooltip-sheet"></div>
-<div style="position:fixed;bottom:2px;right:4px;font-size:9px;color:rgba(128,128,128,0.4);z-index:99999;pointer-events:none">v1379</div>
+<div style="position:fixed;bottom:2px;right:4px;font-size:9px;color:rgba(128,128,128,0.4);z-index:99999;pointer-events:none">v1381</div>
 </body>
 </html>
