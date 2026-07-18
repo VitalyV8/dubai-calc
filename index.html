@@ -432,6 +432,41 @@ input[type=range]::-moz-range-progress{height:5px;border:0;border-radius:999px;b
 .budget-summary-vs{font-size:var(--type-meta);line-height:var(--lh-meta);color:var(--muted)}
 .budget-summary-left{font-size:var(--type-body);font-weight:700;line-height:18px}
 .budget-summary-value{font-size:20px;font-weight:700;line-height:24px;letter-spacing:-.02em}
+.result-mode-seg{margin-bottom:22px!important}
+.result-payment{padding:0 0 4px}
+.result-section-head{display:flex;align-items:center;min-height:24px;margin:0 0 12px}
+.result-section-head .sec-lbl{margin:0;display:flex;align-items:center;gap:4px}
+.result-period-seg,.result-rate-seg{display:flex;width:100%;margin-bottom:10px}
+.result-metrics{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px;margin:2px 0 10px}
+.result-rate-note{min-height:18px;padding:2px 2px 18px;color:var(--muted);font-size:var(--type-meta);line-height:var(--lh-meta);text-align:left}
+#affordability:not(:empty){display:grid;gap:10px;margin:2px 0 20px}
+#affordability:not(:empty)>.sec-lbl{margin:0!important}
+#affordability:not(:empty)>div:not(.sec-lbl){margin-bottom:0!important}
+.result-disclosures{margin-top:2px;border-radius:20px;background:var(--surface-soft);padding:0 16px;overflow:hidden}
+.result-disclosure{display:flex;align-items:center;justify-content:space-between;gap:14px;min-height:72px;padding:14px 0;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.result-disclosure-total{border-top:1px solid var(--border)}
+.result-disclosure-copy{flex:1;min-width:0}
+.result-disclosure-title{font-size:var(--type-body);font-weight:700;line-height:19px;color:var(--text)}
+.result-disclosure-summary{margin-top:4px;font-size:var(--type-meta);line-height:17px;color:var(--muted)}
+.result-disclosure .chevron{flex:0 0 auto}
+.result-collapse>div>div{padding:0 0 12px}
+.result-share{width:100%;min-height:48px;margin-top:16px;padding:12px 16px;border:0;border-radius:18px;background:var(--surface-soft);box-shadow:inset 0 0 0 1px var(--border);font-family:inherit;font-size:var(--type-body);font-weight:600;line-height:19px;color:var(--text);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:transform .16s var(--ease-ui),background-color .18s var(--ease-ui)}
+.result-share:active{transform:scale(.985)}
+.costs-period-control{display:flex;margin-bottom:22px}
+.costs-period-control .seg{display:flex;width:100%}
+.costs-section-label{margin:0 0 8px}
+.costs-section-label.spending{margin-top:26px}
+.cost-row{padding:14px 0;border-bottom:1px solid var(--border)}
+.cost-row-top{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:10px;min-height:22px}
+.cost-row.has-slider .cost-row-top{margin-bottom:10px}
+.cost-row-label{display:flex;align-items:center;gap:7px;min-width:0;font-size:var(--type-body);font-weight:500;line-height:18px;color:var(--text)}
+.cost-row-label>span:not(.tag):not(.tip-btn):last-of-type{min-width:0}
+.cost-row-icon{display:inline-flex;align-items:center;justify-content:center;width:16px;height:18px;flex:0 0 16px;color:var(--muted)}
+.cost-row-value{min-width:72px;text-align:right;white-space:nowrap;font-size:var(--type-body);font-weight:600;line-height:18px;color:var(--text);font-variant-numeric:tabular-nums lining-nums;font-feature-settings:"tnum" 1,"lnum" 1}
+.cost-row input[type=range]{margin-bottom:-2px}
+.cost-row-note{padding-left:24px;margin-top:4px;font-size:var(--type-meta);line-height:17px;color:var(--muted)}
+.costs-total{margin-top:18px;padding:18px;border-radius:20px;background:var(--surface-soft)}
+.costs-total-head{display:flex;justify-content:space-between;align-items:baseline;gap:14px}
 @keyframes periodValueSwap{from{opacity:.28}to{opacity:1}}
 .period-value-swap{animation:periodValueSwap .16s var(--ease-ui)}
 @keyframes iosReveal{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
@@ -450,6 +485,7 @@ input[type=range]::-moz-range-progress{height:5px;border:0;border-radius:999px;b
   .card{padding:20px 18px 17px}.mode-toggle{margin-bottom:18px}.mode-btn{padding:9px 8px}.seg-btn{padding:7px 9px;font-size:11.5px}.finput{width:108px;padding-left:9px;padding-right:9px}.module-card{padding:15px;min-height:108px}
   .modal,#tooltip-sheet{left:calc(12px + env(safe-area-inset-left,0px));right:calc(12px + env(safe-area-inset-right,0px))}
   #emi-rate{display:block;max-width:145px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .result-disclosures{padding:0 14px}.result-disclosure{min-height:70px}.cost-row-top{gap:8px}.cost-row-value{min-width:68px}
 }
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
 *{scrollbar-width:thin;scrollbar-color:var(--subtle) transparent}
@@ -553,7 +589,7 @@ input[type=range]::-moz-range-progress{height:5px;border:0;border-radius:999px;b
       <div class="ftop"><span class="flabel" data-i18n="field.price">Property price</span><span class="unit-badge">AED</span><input class="finput" id="s-price" type="text" inputmode="numeric" value="1,500,000" oninput="simpleCalc()"></div>
       <input type="range" id="s-price-range" min="0" max="1000" step="1" value="298" oninput="document.getElementById('s-price').value=fmtN(sliderToVal('s-price-range',+this.value));simpleCalc()">
       <div class="rlabels"><span id="rl-s-price-min">AED 500K</span><span id="rl-s-price-max">AED 20M</span></div>
-      <button type="button" id="s-gv-status" class="gv-status" aria-haspopup="dialog" onclick="event.stopPropagation();showTooltip('gv')"><span class="gv-status-label">Golden Visa threshold &middot; AED 2M</span></button>
+      <button type="button" id="s-gv-status" class="gv-status" aria-haspopup="dialog" onclick="event.stopPropagation();showTooltip('gv')"><span class="gv-status-label">UAE Golden Visa &middot; AED 2M threshold</span></button>
     </div>
     <div class="field">
       <div class="ftop"><span class="flabel">Down payment</span><span class="unit-badge">%</span><input class="finput" id="s-down" type="text" inputmode="numeric" value="20" oninput="sDownChanged(this.value)" onblur="document.getElementById('s-down').value=vals.down"></div>
@@ -600,7 +636,7 @@ input[type=range]::-moz-range-progress{height:5px;border:0;border-radius:999px;b
       <div class="ftop"><span class="lbl-group"><span class="flabel" data-i18n="field.price">Property price</span><button class="tip-btn" onclick="event.stopPropagation();showTooltip('price')" aria-label="info">i</button></span><span class="unit-badge">AED</span><input class="finput" id="t-price" value="1,500,000"></div>
       <input type="range" id="price" min="0" max="1000" step="1" value="298">
       <div class="rlabels"><span id="rl-price-min">AED 500K</span><span id="rl-price-max">AED 20M</span></div>
-      <button type="button" id="gv-status-adv" class="gv-status" aria-haspopup="dialog" onclick="event.stopPropagation();showTooltip('gv')"><span class="gv-status-label">Golden Visa threshold &middot; AED 2M</span></button>
+      <button type="button" id="gv-status-adv" class="gv-status" aria-haspopup="dialog" onclick="event.stopPropagation();showTooltip('gv')"><span class="gv-status-label">UAE Golden Visa &middot; AED 2M threshold</span></button>
     </div>
     <div class="field">
       <div class="ftop"><span class="lbl-group"><span class="flabel" data-i18n="field.cash">Your cash available</span><button class="tip-btn" onclick="event.stopPropagation();showTooltip('cash')" aria-label="info">i</button></span><span class="unit-badge">AED</span><input class="finput" id="t-cash" value="420,000"></div>
@@ -688,7 +724,7 @@ input[type=range]::-moz-range-progress{height:5px;border:0;border-radius:999px;b
     <div id="verdict"></div>
 
     <!-- Own / Rent out toggle -->
-    <div class="seg seg-full" style="margin-bottom:14px">
+    <div class="seg seg-full result-mode-seg">
       <button id="own-btn" class="seg-btn on" onclick="setRentOut(false)"><span data-ic="home" data-ic-size="15"></span><span data-i18n="btn.owner">Own</span></button>
       <button id="rent-btn" class="seg-btn" onclick="setRentOut(true)"><span data-ic="trendUp" data-ic-size="15"></span><span data-i18n="btn.renting">Rent out</span></button>
     </div>
@@ -702,49 +738,51 @@ input[type=range]::-moz-range-progress{height:5px;border:0;border-radius:999px;b
     <div style="display:none" id="allin-row"><span id="allin-label"></span></div>
 
     <!-- Monthly cost: unified Loan | All-in with Fixed/Variable rate toggle -->
-    <div id="payment-block">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
-      <div class="sec-lbl" style="margin-bottom:0;display:flex;align-items:center;gap:4px">Monthly cost<button class="tip-btn" onclick="event.stopPropagation();showTooltip('allin')" aria-label="info">i</button></div>
-      <div class="seg" style="width:172px">
+    <div id="payment-block" class="result-payment">
+    <div class="result-section-head">
+      <div class="sec-lbl">Monthly cost<button class="tip-btn" onclick="event.stopPropagation();showTooltip('allin')" aria-label="info">i</button></div>
+    </div>
+      <div class="seg result-period-seg">
         <button onclick="setAdvPeriod('month')" id="adv-btn-month" class="seg-btn on">Monthly</button>
         <button onclick="setAdvPeriod('year')" id="adv-btn-year" class="seg-btn">Annual</button>
       </div>
-    </div>
-    <div class="seg" style="display:flex;width:100%;margin-bottom:10px">
+    <div class="seg result-rate-seg">
       <button onclick="setAdvRateView('fixed')" id="adv-rate-fixed" class="seg-btn on" style="flex:1">Now &middot; 4.19%</button>
       <button onclick="setAdvRateView('variable')" id="adv-rate-var" class="seg-btn" style="flex:1">After 5 yrs &middot; ~5.35%</button>
     </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
+    <div class="result-metrics">
       <div class="metric"><div class="m-lbl">Loan payment</div><div class="m-val" style="font-size:18px" id="adv-val-mortgage">&mdash;</div><div class="m-sub" id="adv-mortgage-sub">per month</div></div>
       <div class="metric" id="adv-allin-card" onclick="openRentModal()" style="background:var(--amber-bg);border:1px solid var(--amber-bd)"><div class="m-lbl" style="color:var(--amber)" id="adv-allin-lbl">Total monthly</div><div class="m-val ca" style="font-size:18px" id="adv-val-allin">&mdash;</div><div class="m-sub" id="adv-allin-sub" style="color:var(--amber);opacity:.8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">loan + bills + everything</div></div>
     </div>
-    <div style="font-size:11px;color:var(--muted);text-align:center;padding:2px 0 12px" id="adv-rate-note">Fixed 4.19% &middot; first 5 years</div>
+    <div class="result-rate-note" id="adv-rate-note">Fixed 4.19% &middot; first 5 years</div>
     </div><!-- /payment-block -->
 
     <!-- Affordability (shows only if income entered) -->
     <div id="affordability"></div>
 
+    <div class="result-disclosures">
     <!-- Closing — collapsible -->
-    <div onclick="toggleClosing()" style="display:flex;align-items:center;justify-content:space-between;padding:13px 4px;cursor:pointer;-webkit-tap-highlight-color:transparent">
-      <div>
-        <div style="font-size:14px;font-weight:700;color:var(--text)">What you need at closing</div>
-        <div style="font-size:12px;color:var(--muted);margin-top:2px" id="closing-summary">Tap to see breakdown</div>
+    <div onclick="toggleClosing()" class="result-disclosure">
+      <div class="result-disclosure-copy">
+        <div class="result-disclosure-title">What you need at closing</div>
+        <div class="result-disclosure-summary" id="closing-summary">Tap to see breakdown</div>
       </div>
       <span id="closing-chev" class="chevron" style="color:var(--muted)" data-ic="chevron" data-ic-size="16"></span>
     </div>
-    <div id="closing-body" class="collapse-wrap"><div><div id="breakdown" style="margin-bottom:8px"></div></div></div>
+    <div id="closing-body" class="collapse-wrap result-collapse"><div><div id="breakdown"></div></div></div>
 
     <!-- Total cost — collapsible -->
-    <div onclick="toggleTotalCost()" style="display:flex;align-items:center;justify-content:space-between;padding:13px 4px;cursor:pointer;-webkit-tap-highlight-color:transparent;border-top:1px solid var(--border)">
-      <div>
-        <div style="font-size:14px;font-weight:700;color:var(--text)">Total cost over loan term</div>
-        <div style="font-size:12px;color:var(--muted);margin-top:2px" id="totalcost-summary">Property + interest + fees + living</div>
+    <div onclick="toggleTotalCost()" class="result-disclosure result-disclosure-total">
+      <div class="result-disclosure-copy">
+        <div class="result-disclosure-title">Total cost over loan term</div>
+        <div class="result-disclosure-summary" id="totalcost-summary">Property + interest + fees + living</div>
       </div>
       <span id="totalcost-chev" class="chevron" style="color:var(--muted)" data-ic="chevron" data-ic-size="16"></span>
     </div>
-    <div id="totalcost-body" class="collapse-wrap"><div><div id="total-cost"></div></div></div>
+    <div id="totalcost-body" class="collapse-wrap result-collapse"><div><div id="total-cost"></div></div></div>
+    </div>
 
-    <button onclick="shareCalc()" style="width:100%;margin-top:16px;padding:13px;background:var(--card);border:1.5px solid var(--border);border-radius:14px;font-size:14px;font-weight:600;color:var(--text);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px">
+    <button onclick="shareCalc()" class="result-share">
       <span data-ic="share" data-ic-size="17"></span><span data-i18n="share.btn">Share this calculation</span>
     </button>
   </div></div>
@@ -770,25 +808,25 @@ input[type=range]::-moz-range-progress{height:5px;border:0;border-radius:999px;b
 <div class="card" id="card-living" style="display:none">
   <div class="card-head"><span class="ctitle">Living costs</span></div>
   <div class="card-body-wrap open"><div class="card-body-inner">
-    <div style="padding:12px 0;border-bottom:1px solid var(--border)" id="lvrow-dewa">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><span style="display:flex;align-items:center;gap:8px;font-size:14px;color:var(--text);font-weight:500"><span style="color:var(--muted);display:inline-flex" data-ic="bolt" data-ic-size="16"></span><span data-i18n="living.dewa">DEWA</span><button class="tip-btn" onclick="event.stopPropagation();showTooltip('dewa')" aria-label="info">i</button><span id="dewa-tag" class="tag tag-auto" onclick="resetDewaAuto()" style="flex-shrink:0">auto</span></span><span id="lv-dewa" onclick="openLivingEdit('dewa')" style="font-size:14px;font-weight:600;color:var(--text);cursor:pointer;white-space:nowrap">&mdash;</span><input class="finput" id="t-dewa" value="560" style="display:none"></div>
+    <div class="cost-row has-slider" id="lvrow-dewa">
+      <div class="cost-row-top"><span class="cost-row-label"><span class="cost-row-icon" data-ic="bolt" data-ic-size="16"></span><span data-i18n="living.dewa">DEWA</span><button class="tip-btn" onclick="event.stopPropagation();showTooltip('dewa')" aria-label="info">i</button><span id="dewa-tag" class="tag tag-auto" onclick="resetDewaAuto()" style="flex-shrink:0">auto</span></span><span id="lv-dewa" class="cost-row-value" onclick="openLivingEdit('dewa')" style="cursor:pointer">&mdash;</span><input class="finput" id="t-dewa" value="560" style="display:none"></div>
       <input type="range" id="dewa" min="0" max="8000" step="1" value="560">
     </div>
-    <div style="padding:12px 0;border-bottom:1px solid var(--border)" id="lvrow-cooling">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><span style="display:flex;align-items:center;gap:8px;font-size:14px;color:var(--text);font-weight:500"><span style="color:var(--muted);display:inline-flex" data-ic="snowflake" data-ic-size="16"></span><span data-i18n="living.cooling">District cooling</span><button class="tip-btn" onclick="event.stopPropagation();showTooltip('cooling')" aria-label="info">i</button><span id="cooling-tag" class="tag tag-auto" onclick="resetCoolingAuto()" style="flex-shrink:0">auto</span></span><span id="lv-cooling" onclick="openLivingEdit('cooling')" style="font-size:14px;font-weight:600;color:var(--text);cursor:pointer;white-space:nowrap">&mdash;</span><input class="finput" id="t-cooling" value="280" style="display:none"></div>
+    <div class="cost-row has-slider" id="lvrow-cooling">
+      <div class="cost-row-top"><span class="cost-row-label"><span class="cost-row-icon" data-ic="snowflake" data-ic-size="16"></span><span data-i18n="living.cooling">District cooling</span><button class="tip-btn" onclick="event.stopPropagation();showTooltip('cooling')" aria-label="info">i</button><span id="cooling-tag" class="tag tag-auto" onclick="resetCoolingAuto()" style="flex-shrink:0">auto</span></span><span id="lv-cooling" class="cost-row-value" onclick="openLivingEdit('cooling')" style="cursor:pointer">&mdash;</span><input class="finput" id="t-cooling" value="280" style="display:none"></div>
       <input type="range" id="cooling" min="0" max="5000" step="1" value="280">
     </div>
-    <div style="padding:12px 0;border-bottom:1px solid var(--border)" id="lvrow-sc">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><span style="display:flex;align-items:center;gap:8px;font-size:14px;color:var(--text);font-weight:500"><span style="color:var(--muted);display:inline-flex" data-ic="home" data-ic-size="16"></span><span data-i18n="living.sc">Service charge</span><button class="tip-btn" onclick="event.stopPropagation();showTooltip('sc')" aria-label="info">i</button></span><span id="lv-sc" onclick="openLivingEdit('sc')" style="font-size:14px;font-weight:600;color:var(--text);cursor:pointer;white-space:nowrap">&mdash;</span><input class="finput" id="t-sc" value="23" style="display:none"></div>
+    <div class="cost-row has-slider" id="lvrow-sc">
+      <div class="cost-row-top"><span class="cost-row-label"><span class="cost-row-icon" data-ic="home" data-ic-size="16"></span><span data-i18n="living.sc">Service charge</span><button class="tip-btn" onclick="event.stopPropagation();showTooltip('sc')" aria-label="info">i</button></span><span id="lv-sc" class="cost-row-value" onclick="openLivingEdit('sc')" style="cursor:pointer">&mdash;</span><input class="finput" id="t-sc" value="23" style="display:none"></div>
       <input type="range" id="sc" min="0" max="60" step="1" value="23">
-      <div id="sc-monthly-hint" style="font-size:11px;color:var(--muted);margin-top:3px;padding-left:24px">&mdash;</div>
+      <div id="sc-monthly-hint" class="cost-row-note">&mdash;</div>
     </div>
-    <div style="padding:12px 0;border-bottom:1px solid var(--border)" id="lvrow-internet">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><span style="display:flex;align-items:center;gap:8px;font-size:14px;color:var(--text);font-weight:500"><span style="color:var(--muted);display:inline-flex" data-ic="wifi" data-ic-size="16"></span><span data-i18n="living.internet">Internet</span><button class="tip-btn" onclick="event.stopPropagation();showTooltip('internet')" aria-label="info">i</button></span><span id="lv-internet" onclick="openLivingEdit('internet')" style="font-size:14px;font-weight:600;color:var(--text);cursor:pointer;white-space:nowrap">&mdash;</span><input class="finput" id="t-internet" value="360" style="display:none"></div>
+    <div class="cost-row has-slider" id="lvrow-internet">
+      <div class="cost-row-top"><span class="cost-row-label"><span class="cost-row-icon" data-ic="wifi" data-ic-size="16"></span><span data-i18n="living.internet">Internet</span><button class="tip-btn" onclick="event.stopPropagation();showTooltip('internet')" aria-label="info">i</button></span><span id="lv-internet" class="cost-row-value" onclick="openLivingEdit('internet')" style="cursor:pointer">&mdash;</span><input class="finput" id="t-internet" value="360" style="display:none"></div>
       <input type="range" id="internet" min="0" max="1000" step="20" value="360">
     </div>
-    <div style="padding:12px 0;border-bottom:1px solid var(--border)" id="lvrow-gas">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><span style="display:flex;align-items:center;gap:8px;font-size:14px;color:var(--text);font-weight:500"><span style="color:var(--muted);display:inline-flex" data-ic="flame" data-ic-size="16"></span><span data-i18n="living.gas">Gas</span><button class="tip-btn" onclick="event.stopPropagation();showTooltip('gas')" aria-label="info">i</button></span><span id="lv-gas" onclick="openLivingEdit('gas')" style="font-size:14px;font-weight:600;color:var(--text);cursor:pointer;white-space:nowrap">&mdash;</span><input class="finput" id="t-gas" value="55" style="display:none"></div>
+    <div class="cost-row has-slider" id="lvrow-gas">
+      <div class="cost-row-top"><span class="cost-row-label"><span class="cost-row-icon" data-ic="flame" data-ic-size="16"></span><span data-i18n="living.gas">Gas</span><button class="tip-btn" onclick="event.stopPropagation();showTooltip('gas')" aria-label="info">i</button></span><span id="lv-gas" class="cost-row-value" onclick="openLivingEdit('gas')" style="cursor:pointer">&mdash;</span><input class="finput" id="t-gas" value="55" style="display:none"></div>
       <input type="range" id="gas" min="0" max="500" step="5" value="55">
     </div>
     <div style="background:var(--bg);border-radius:12px;padding:14px;margin-top:8px;display:none" id="living-totals-block">
@@ -884,12 +922,12 @@ input[type=range]::-moz-range-progress{height:5px;border:0;border-radius:999px;b
 <div class="modal" id="modal-costs" data-mod="costs">
   <div class="modal-head"><div class="modal-title" style="display:flex;align-items:center;gap:8px"><span data-ic="chartBar" data-ic-size="20" style="color:var(--green)"></span><span>Costs</span></div><button type="button" class="modal-close" aria-label="Close" onclick="event.stopPropagation();closeModal()"><span data-ic="close" data-ic-size="18"></span></button></div>
   <div id="modal-costs-body">
-    <div style="display:flex;justify-content:center;margin-bottom:14px"><div class="seg" style="width:200px"><button class="seg-btn on" id="costs-per-mo" onclick="setBudgetPeriod('month')" style="flex:1">Monthly</button><button class="seg-btn" id="costs-per-yr" onclick="setBudgetPeriod('year')" style="flex:1">Annual</button></div></div>
-    <div class="sec-lbl">Home</div>
-    <div style="padding:12px 0;border-bottom:1px solid var(--border)" id="costs-mortgage-row"><div style="display:flex;justify-content:space-between;align-items:center"><span style="display:flex;align-items:center;gap:8px;font-size:14px;color:var(--text);font-weight:500"><span style="color:var(--muted);display:inline-flex" data-ic="scale" data-ic-size="16"></span><span>Mortgage</span></span><span id="costs-mortgage-val" style="font-size:14px;font-weight:600;color:var(--text);white-space:nowrap">&mdash;</span></div></div>
+    <div class="costs-period-control"><div class="seg"><button class="seg-btn on" id="costs-per-mo" onclick="setBudgetPeriod('month')" style="flex:1">Monthly</button><button class="seg-btn" id="costs-per-yr" onclick="setBudgetPeriod('year')" style="flex:1">Annual</button></div></div>
+    <div class="sec-lbl costs-section-label">Home</div>
+    <div class="cost-row" id="costs-mortgage-row"><div class="cost-row-top"><span class="cost-row-label"><span class="cost-row-icon" data-ic="scale" data-ic-size="16"></span><span>Mortgage</span></span><span id="costs-mortgage-val" class="cost-row-value">&mdash;</span></div></div>
     <div id="modal-living-body"></div>
-    <div style="padding:12px 0;border-bottom:1px solid var(--border)" id="costs-ins-row"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><span style="display:flex;align-items:center;gap:8px;font-size:14px;color:var(--text);font-weight:500"><span style="color:var(--muted);display:inline-flex" data-ic="activity" data-ic-size="16"></span><span>Home insurance</span><button class="tip-btn" onclick="event.stopPropagation();showTooltip('insurance')" aria-label="info">i</button><span id="insurance-tag" class="tag tag-auto" onclick="resetInsuranceAuto()" style="flex-shrink:0">auto</span></span><span id="costs-ins-val" onclick="openLivingEdit('insurance')" style="font-size:14px;font-weight:600;color:var(--text);cursor:pointer;white-space:nowrap">&mdash;</span></div><input type="range" id="ins-slider" min="0" max="1500" step="5" value="259" oninput="insEdited=true;insOverride=parseInt(this.value)||0;setTag('insurance-tag',true);paintSlider(this);calc();if(typeof syncLivingRows==='function')syncLivingRows();"></div>
-    <div class="sec-lbl" style="margin-top:18px">Spending</div>
+    <div class="cost-row has-slider" id="costs-ins-row"><div class="cost-row-top"><span class="cost-row-label"><span class="cost-row-icon" data-ic="activity" data-ic-size="16"></span><span>Home insurance</span><button class="tip-btn" onclick="event.stopPropagation();showTooltip('insurance')" aria-label="info">i</button><span id="insurance-tag" class="tag tag-auto" onclick="resetInsuranceAuto()" style="flex-shrink:0">auto</span></span><span id="costs-ins-val" class="cost-row-value" onclick="openLivingEdit('insurance')" style="cursor:pointer">&mdash;</span></div><input type="range" id="ins-slider" min="0" max="1500" step="5" value="259" oninput="insEdited=true;insOverride=parseInt(this.value)||0;setTag('insurance-tag',true);paintSlider(this);calc();if(typeof syncLivingRows==='function')syncLivingRows();"></div>
+    <div class="sec-lbl costs-section-label spending">Spending</div>
     <div id="modal-budget-body"></div>
   </div>
 </div>
@@ -1267,9 +1305,9 @@ function renderBudget(){
   const rows=Object.keys(BUDGET_DEFAULTS).filter(k=>{if(k==='housing')return false;if(BUDGET_DEFAULTS[k].rentOnly)return rentOut;return true;}).map(k=>{
     const d=BUDGET_DEFAULTS[k],v=budgetVals[k];
     const [smin,smax,sstep]=BSLIDERS[k]||[0,10000,250];
-    return `<div style="padding:12px 0;border-bottom:1px solid var(--border)" id="budget-row-${k}"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><span style="display:flex;align-items:center;gap:8px;font-size:14px;color:var(--text);font-weight:500"><span style="color:var(--muted);display:inline-flex">${ic(d.icon,16)}</span><span>${t(d.key)}</span></span><span id="budget-val-${k}" onclick="openBudgetEdit('${k}')" style="font-size:14px;font-weight:600;color:${v>0?'var(--text)':'var(--muted)'};cursor:pointer;white-space:nowrap">${v>0?budgetDisp(v):'\u2014'}</span></div><input type="range" id="budget-slider-${k}" min="${smin}" max="${smax}" step="${sstep}" value="${v}" style="width:100%;margin:0" oninput="budgetVals['${k}']=parseInt(this.value)||0;paintSlider(this);const ve=document.getElementById('budget-val-${k}');if(ve){const vv=budgetVals['${k}'];ve.textContent=vv>0?budgetDisp(vv):'\u2014';ve.style.color=vv>0?'var(--text)':'var(--muted)';}updateBudgetSummary()"></div>`;
+    return `<div class="cost-row has-slider" id="budget-row-${k}"><div class="cost-row-top"><span class="cost-row-label"><span class="cost-row-icon">${ic(d.icon,16)}</span><span>${t(d.key)}</span></span><span id="budget-val-${k}" class="cost-row-value" onclick="openBudgetEdit('${k}')" style="color:${v>0?'var(--text)':'var(--muted)'};cursor:pointer">${v>0?budgetDisp(v):'\u2014'}</span></div><input type="range" id="budget-slider-${k}" min="${smin}" max="${smax}" step="${sstep}" value="${v}" oninput="budgetVals['${k}']=parseInt(this.value)||0;paintSlider(this);const ve=document.getElementById('budget-val-${k}');if(ve){const vv=budgetVals['${k}'];ve.textContent=vv>0?budgetDisp(vv):'\u2014';ve.style.color=vv>0?'var(--text)':'var(--muted)';}updateBudgetSummary()"></div>`;
   }).join('');
-  body.innerHTML=`<div>${rows}</div><div style="background:var(--bg);border-radius:14px;padding:16px;margin-top:16px"><div style="display:flex;justify-content:space-between;align-items:center"><span id="budget-total-key" style="font-size:14px;font-weight:700">${t(budgetPeriod==='year'?'budget.total.yr':'budget.total')}</span><span id="budget-total-val" style="font-size:22px;font-weight:700;letter-spacing:-0.5px">${budgetDisp(total)}</span></div><div id="budget-summary" style="display:none"></div></div>`;
+  body.innerHTML=`<div>${rows}</div><div class="costs-total"><div class="costs-total-head"><span id="budget-total-key" style="font-size:14px;font-weight:700">${t(budgetPeriod==='year'?'budget.total.yr':'budget.total')}</span><span id="budget-total-val" style="font-size:22px;font-weight:700;letter-spacing:-0.5px">${budgetDisp(total)}</span></div><div id="budget-summary" style="display:none"></div></div>`;
   paintAllSliders();
   updateBudgetSummary();
 }
@@ -1505,7 +1543,7 @@ const TIPS={
     gas:{title:'Gas (LPG)',text:'Lootah BCGas — billed quarterly. Estimated monthly average shown. Many buildings use electric cooking so gas cost may be zero.'},
     income:{title:'Monthly Income',text:'Your gross monthly salary. UAE banks limit mortgage payments to 50% of income (DBR) and approve loans up to ~7× annual salary.'},
     rent:{title:'Annual Rent',text:'What you currently pay per year renting. Used to compare renting vs buying over time.'},
-    gv:{title:'Golden Visa property threshold',text:'Property valued at AED 2M or more may meet the real-estate investment threshold. Hayyak uses the entered purchase price as an estimate; final eligibility depends on official ownership or valuation documents and approval by the relevant UAE authority.'},
+    gv:{title:'UAE Golden Visa property threshold',text:'The AED 2M real-estate investor threshold applies across the UAE. Hayyak uses the entered purchase price only as an early estimate. Authorities rely on registered ownership or valuation documents, and mortgage, off-plan, paid-equity and document rules can differ. Dubai applications use GDRFA and DLD; other emirates use ICP and the relevant local property-registration authority. Final approval remains with the authority.'},
     rate:{title:'Fixed Interest Rate',text:'The interest rate locked for the fixed period (3 or 5 years). After it ends, the rate switches to variable (EIBOR + bank margin). Salary transfer to the bank usually gets a lower rate.'},
     ppmonth:{title:'Prepayment Month',text:'When you make the extra payment, counted from loan start. Month 1 = right after closing. The UAE regulatory maximum for an early or partial home-loan settlement fee is 1% of the outstanding balance or AED 10,000, whichever is lower; your bank may charge less or waive it.'},
     ppamt:{title:'Prepayment Amount',text:'Extra lump sum you pay toward the principal. This reduces either your loan term or your monthly payment, saving you interest over time.'},
@@ -1623,7 +1661,7 @@ function fmt(aedVal){const v=toDisp(aedVal);const sym=currency==='USD'?'$':'AED 
 function clamp(v,mn,mx){return Math.min(mx,Math.max(mn,v));}
 function fmtN(n){return Math.round(n).toLocaleString('en-US');}
 function setLiveText(el,value){if(el&&el.textContent!==String(value))el.textContent=String(value);}
-const GOLDEN_VISA_THRESHOLD=2000000;
+const GOLDEN_VISA_THRESHOLD=2000000; // Federal UAE-wide property-investor threshold; local authorities verify documents and eligibility.
 function fmtGoldenVisaGap(aedValue){
   const v=toDisp(aedValue),prefix=currency==='USD'?'$':'AED ';
   if(v>=1000000)return prefix+(v/1000000).toFixed(v%1000000?1:0)+'M';
@@ -1632,7 +1670,7 @@ function fmtGoldenVisaGap(aedValue){
 }
 function updateGoldenVisaStatus(price){
   const amount=Number(price)||0,qualified=amount>=GOLDEN_VISA_THRESHOLD;
-  const label=!amount?'Golden Visa threshold · AED 2M':qualified?'Golden Visa property threshold reached':`${fmtGoldenVisaGap(GOLDEN_VISA_THRESHOLD-amount)} to Golden Visa threshold`;
+  const label=!amount?'UAE Golden Visa · AED 2M threshold':qualified?'UAE Golden Visa · AED 2M threshold met':`${fmtGoldenVisaGap(GOLDEN_VISA_THRESHOLD-amount)} to UAE Golden Visa threshold`;
   ['s-gv-status','gv-status-adv'].forEach(id=>{
     const el=document.getElementById(id);if(!el)return;
     el.classList.toggle('qualified',qualified);
@@ -2623,7 +2661,7 @@ const I18N={
     'card.loanhigh':'Loan exceeds approved amount',
     'card.monthly':'Monthly','card.closing':'At closing','card.loan':'Loan',
     'verdict.need':'Need','verdict.toclose':'to close','verdict.youhave':'you have','verdict.vsapproved':'vs approved',
-    'gv.title':'Golden Visa property threshold','gv.desc':'AED 2M may meet the property-value threshold; final eligibility requires official documents and authority approval',
+    'gv.title':'UAE Golden Visa property threshold','gv.desc':'AED 2M is the UAE-wide real-estate investor threshold; final eligibility requires official documents and authority approval',
     'sub.permonth':'per month','sub.peryear':'per year',
     'sub.allin.full':'mortgage + DEWA + cooling + service charge + internet + gas',
     'field.approved':'Max loan','field.bval':'Bank valuation',
@@ -2885,6 +2923,6 @@ document.addEventListener('DOMContentLoaded',()=>hydrateIcons());
 </div>
 
 <div id="tooltip-sheet"></div>
-<div style="position:fixed;bottom:2px;right:4px;font-size:9px;color:rgba(128,128,128,0.4);z-index:99999;pointer-events:none">v1381</div>
+<div style="position:fixed;bottom:2px;right:4px;font-size:9px;color:rgba(128,128,128,0.4);z-index:99999;pointer-events:none">v1382</div>
 </body>
 </html>
